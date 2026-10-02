@@ -1,4 +1,5 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/preact';
+import { createRef } from 'preact';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/preact';
 import { useState } from 'preact/hooks';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -115,4 +116,30 @@ it('confirmDisabled blocks only confirmation', async () => {
   expect(onClose).toHaveBeenCalledOnce();
   await user.keyboard('{Escape}');
   expect(onClose).toHaveBeenCalledTimes(2);
+});
+
+it('restores a replacement fallback after the old target detaches', async () => {
+  document.body.focus();
+  const old = createRef<HTMLButtonElement>();
+  const next = createRef<HTMLButtonElement>();
+  old.current = document.createElement('button');
+  next.current = document.createElement('button');
+  document.body.append(old.current, next.current);
+  const props = {
+    title: 'Confirm?',
+    ...labels,
+    onClose: vi.fn(),
+    onConfirm: vi.fn(),
+    children: 'Details',
+  };
+  const { rerender, unmount, container } = render(
+    <ConfirmDialog {...props} fallbackFocusRef={old} />,
+  );
+  old.current.remove();
+  rerender(<ConfirmDialog {...props} fallbackFocusRef={next} />);
+  expect(container.hasAttribute('inert')).toBe(true);
+  expect(document.body.style.overflow).toBe('hidden');
+  unmount();
+  await waitFor(() => expect(document.activeElement).toBe(next.current));
+  next.current.remove();
 });

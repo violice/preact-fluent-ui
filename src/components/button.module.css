@@ -129,3 +129,7 @@
     transition: none;
   }
 }
+
+.button[hidden] {
+  display: none;
+}

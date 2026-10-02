@@ -55,7 +55,7 @@ const fallback = useRef<HTMLButtonElement>(null);
 </Modal>}
 ```
 
-Use unique title ids and only one active Modal, including ConfirmDialog. There is no nested dialog stack. Modal traps Tab and Shift+Tab among visible, enabled, non-inert controls, focuses itself when there are none, makes background body children inert, and locks body scrolling. Escape and backdrop call `onClose`; the caller must unmount the Modal. Focus returns to the opener, then the supplied fallback, then body. Keep fallback ref identity stable while open. Caller keyboard handlers run first; `preventDefault()` suppresses Modal's handling. Its role, aria-modal and aria-labelledby cannot be replaced.
+Use unique title ids and only one active Modal, including ConfirmDialog. There is no nested dialog stack. Modal traps Tab and Shift+Tab among visible, enabled, non-inert controls, focuses itself when there are none, makes background body children inert, and locks body scrolling. Escape and backdrop call `onClose`; the caller must unmount the Modal. Focus returns to the opener, then the latest supplied fallback, then body. Closed disclosure content is excluded; the visible summary remains available. Interior Tab and radio arrow selection use native browser behavior, with Tab wrapping at the dialog edges. Caller keyboard handlers run first; `preventDefault()` suppresses Modal's handling. Its role, aria-modal and aria-labelledby cannot be replaced.
 
 Dialog tokens live at `:root` because the portal renders into body. A theme on a nested app container will not reach the dialog.
 

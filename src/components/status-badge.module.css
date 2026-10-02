@@ -46,3 +46,7 @@
     border-color: CanvasText;
   }
 }
+
+.badge[hidden] {
+  display: none;
+}

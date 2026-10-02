@@ -362,3 +362,136 @@ it('restores mixed overflow priorities without reverting unrelated body style ch
   expect(document.body.style.getPropertyPriority('overflow-y')).toBe('');
   expect(document.body.style.color).toBe('red');
 });
+
+it('rejects concealed initial focus and skips failed candidates', () => {
+  const initial = createRef<HTMLInputElement>();
+  render(
+    <Modal labelledBy="title" initialFocusRef={initial} onClose={vi.fn()}>
+      <h2 id="title">Dialog</h2>
+
+      <details>
+        <summary>Disclosure</summary>
+        <input ref={initial} />
+      </details>
+      <button>Footer</button>
+    </Modal>,
+  );
+  expect(document.activeElement?.textContent).toBe('Disclosure');
+});
+
+it('continues initial focus after a candidate that cannot receive focus', () => {
+  render(
+    <Modal labelledBy="title" initialFocusRef={createRef<HTMLElement>()} onClose={vi.fn()}>
+      <h2 id="title">Dialog</h2>
+      <button
+        ref={(element) => {
+          if (element) element.focus = () => {};
+        }}
+      >
+        Declines focus
+      </button>
+      <button>Available</button>
+    </Modal>,
+  );
+  expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Available' }));
+});
+
+it('leaves interior radio Tab and arrow selection to the browser', () => {
+  const initial = createRef<HTMLButtonElement>();
+  render(
+    <Modal labelledBy="title" initialFocusRef={initial} onClose={vi.fn()}>
+      <h2 id="title">Dialog</h2>
+      <button ref={initial}>Before</button>
+      <input type="radio" name="choice" checked />
+      <input type="radio" name="choice" />
+      <button>After</button>
+    </Modal>,
+  );
+  for (const target of [initial.current!, ...screen.getAllByRole('radio')]) {
+    target.focus();
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+    target.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(false);
+    expect(document.activeElement).toBe(target);
+  }
+});
+
+it('restores the latest fallback ref without unlocking on rerender', async () => {
+  const old = createRef<HTMLButtonElement>();
+  const next = createRef<HTMLButtonElement>();
+  old.current = document.createElement('button');
+  next.current = document.createElement('button');
+  document.body.append(old.current, next.current);
+  const props = {
+    labelledBy: 'title',
+    initialFocusRef: createRef<HTMLElement>(),
+    onClose: vi.fn(),
+    children: <button>Inside</button>,
+  };
+  const { rerender, unmount, container } = render(<Modal {...props} fallbackFocusRef={old} />);
+  old.current.remove();
+  rerender(<Modal {...props} fallbackFocusRef={next} />);
+  expect(container.hasAttribute('inert')).toBe(true);
+  expect(document.body.style.overflow).toBe('hidden');
+  expect(document.activeElement?.textContent).toBe('Inside');
+  unmount();
+  await waitFor(() => expect(document.activeElement).toBe(next.current));
+});
+
+it('wraps to the selected radio and reads checked updates', () => {
+  render(
+    <Modal labelledBy="title" initialFocusRef={createRef<HTMLElement>()} onClose={vi.fn()}>
+      <h2 id="title">Dialog</h2>
+      <input type="radio" name="choice" aria-label="A" />
+      <input type="radio" name="choice" aria-label="B" checked />
+      <button>End</button>
+    </Modal>,
+  );
+  const [a, b] = screen.getAllByRole('radio') as HTMLInputElement[];
+  expect(document.activeElement).toBe(b);
+  const end = screen.getByRole('button', { name: 'End' });
+  a.checked = true;
+  end.focus();
+  fireEvent.keyDown(end, { key: 'Tab' });
+  expect(document.activeElement).toBe(a);
+});
+
+it('wraps a group with no selection to its directional entry', () => {
+  render(
+    <Modal labelledBy="title" initialFocusRef={createRef<HTMLElement>()} onClose={vi.fn()}>
+      <h2 id="title">Dialog</h2>
+      <input type="radio" name="choice" aria-label="A" />
+      <input type="radio" name="choice" aria-label="B" />
+    </Modal>,
+  );
+  const [a, b] = screen.getAllByRole('radio');
+  expect(document.activeElement).toBe(a);
+  fireEvent.keyDown(a, { key: 'Tab', shiftKey: true });
+  expect(document.activeElement).toBe(b);
+});
+
+it('keeps unnamed radios and same-name radios with distinct form owners independent', () => {
+  render(
+    <Modal labelledBy="title" initialFocusRef={createRef<HTMLElement>()} onClose={vi.fn()}>
+      <h2 id="title">Dialog</h2>
+      <input type="radio" aria-label="Unnamed A" />
+      <input type="radio" aria-label="Unnamed B" />
+      <form id="one">
+        <input type="radio" name="choice" aria-label="Form one" />
+      </form>
+      <form id="two">
+        <input type="radio" name="choice" aria-label="Form two" checked />
+      </form>
+    </Modal>,
+  );
+  const radios = screen.getAllByRole('radio');
+  for (const radio of radios.slice(0, -1)) {
+    radio.focus();
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+    radio.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(false);
+  }
+  radios[radios.length - 1]!.focus();
+  fireEvent.keyDown(document.activeElement!, { key: 'Tab' });
+  expect(document.activeElement).toBe(radios[0]);
+});

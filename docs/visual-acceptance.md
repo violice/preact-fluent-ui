@@ -23,6 +23,29 @@ Checked on 2026-10-02 through T3 native preview tools, tab_1, at http://localhos
 
 The initial light 1280 minimal computed sample caught a control background mid-transition after changing appearance. The subsequent light 720/320 samples and a settled 1280 retry show white control backgrounds. The screenshots represent the actual saved viewport, not full-page stitched captures. Native select popup Home/Enter commands briefly returned client errors; state inspection and ArrowDown confirmed selection. A click call that mixed a selector with coordinates was rejected and retried with coordinates alone. These tool errors did not indicate a product failure. A library rebuild while the dev server was active briefly removed dist/theme.css and produced an HMR 404; a full reload recovered and a fresh fetch returned 200 with all three minimal stylesheets present.
 
+## Final focused native regressions
+
+Checked again in T3 native Chromium on 2026-10-02 at 1280×800. These are focused checks after the final review, not a repeat of the 18-page matrix. The earlier hidden-controls row established keyboard exclusion only; the final review exposed missing native hidden layout behavior. The stopped gallery server was restarted against the existing pre-fix dist for RED. After the one library rebuild, a reload used the new dist and cleared transient HMR errors.
+
+| Check | RED | GREEN |
+| --- | --- | --- |
+| Native hidden layout | Reviewer Button clone: hidden=true, inline-flex, one rect. Final fixture authored footer root: flex, one rect. | Real Preact renders of Button, InfoBar, StatusBadge, PageHeader, EmptyState, DialogBody, DialogFooter and Select with hidden=true produce display:none and zero rects. Rerender hidden=false gives one rect each. Select wrapper is also zero then one. Passed on full and theme/styles-only minimal pages. |
+| Closed disclosure | In actual gallery Modal, Tab from summary targets concealed input, focus fails and lands on dialog. | Concealed initialFocusRef falls back to Before. Closed forward traversal: Before → summary → After → Footer → End → Before. Reverse: End → Footer → After → summary → Before → End. Enter opens disclosure; Tab enters input. Enter closes it; Tab reaches After. |
+| Native radios | Checked a → Tab focuses unchecked b without selecting it. | Before → Tab enters checked a. ArrowRight focuses/selects b. Tab exits to After; Shift+Tab enters checked b and exits to Before. Checked updates enter the new checked a. With neither checked, native forward and reverse entry/exit leave both unchecked; Chromium remembers a on reverse entry in this sequence. Unnamed radios, distinct names and same-name radios in separate forms remain separate stops in both directions. |
+| Updated fallback identity | Focused DOM tests fail with body focused after old target detaches. | Native Modal and ConfirmDialog rerender with replacement fallback ref, detach old target, keep inert and overflow while open, then restore new target on unmount. |
+
+Fixtures used the actual built components with the gallery's Preact runtime. Temporary roots, controls and refs were removed; final inspection found no dialog, fixture or inert elements and restored empty body overflow. Reproduction expressions and measured JSON are retained in `.superpowers/sdd/2026-10-02-preact-fluent-ui/scratch/final-native-evidence.json`. Focused DOM tests also cover an explicitly declining focus method, group boundary wrapping, checked updates and separate form owners; native keyboard results above supply browser semantics that jsdom cannot establish.
+
+Saved native screenshot evidence (local T3 artifacts):
+
+- RED disclosure/radio probe: `/home/violice/.t3/userdata/browser-artifacts/browser-screenshot-localhost-muqw9kbb-a0003f12.png`
+- Full hidden true/false render fixture: `/home/violice/.t3/userdata/browser-artifacts/browser-screenshot-localhost-muqwefln-08e36257.png`
+- Minimal hidden true/false render fixture: `/home/violice/.t3/userdata/browser-artifacts/browser-screenshot-localhost-muqwegql-159d694c.png`
+- Disclosure navigation: `/home/violice/.t3/userdata/browser-artifacts/browser-screenshot-localhost-muqwfegp-3f049d2a.png`
+- Radio identity/navigation: `/home/violice/.t3/userdata/browser-artifacts/browser-screenshot-localhost-muqwgien-fba2be86.png`
+
+Forced-colors and reduced-motion manual acceptance remain pending as described below.
+
 ## Saved screenshots
 
 Paths are local T3 artifacts from this session. They are not packaged npm files.

@@ -24,6 +24,10 @@ function isAvailable(element: HTMLElement): boolean {
       ancestor.getAttribute('aria-hidden') === 'true'
     )
       return false;
+    if (ancestor instanceof HTMLDetailsElement && !ancestor.open) {
+      const summary = Array.from(ancestor.children).find((child) => child.tagName === 'SUMMARY');
+      if (!summary?.contains(element)) return false;
+    }
     const style = getComputedStyle(ancestor);
     if (
       style.display === 'none' ||
@@ -41,8 +45,8 @@ function tryFocus(element: HTMLElement | null | undefined): boolean {
   return document.activeElement === element;
 }
 
-function getControls(dialog: HTMLElement): HTMLElement[] {
-  return Array.from(
+function getControls(dialog: HTMLElement, backwards = false): HTMLElement[] {
+  const controls = Array.from(
     dialog.querySelectorAll<HTMLElement>(
       'button, input, select, textarea, a[href], area[href], [tabindex], [contenteditable], summary, audio[controls], video[controls]',
     ),
@@ -53,11 +57,26 @@ function getControls(dialog: HTMLElement): HTMLElement[] {
       const secondIndex = second.tabIndex > 0 ? second.tabIndex : Infinity;
       return firstIndex === secondIndex ? 0 : firstIndex - secondIndex;
     });
+  return controls.filter((element) => {
+    if (!(element instanceof HTMLInputElement) || element.type !== 'radio' || !element.name)
+      return true;
+    const group = controls.filter(
+      (other): other is HTMLInputElement =>
+        other instanceof HTMLInputElement &&
+        other.type === 'radio' &&
+        other.name === element.name &&
+        other.form === element.form,
+    );
+    return (
+      element ===
+      (group.find((radio) => radio.checked) ?? (backwards ? group[group.length - 1] : group[0]))
+    );
+  });
 }
 
 function focusDialog(dialog: HTMLElement, initial?: HTMLElement | null) {
   if (initial && dialog.contains(initial) && tryFocus(initial)) return;
-  if (!tryFocus(getControls(dialog)[0])) dialog.focus();
+  if (!getControls(dialog).some((element) => tryFocus(element))) dialog.focus();
 }
 
 function focusBody() {
@@ -91,7 +110,6 @@ export const Modal = /* @__PURE__ */ forwardRef<HTMLDivElement, ModalProps>(func
 
   useLayoutEffect(() => {
     const dialog = dialogRef.current!;
-    const fallback = latest.current.fallbackFocusRef;
     const opener =
       document.activeElement instanceof HTMLElement && document.activeElement !== document.body
         ? document.activeElement
@@ -120,7 +138,9 @@ export const Modal = /* @__PURE__ */ forwardRef<HTMLDivElement, ModalProps>(func
         document.body.style.setProperty(property, value, priority);
       });
       queueMicrotask(() => {
-        if (!tryFocus(opener) && !tryFocus(fallback?.current)) focusBody();
+        // Restoration deliberately reads the current prop after any updates while open.
+        // oxlint-disable-next-line react-hooks/exhaustive-deps
+        if (!tryFocus(opener) && !tryFocus(latest.current.fallbackFocusRef?.current)) focusBody();
       });
     };
   }, []);
@@ -143,15 +163,32 @@ export const Modal = /* @__PURE__ */ forwardRef<HTMLDivElement, ModalProps>(func
       onClose();
     } else if (event.key === 'Tab') {
       const dialog = dialogRef.current!;
-      const controls = getControls(dialog);
-      const index = controls.indexOf(document.activeElement as HTMLElement);
-      const next = event.shiftKey
-        ? index <= 0
-          ? controls.length - 1
-          : index - 1
-        : (index + 1) % controls.length;
+      const controls = getControls(dialog, event.shiftKey);
+      const active = document.activeElement;
+      const index = controls.findIndex(
+        (element) =>
+          element === active ||
+          (element instanceof HTMLInputElement &&
+            active instanceof HTMLInputElement &&
+            element.type === 'radio' &&
+            active.type === 'radio' &&
+            !!element.name &&
+            element.name === active.name &&
+            element.form === active.form),
+      );
+      const atEdge = event.shiftKey ? index === 0 : index === controls.length - 1;
+      // Browsers own interior Tab/arrow behavior, including radio selection. Native
+      // inert is also enforced by the browser; aria-hidden alone is not a Tab exclusion.
+      const hasExcludedInterior = dialog.querySelector('[aria-hidden="true"], [inert]');
+      if (index >= 0 && !atEdge && !hasExcludedInterior) return;
       event.preventDefault();
-      if (!tryFocus(controls[next])) dialog.focus();
+      const step = event.shiftKey ? -1 : 1;
+      const start = index < 0 ? (event.shiftKey ? 0 : -1) : index;
+      for (let offset = 1; offset <= controls.length; offset++) {
+        const next = (start + step * offset + controls.length) % controls.length;
+        if (tryFocus(controls[next])) return;
+      }
+      dialog.focus();
     }
   }
 

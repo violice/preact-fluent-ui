@@ -45,3 +45,7 @@
     border-left-width: 3px;
   }
 }
+
+.infoBar[hidden] {
+  display: none;
+}

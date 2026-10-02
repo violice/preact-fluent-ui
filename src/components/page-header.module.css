@@ -45,3 +45,7 @@
     flex-direction: column;
   }
 }
+
+.header[hidden] {
+  display: none;
+}

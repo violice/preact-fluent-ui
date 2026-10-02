@@ -30,3 +30,7 @@
   justify-items: center;
   gap: 12px;
 }
+
+.empty[hidden] {
+  display: none;
+}
