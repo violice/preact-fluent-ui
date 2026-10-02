@@ -495,3 +495,20 @@ it('keeps unnamed radios and same-name radios with distinct form owners independ
   fireEvent.keyDown(document.activeElement!, { key: 'Tab' });
   expect(document.activeElement).toBe(radios[0]);
 });
+
+
+it('accepts the closed details root as an initial focus target', () => {
+  const initial = createRef<HTMLDetailsElement>();
+  render(
+    <Modal labelledBy="title" initialFocusRef={initial} onClose={vi.fn()}>
+      <h2 id="title">Dialog</h2>
+      <details ref={initial} tabIndex={0}>
+        <summary>Disclosure</summary>
+        <input aria-label="Concealed" />
+      </details>
+      <button>Footer</button>
+    </Modal>,
+  );
+  expect(initial.current!.open).toBe(false);
+  expect(document.activeElement).toBe(initial.current);
+});

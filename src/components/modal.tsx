@@ -24,7 +24,7 @@ function isAvailable(element: HTMLElement): boolean {
       ancestor.getAttribute('aria-hidden') === 'true'
     )
       return false;
-    if (ancestor instanceof HTMLDetailsElement && !ancestor.open) {
+    if (ancestor !== element && ancestor instanceof HTMLDetailsElement && !ancestor.open) {
       const summary = Array.from(ancestor.children).find((child) => child.tagName === 'SUMMARY');
       if (!summary?.contains(element)) return false;
     }
