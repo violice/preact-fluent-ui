@@ -8,7 +8,7 @@ export type SelectProps = JSX.SelectHTMLAttributes<HTMLSelectElement> & {
   wrapperClassName?: string;
 };
 
-export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select(
+export const Select = /* @__PURE__ */ forwardRef<HTMLSelectElement, SelectProps>(function Select(
   { class: classProp, className, wrapperClassName, children, ...props },
   ref,
 ) {

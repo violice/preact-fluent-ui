@@ -16,7 +16,7 @@ export type InfoBarProps = JSX.HTMLAttributes<HTMLDivElement> & {
   title?: string;
 };
 
-export const InfoBar = forwardRef<HTMLDivElement, InfoBarProps>(function InfoBar(
+export const InfoBar = /* @__PURE__ */ forwardRef<HTMLDivElement, InfoBarProps>(function InfoBar(
   { tone = 'info', title, children, class: classProp, className, role, ...props },
   ref,
 ) {

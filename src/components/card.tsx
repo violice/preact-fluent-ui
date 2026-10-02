@@ -5,7 +5,7 @@ import styles from './card.module.css';
 
 export type CardProps = JSX.HTMLAttributes<HTMLElement>;
 
-export const Card = forwardRef<HTMLElement, CardProps>(function Card(
+export const Card = /* @__PURE__ */ forwardRef<HTMLElement, CardProps>(function Card(
   { class: classProp, className, ...props },
   ref,
 ) {

@@ -1,0 +1,5 @@
+{
+  "name": "packed-library-consumer",
+  "private": true,
+  "type": "module"
+}

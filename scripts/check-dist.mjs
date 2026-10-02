@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { isAbsolute } from 'node:path';
 
 const root = new URL('../', import.meta.url);
 const manifest = JSON.parse(await readFile(new URL('package.json', root), 'utf8'));
@@ -38,6 +39,28 @@ assert(
   sourcemap.sources.length > 0 && sourcemap.sourcesContent.length > 0,
   'Sourcemap must include sources',
 );
+assert.equal(sourcemap.sourcesContent.length, sourcemap.sources.length);
+assert(!sourcemap.sourceRoot, 'Published sourcemap must not have a local sourceRoot');
+for (const [index, source] of sourcemap.sources.entries()) {
+  const normalized = source.replaceAll('\\', '/');
+  assert(
+    !isAbsolute(source) && !/^[a-z]+:/i.test(normalized),
+    `Absolute sourcemap path: ${source}`,
+  );
+  assert(!/(?:^|\/)preact(?:\/|$)/.test(normalized), `Embedded Preact source: ${source}`);
+  assert(
+    /^\.\.\/(?:src\/(?:classes\.ts|components\/[^/]+\.(?:tsx|module\.css)|icons\/[^/]+\.(?:ts|tsx|module\.css))|node_modules\/(?:clsx|class-variance-authority)\/dist\/[^/]+\.mjs)$/.test(
+      normalized,
+    ) && !/\.test\./.test(normalized),
+    `Unrelated sourcemap source: ${source}`,
+  );
+  assert.equal(
+    typeof sourcemap.sourcesContent[index],
+    'string',
+    `Missing source content: ${source}`,
+  );
+  assert(sourcemap.sourcesContent[index].length > 0, `Empty source content: ${source}`);
+}
 
 const graph = JSON.parse(await readFile(new URL('.artifacts/library-modules.json', root), 'utf8'));
 assert(graph.modules.length > 0, 'Build module graph must not be empty');
@@ -128,6 +151,18 @@ const archives = Array.isArray(packOutput) ? packOutput : Object.values(packOutp
 assert.equal(archives.length, 1, 'Expected one package from npm pack');
 const [archive] = archives;
 const packedFiles = new Set(archive.files.map((file) => file.path));
+for (const file of packedFiles) {
+  assert(
+    /^(?:dist\/|licenses\/|package\.json$|README\.md$|LICENSE$|THIRD_PARTY_NOTICES\.txt$)/.test(
+      file,
+    ),
+    `Unexpected npm pack file: ${file}`,
+  );
+  assert(
+    !/(?:^|\/)(?:node_modules|src|tests|scripts|examples|gallery)(?:\/|$)/.test(file),
+    `Private file in npm pack: ${file}`,
+  );
+}
 for (const file of [
   ...requiredPackageFiles,
   ...[...targets].map((target) => target.slice(2)),

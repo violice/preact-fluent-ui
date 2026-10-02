@@ -9,20 +9,22 @@ export type EmptyStateProps = Omit<JSX.HTMLAttributes<HTMLElement>, 'title'> & {
   icon?: IconName;
 };
 
-export const EmptyState = forwardRef<HTMLElement, EmptyStateProps>(function EmptyState(
-  { title, children, icon = 'routes', class: classProp, className, role = 'status', ...props },
-  ref,
-) {
-  return (
-    <section
-      {...props}
-      ref={ref}
-      class={mergeClasses(styles.empty, classProp, className)}
-      role={role}
-    >
-      <Icon name={icon} size={24} />
-      <h2>{title}</h2>
-      <div class={styles.content}>{children}</div>
-    </section>
-  );
-});
+export const EmptyState = /* @__PURE__ */ forwardRef<HTMLElement, EmptyStateProps>(
+  function EmptyState(
+    { title, children, icon = 'routes', class: classProp, className, role = 'status', ...props },
+    ref,
+  ) {
+    return (
+      <section
+        {...props}
+        ref={ref}
+        class={mergeClasses(styles.empty, classProp, className)}
+        role={role}
+      >
+        <Icon name={icon} size={24} />
+        <h2>{title}</h2>
+        <div class={styles.content}>{children}</div>
+      </section>
+    );
+  },
+);

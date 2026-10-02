@@ -26,7 +26,7 @@ export type ButtonProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
   size?: 'default' | 'compact' | 'icon';
 };
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+export const Button = /* @__PURE__ */ forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { variant = 'default', size = 'default', type = 'button', class: classProp, className, ...props },
   ref,
 ) {

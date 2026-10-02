@@ -14,30 +14,29 @@ export type DialogHeaderProps = Omit<
 export type DialogBodyProps = JSX.HTMLAttributes<HTMLDivElement>;
 export type DialogFooterProps = JSX.HTMLAttributes<HTMLElement>;
 
-export const DialogHeader = forwardRef<HTMLElement, DialogHeaderProps>(function DialogHeader(
-  { id, title, description, class: classProp, className, ...props },
-  ref,
-) {
-  return (
-    <header {...props} ref={ref} class={mergeClasses(styles.header, classProp, className)}>
-      <h2 id={id} class={styles.title}>
-        {title}
-      </h2>
-      {description != null && <p class={styles.description}>{description}</p>}
-    </header>
-  );
-});
+export const DialogHeader = /* @__PURE__ */ forwardRef<HTMLElement, DialogHeaderProps>(
+  function DialogHeader({ id, title, description, class: classProp, className, ...props }, ref) {
+    return (
+      <header {...props} ref={ref} class={mergeClasses(styles.header, classProp, className)}>
+        <h2 id={id} class={styles.title}>
+          {title}
+        </h2>
+        {description != null && <p class={styles.description}>{description}</p>}
+      </header>
+    );
+  },
+);
 
-export const DialogBody = forwardRef<HTMLDivElement, DialogBodyProps>(function DialogBody(
-  { class: classProp, className, ...props },
-  ref,
-) {
-  return <div {...props} ref={ref} class={mergeClasses(styles.body, classProp, className)} />;
-});
+export const DialogBody = /* @__PURE__ */ forwardRef<HTMLDivElement, DialogBodyProps>(
+  function DialogBody({ class: classProp, className, ...props }, ref) {
+    return <div {...props} ref={ref} class={mergeClasses(styles.body, classProp, className)} />;
+  },
+);
 
-export const DialogFooter = forwardRef<HTMLElement, DialogFooterProps>(function DialogFooter(
-  { class: classProp, className, ...props },
-  ref,
-) {
-  return <footer {...props} ref={ref} class={mergeClasses(styles.actions, classProp, className)} />;
-});
+export const DialogFooter = /* @__PURE__ */ forwardRef<HTMLElement, DialogFooterProps>(
+  function DialogFooter({ class: classProp, className, ...props }, ref) {
+    return (
+      <footer {...props} ref={ref} class={mergeClasses(styles.actions, classProp, className)} />
+    );
+  },
+);

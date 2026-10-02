@@ -68,7 +68,7 @@ function focusBody() {
   else document.body.setAttribute('tabindex', tabindex);
 }
 
-export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal(
+export const Modal = /* @__PURE__ */ forwardRef<HTMLDivElement, ModalProps>(function Modal(
   {
     labelledBy,
     initialFocusRef,

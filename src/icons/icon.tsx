@@ -10,7 +10,7 @@ export type IconProps = Omit<JSX.SVGAttributes<SVGSVGElement>, 'children' | 'wid
   size?: 16 | 20 | 24;
 };
 
-export const Icon = forwardRef<SVGSVGElement, IconProps>(function Icon(
+export const Icon = /* @__PURE__ */ forwardRef<SVGSVGElement, IconProps>(function Icon(
   { name, size = 20, class: classProp, className, ...props },
   ref,
 ) {
