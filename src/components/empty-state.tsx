@@ -22,7 +22,7 @@ export const EmptyState = forwardRef<HTMLElement, EmptyStateProps>(function Empt
     >
       <Icon name={icon} size={24} />
       <h2>{title}</h2>
-      <div>{children}</div>
+      <div class={styles.content}>{children}</div>
     </section>
   );
 });

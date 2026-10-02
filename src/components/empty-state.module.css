@@ -25,3 +25,8 @@
   margin: 0;
   max-width: 440px;
 }
+.content {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
