@@ -38,10 +38,10 @@ The installed archive was checked with the locked Preact `10.29.8` and minimum p
 
 | Preact | Full JS raw / gzip bytes | Button-only JS raw / gzip bytes | Full CSS raw / gzip bytes | Button-only CSS raw / gzip bytes |
 | --- | ---: | ---: | ---: | ---: |
-| 10.29.8 | 89,098 / 33,971 | 20,545 / 8,234 | 16,770 / 3,506 | 13,841 / 3,185 |
-| 10.27.0 | 89,034 / 33,998 | 20,435 / 8,237 | 16,770 / 3,506 | 13,841 / 3,185 |
+| 10.29.8 | 89,105 / 33,979 | 20,545 / 8,234 | 16,770 / 3,506 | 13,841 / 3,185 |
+| 10.27.0 | 89,041 / 34,004 | 20,435 / 8,237 | 16,770 / 3,506 | 13,841 / 3,185 |
 
-These measured baselines count emitted JS/CSS buffers, exclude source maps, and sum each emitted file's bytes and Node `gzipSync` result with default options. They include Preact's consumer runtime and are not package-only transfer sizes. The library's unminified `index.js` is 72,141 raw / 25,508 gzip bytes; `styles.css` is 9,866 / 2,160 and `theme.css` is 4,743 / 1,238. The common component stylesheet remains in the Button-only build, including unused components' CSS. Its JavaScript has no live Modal, ConfirmDialog, Icon, or SVG catalog mappings. No arbitrary size limit is enforced.
+These measured baselines count emitted JS/CSS buffers, exclude source maps, and sum each emitted file's bytes and Node `gzipSync` result with default options. They include Preact's consumer runtime and are not package-only transfer sizes. The library's unminified `index.js` is 72,152 raw / 25,514 gzip bytes; `styles.css` is 9,866 / 2,160 and `theme.css` is 4,743 / 1,238. The common component stylesheet remains in the Button-only build, including unused components' CSS. Its JavaScript has no live Modal, ConfirmDialog, Icon, or SVG catalog mappings. No arbitrary size limit is enforced.
 
 Preact remains external to the library, and each isolated consumer resolves its Preact subpaths from one installed copy. CVA and clsx are bundled and need no separate consumer dependencies. The verifier checks strict declarations, closed private subpaths, licenses, source maps, and real installed package contents.
 
