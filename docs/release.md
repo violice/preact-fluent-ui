@@ -33,13 +33,13 @@ If the owner later selects token authentication, configure a separate explicit w
 Run on Node 24 with `npm ci`. CI on every push and pull request runs the same checks:
 
 ```sh
-npm run check
 npm run build
+npm run check
 npm run build:gallery
 npm run test:package:all
 ```
 
-`check` runs typecheck, lint, format checks, behavior tests, release tests, and notices checks. Individual check commands remain available. `build:gallery` consumes the library's existing `dist`, so run `build` first. `dev` still builds the library before starting the gallery.
+`check` runs typecheck, lint, format checks, behavior tests, release tests, and notices checks. Individual check commands remain available. Run `build` before `check` on a clean checkout because the gallery imports the built library and its declarations. `build:gallery` also consumes the library's existing `dist`. `dev` still builds the library before starting the gallery.
 
 Finish both builds before `test:package:all`. This cross-platform Node command packs the existing build once with scripts disabled, then passes the same absolute tarball path to `test-package.mjs` for the root lockfile's Preact version and minimum peer `10.27.0`. A failed pack or verification stops the command and returns the child process's exit code.
 
@@ -51,7 +51,7 @@ The evidence directory `.artifacts/package/` contains the tarball, its `.sha256`
 
 After a separate release instruction, create `v0.1.0` at the reviewed commit and publish a GitHub Release. `publish.yml` runs only on `release: published`, checks out that tag, and checks that its commit matches the release event's SHA. GitHub documents that SHA as the last commit in the tagged release in the [release event reference](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#release).
 
-The workflow requires the exact `v<package.version>` tag and connected repository metadata before continuing. It runs `check`, builds the library once and then the gallery, and runs `test:package:all` to pack once and verify the same archive with both Preact versions. It uploads the evidence, checks the saved SHA-256, then publishes exactly `violice-preact-fluent-ui-0.1.0.tgz` with public access and scripts disabled. It does not rebuild or pack between verification and publication.
+The workflow requires the exact `v<package.version>` tag and connected repository metadata before continuing. It builds the library once, runs `check`, builds the gallery, and runs `test:package:all` to pack once and verify the same archive with both Preact versions. It uploads the evidence, checks the saved SHA-256, then publishes exactly `violice-preact-fluent-ui-0.1.0.tgz` with public access and scripts disabled. It does not rebuild or pack between verification and publication.
 
 After the workflow succeeds, inspect the public npm version and provenance. In a new temporary consumer, install `@violice/preact-fluent-ui@0.1.0` from `https://registry.npmjs.org`, compile the public TypeScript API, and build with the CSS imports. Save the installed version and registry/integrity evidence. Only that registry check establishes publication success and permits the final application migration plan to begin. A local tarball pass alone does not establish npm publication.
 
