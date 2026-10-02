@@ -70,7 +70,7 @@
 
 | Файлы | Ответственность |
 | --- | --- |
-| package.json, package-lock.json, .nvmrc, .gitignore | Версия, exports, команды, зависимости, Node 24 |
+| package.json, package-lock.json, .node-version, .gitignore | Версия, exports, команды, зависимости, Node 24 |
 | tsconfig.json, tsconfig.build.json, vite.config.ts, vitest.config.ts | Проверки, декларации, ESM/CSS-сборка, DOM-тесты |
 | .oxlintrc.json, .oxfmtrc.json | Знакомые настройки lint/format без правил FSD для библиотеки |
 | src/index.ts | Только публичные компоненты и types |
