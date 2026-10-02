@@ -1,1 +1,33 @@
-/* Optional global reset. The complete reset is added with the gallery and theme documentation. */
+/* Optional document defaults. Import after theme.css. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font: var(--type-body) / 1.5 var(--font-body);
+  font-synthesis: none;
+  color: var(--color-text);
+  background: var(--color-canvas);
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+code,
+pre {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+::selection {
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+}

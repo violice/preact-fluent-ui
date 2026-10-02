@@ -1,0 +1,57 @@
+/* Xbox DNS colors. Load after the library CSS. */
+:root {
+  --color-canvas: #eef1ee;
+  --color-border: #e2e7df;
+  --color-text-muted: #576153;
+  --color-text-subtle: #65705f;
+  --color-accent: #107c10;
+  --color-accent-hover: #0d6b0d;
+  --color-accent-pressed: #095509;
+  --color-on-accent: #ffffff;
+  --color-accent-subtle: #e8f4e4;
+  --color-primary: var(--color-accent);
+  --color-primary-hover: var(--color-accent-hover);
+  --color-primary-pressed: var(--color-accent-pressed);
+  --color-on-primary: #ffffff;
+  --color-info-bg: #f0f6ed;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-canvas: #1c201c;
+    --color-card: #2d332e;
+    --color-border: #3b3d44;
+    --color-text-muted: #bec2cb;
+    --color-text-subtle: #a0a6b2;
+    --color-accent: #91d981;
+    --color-accent-hover: #ace79e;
+    --color-accent-pressed: #79c869;
+    --color-on-accent: #142d10;
+    --color-accent-subtle: #2d422b;
+    --color-primary: #3d6b47;
+    --color-primary-hover: #497a54;
+    --color-primary-pressed: #345c3d;
+    --color-on-primary: #ffffff;
+    --color-focus: #e1f5db;
+    --color-info-bg: #2c392c;
+  }
+}
+@media (forced-colors: active) {
+  :root {
+    --color-canvas: Canvas;
+    --color-card: Canvas;
+    --color-border: CanvasText;
+    --color-text-muted: CanvasText;
+    --color-text-subtle: CanvasText;
+    --color-accent: Highlight;
+    --color-accent-hover: Highlight;
+    --color-accent-pressed: Highlight;
+    --color-on-accent: HighlightText;
+    --color-accent-subtle: Canvas;
+    --color-primary: Highlight;
+    --color-primary-hover: Highlight;
+    --color-primary-pressed: Highlight;
+    --color-on-primary: HighlightText;
+    --color-focus: Highlight;
+    --color-info-bg: Canvas;
+  }
+}

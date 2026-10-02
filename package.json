@@ -24,14 +24,16 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "oxlint src scripts vite.config.ts vitest.config.ts --max-warnings 0",
-    "format": "oxfmt --write src scripts vite.config.ts vitest.config.ts tsconfig.json tsconfig.build.json package.json .oxlintrc.json .oxfmtrc.json",
-    "format:check": "oxfmt --check src scripts vite.config.ts vitest.config.ts tsconfig.json tsconfig.build.json package.json .oxlintrc.json .oxfmtrc.json",
+    "lint": "oxlint src scripts examples/gallery vite.config.ts vitest.config.ts --max-warnings 0",
+    "format": "oxfmt --write src scripts examples/gallery vite.config.ts vitest.config.ts tsconfig.json tsconfig.build.json package.json .oxlintrc.json .oxfmtrc.json",
+    "format:check": "oxfmt --check src scripts examples/gallery vite.config.ts vitest.config.ts tsconfig.json tsconfig.build.json package.json .oxlintrc.json .oxfmtrc.json",
     "test": "vitest run",
     "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-css.mjs && node scripts/check-dist.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "licenses:generate": "node scripts/generate-third-party-notices.mjs",
-    "licenses:check": "node scripts/generate-third-party-notices.mjs --check"
+    "licenses:check": "node scripts/generate-third-party-notices.mjs --check",
+    "dev": "npm run build && vite --config examples/gallery/vite.config.ts",
+    "build:gallery": "npm run build && vite build --config examples/gallery/vite.config.ts"
   },
   "peerDependencies": {
     "preact": "^10.27.0"

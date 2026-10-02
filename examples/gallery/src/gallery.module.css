@@ -1,0 +1,69 @@
+.gallery {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  font: var(--type-body) / 1.5 var(--font-body);
+}
+.navigation a {
+  color: var(--color-accent);
+}
+.navigation a:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+.sections {
+  display: grid;
+  gap: 24px;
+}
+.heading {
+  margin: 0 0 16px;
+  font-size: var(--type-subtitle);
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.stack {
+  display: grid;
+  gap: 12px;
+}
+.icons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
+.iconSample {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.form {
+  display: grid;
+  gap: 16px;
+  max-width: 480px;
+}
+.label {
+  display: grid;
+  gap: 6px;
+}
+.nativeField {
+  max-width: 100%;
+  min-width: 0;
+}
+.longText {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 600px) {
+  .gallery {
+    padding: 12px;
+  }
+}

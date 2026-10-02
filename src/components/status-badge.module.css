@@ -1,5 +1,6 @@
 .badge {
   box-sizing: border-box;
+  overflow-wrap: anywhere;
   font-family: var(--font-body);
   font-synthesis: none;
   display: inline-flex;

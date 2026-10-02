@@ -1,5 +1,6 @@
 .empty {
   box-sizing: border-box;
+  overflow-wrap: anywhere;
   font-family: var(--font-body);
   font-synthesis: none;
   font-size: var(--type-body);

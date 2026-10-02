@@ -82,7 +82,7 @@
 | scripts/{build-css,check-dist,test-package,generate-third-party-notices,check-release}.mjs | Копирование CSS, проверка dist, архива, notices и release |
 | scripts/check-release.test.mjs | Разбор тега и соответствие версии |
 | tests/package-consumer/{package.json,tsconfig.json,vite.config.ts,index.html,src/main.tsx,src/api-contract.tsx} | Изолированный потребитель архива |
-| examples/gallery/{index.html,vite.config.ts,src/main.tsx,src/gallery.tsx,src/gallery.module.css,src/green-theme.css} | Локальные примеры и проверка тем |
+| examples/gallery/{index.html,minimal.html,green.html,vite.config.ts,src/main.tsx,src/minimal.tsx,src/green.tsx,src/gallery.tsx,src/gallery.module.css,src/green-theme.css} | Локальные примеры и проверка тем |
 | docs/{api,tokens,visual-acceptance,release}.md, README.md, CHANGELOG.md | Контракт, подключение, ручная приёмка, выпуск |
 | LICENSE, THIRD_PARTY_NOTICES.txt, licenses/fluent-system-icons.txt | Собственная лицензия и атрибуция встроенных материалов |
 | .github/workflows/{ci,publish}.yml | Проверки и публикация проверенного архива |

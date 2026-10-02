@@ -2,6 +2,7 @@
 .body,
 .actions {
   box-sizing: border-box;
+  overflow-wrap: anywhere;
   font: var(--type-body) / 1.5 var(--font-body);
 }
 

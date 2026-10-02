@@ -27,3 +27,17 @@
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
+
+@media (forced-colors: active) {
+  .backdrop {
+    background: transparent;
+  }
+  .dialog {
+    background: Canvas;
+    color: CanvasText;
+    border-color: CanvasText;
+  }
+  .dialog:focus-visible {
+    outline-color: Highlight;
+  }
+}
