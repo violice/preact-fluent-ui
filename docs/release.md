@@ -1,32 +1,47 @@
-# Release 0.1.0
+# npm releases
 
-This checkout prepares `@violice/preact-fluent-ui@0.1.0`. It has no connected GitHub repository or confirmed access to the `@violice` npm scope. No npm publication has been performed. Connecting the repository, registering the package, and publishing a GitHub Release require a separate release instruction.
+## Published 0.1.0
 
-## Connect the repository
+`@violice/preact-fluent-ui@0.1.0` was published on 2026-10-02 from commit `6307c6b869ca41fdeb4b31fac293639a940e2234`. The public registry's `latest` tag points to `0.1.0`; the initial registration version `0.0.0` remains under `bootstrap`.
 
-The owner must choose the actual GitHub owner and repository and confirm npm scope rights. Add the following metadata to `package.json`, replacing both placeholders with the connected repository, then update the lockfile and commit the metadata before creating the release tag:
+- [npm package](https://www.npmjs.com/package/@violice/preact-fluent-ui)
+- [GitHub Release v0.1.0](https://github.com/violice/preact-fluent-ui/releases/tag/v0.1.0)
+- [Successful publish workflow](https://github.com/violice/preact-fluent-ui/actions/runs/37012852879)
+
+The workflow verified one archive against Preact `10.29.8` and `10.27.0`, then published that archive through npm OIDC. npm recorded provenance. A fresh temporary consumer installed `0.1.0` from the public registry, compiled the public TypeScript API, and built both full and minimal entries with CSS imports. Local registry evidence is saved in `.artifacts/registry/verified-0.1.0.json`.
+
+The registry integrity is:
+
+```text
+sha512-LKZfUoIArVZVGjkHn8/0kip0xSeTfsR7zRgpdRnkiEPYssWv65DyvYjy62kOKe2jMacJ1i1lhQsvMtNj0gMavw==
+```
+
+## Repository and npm configuration
+
+The repository is [violice/preact-fluent-ui](https://github.com/violice/preact-fluent-ui). Its `package.json` metadata is:
 
 ```json
 "repository": {
   "type": "git",
-  "url": "git+https://github.com/OWNER/REPOSITORY.git"
+  "url": "git+https://github.com/violice/preact-fluent-ui.git"
 }
 ```
 
-Do not release a placeholder URL. The publish workflow compares this URL with `GITHUB_REPOSITORY` and stops if it is absent or different. npm requires the metadata to match the actual GitHub repository for trusted publishing. Use a public repository and public package for automatic provenance. See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
+The publish workflow compares this URL with `GITHUB_REPOSITORY` and stops if it is absent or different.
 
-## Register the package and configure npm
+Initial package registration is complete. The owner published a separately prepared `0.0.0` archive with public access and the `bootstrap` dist-tag, then configured the npm GitHub Actions trusted publisher:
 
-Trusted publishing is configured in the settings of an existing npm package. It cannot bootstrap a name that has no package settings. The selected strategy is an owner-authenticated bootstrap version before the OIDC release of `0.1.0`.
+| Field | Value |
+| --- | --- |
+| Organization or user | `violice` |
+| Repository | `preact-fluent-ui` |
+| Workflow filename | `publish.yml` |
+| Environment name | Empty |
+| Allowed actions | Direct `npm publish` allowed |
 
-1. Confirm ownership or publish rights for `@violice`, and check whether the package already exists. If it does, confirm its owners and published versions before proceeding.
-2. If it does not exist, the owner must separately prepare and approve an initial registration package at version `0.0.0`, with the actual repository metadata and licenses. Publish that separately reviewed archive with public access and the `bootstrap` dist-tag using the owner's interactive npm authentication and required 2FA. Keep `0.1.0` unpublished for this workflow. Do not change this checkout's version or publish its archive as part of registration.
-3. In the package settings on npmjs.com, add a GitHub Actions trusted publisher. Set organization/user to the actual GitHub owner, repository to its actual name, and workflow filename to `publish.yml`, without the directory. This workflow uses no GitHub environment, so leave environment name empty. Explicitly allow direct `npm publish` in the publisher's allowed actions.
-4. Confirm that `0.1.0` is still available. Review the registration result and trusted publisher settings before creating `v0.1.0`.
+Bootstrap registration is a one-time setup step and is not repeated for future releases. Account changes and publisher settings may require the owner's 2FA confirmation.
 
-The bootstrap is a future owner action, not a completed release or a credential fallback. The shipped workflow uses only OIDC on a GitHub-hosted Ubuntu runner, grants `id-token: write`, and installs npm `12.1.0` on Node 24. npm requires at least npm `11.5.1` and Node `22.14.0` for trusted publishing. It does not receive `NPM_TOKEN` or `NODE_AUTH_TOKEN`. For a public repository and public package, npm trusted publishing generates provenance automatically. These requirements and the publisher fields are documented in [npm's setup guide](https://docs.npmjs.com/trusted-publishers/).
-
-If the owner later selects token authentication, configure a separate explicit workflow branch with its own secret and authentication step. There is no hidden token fallback in this workflow. That alternative is not configured here.
+The workflow uses OIDC on a GitHub-hosted Ubuntu runner, grants `id-token: write`, and installs npm `12.1.0` on Node 24. It receives no `NPM_TOKEN` or `NODE_AUTH_TOKEN`. npm requires at least npm `11.5.1` and Node `22.14.0` for trusted publishing. For a public repository and public package, provenance is generated automatically. See [npm's setup guide](https://docs.npmjs.com/trusted-publishers/).
 
 ## Check one archive
 
@@ -47,12 +62,14 @@ For a standalone check, `npm run test:package -- --tarball <absolute-path> --pre
 
 The evidence directory `.artifacts/package/` contains the tarball, its `.sha256` checksum, `verified-10.29.8.json`, `verified-10.27.0.json`, and full/minimal consumer outputs and JSON reports. The verifier writes the locked peer's exact version into the report filename if the lockfile changes. JSON reports record the archive SHA-256, file list, published source maps/imports, module graphs, live source mappings, one resolved Preact root per installation, and emitted raw/gzip byte sizes. CI uploads this directory as an artifact, including its hidden parent directory. These baselines have no arbitrary size limit.
 
-## Publish and verify
+## Future releases
 
-After a separate release instruction, create `v0.1.0` at the reviewed commit and publish a GitHub Release. `publish.yml` runs only on `release: published`, checks out that tag, and checks that its commit matches the release event's SHA. GitHub documents that SHA as the last commit in the tagged release in the [release event reference](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#release).
+Before the next release, update `package.json`, `package-lock.json`, and the changelog to a new unpublished version. The final publish step currently hard-codes `violice-preact-fluent-ui-0.1.0.tgz` and its checksum filename; update those filenames for the new version or make them derive from the package version before tagging. Version `0.1.0` is already published and must not be reused.
+
+Create `v<package.version>` at the reviewed commit, push the tag, and publish a GitHub Release. Pushing a tag alone does not trigger npm publication. `publish.yml` runs only on `release: published`, checks out that tag, and checks that its commit matches the release event's SHA. GitHub documents that SHA as the last commit in the tagged release in the [release event reference](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#release).
 
 The workflow requires the exact `v<package.version>` tag and connected repository metadata before continuing. It builds the library once, runs `check`, builds the gallery, and runs `test:package:all` to pack once and verify the same archive with both Preact versions. It uploads the evidence, checks the saved SHA-256, then publishes exactly `violice-preact-fluent-ui-0.1.0.tgz` with public access and scripts disabled. It does not rebuild or pack between verification and publication.
 
-After the workflow succeeds, inspect the public npm version and provenance. In a new temporary consumer, install `@violice/preact-fluent-ui@0.1.0` from `https://registry.npmjs.org`, compile the public TypeScript API, and build with the CSS imports. Save the installed version and registry/integrity evidence. Only that registry check establishes publication success and permits the final application migration plan to begin. A local tarball pass alone does not establish npm publication.
+After the workflow succeeds, inspect the public npm version and provenance. In a new temporary consumer, install the exact newly released version of `@violice/preact-fluent-ui` from `https://registry.npmjs.org`, compile the public TypeScript API, and build with the CSS imports. Save the installed version and registry/integrity evidence. Only that registry check establishes publication success. npm may report that the package is still being processed for a few minutes after a successful publish; wait for registry availability rather than publishing the same version again. A local tarball pass alone does not establish npm publication.
 
 Windows forced-colors and reduced-motion acceptance remains pending as recorded in [visual acceptance](visual-acceptance.md). The workflow's DOM and archive checks do not replace those manual checks.

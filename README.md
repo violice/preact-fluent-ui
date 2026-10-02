@@ -2,7 +2,7 @@
 
 `@violice/preact-fluent-ui` is an independent Fluent-style component library for Preact. It is not an official Microsoft package or a native WinUI wrapper. Version 0.1.0 requires Preact `^10.27.0` and an ESM build setup that handles CSS imports.
 
-Version 0.1.0 is prepared locally and has not been published to npm. The install command below applies after the release's registry verification. Before publication, use the verified local tarball described in [release preparation](docs/release.md).
+Version 0.1.0 is [published on npm](https://www.npmjs.com/package/@violice/preact-fluent-ui) and is the `latest` release. GitHub Actions published the verified archive through npm OIDC with provenance. Installation from the public registry, the TypeScript API, and full/minimal consumer builds with CSS were verified. See [release results and future releases](docs/release.md).
 
 ```sh
 npm install @violice/preact-fluent-ui preact
@@ -53,7 +53,7 @@ Use Node 24 and `npm ci`. `npm run dev` builds the library and starts the galler
 
 `npm run check` runs typecheck, lint, format checks, behavior tests, release tests, and notices checks. The individual commands remain available. Gallery sources participate in type and format checks.
 
-Run `npm run build` before `npm run build:gallery`; the gallery consumes the existing library `dist` and writes all three HTML entries to `.gallery-dist`. Finish both builds before `npm run test:package:all`, which packs once and verifies the same archive with the locked Preact version and minimum peer `10.27.0`. These commands are the CI checks. `npm run test:package -- --tarball <absolute-path> --preact 10.27.0` remains available to verify an existing archive independently. Without `--tarball`, `test:package` packs the existing build and checks one peer.
+On a clean checkout, run `npm run build` before `npm run check` because gallery type checks need the built declarations. Run `npm run build` before `npm run build:gallery`; the gallery consumes the existing library `dist` and writes all three HTML entries to `.gallery-dist`. Finish both builds before `npm run test:package:all`, which packs once and verifies the same archive with the locked Preact version and minimum peer `10.27.0`. These commands are the CI checks. `npm run test:package -- --tarball <absolute-path> --preact 10.27.0` remains available to verify an existing archive independently. Without `--tarball`, `test:package` packs the existing build and checks one peer.
 
 Push/PR workflows retain the archive, checksum, and size reports. The release workflow repeats these checks and publishes the verified file through npm OIDC after tag/version and repository metadata guards. See [release setup and registry verification](docs/release.md).
 
