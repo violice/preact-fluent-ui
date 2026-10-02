@@ -173,7 +173,7 @@
 
 **Files:** Modify `src/styles/*.css`, component CSS, package.json; create `examples/gallery/*`, README.md, CHANGELOG.md, `docs/{api,tokens,visual-acceptance}.md`.
 
-**Interfaces:** Consumes весь UI задач 1–3. Produces `dev` для галереи и `build:gallery` с output `.gallery-dist`, отдельно от npm dist; инструкция подключения и полная таблица токенов.
+**Interfaces:** Consumes весь UI задач 1–3. Produces `dev` для галереи с подготовкой dist и `build:gallery`, который использует готовый library dist и пишет `.gallery-dist`, отдельно от npm dist; инструкция подключения и полная таблица токенов.
 
 - [ ] Отделить необязательный reset с box-sizing, margin, типографикой, code/pre и selection от native-controls для обычных input/textarea/select. Не переносить min-width/min-height приложения, shell/nav/layout и глобальное отключение всех анимаций страницы.
 - [ ] Проверить каждый используемый `var(--...)`: он определён в theme.css или явно документирован как локальный. Дополнить light/dark/forced-colors для общих токенов; primary aliases ссылаются на accent. Theme задаёт токены и color-scheme, но не оформляет body/поля/заголовки.
@@ -220,7 +220,7 @@
   ```
 
 - [ ] Реализовать экспортируемую `assertReleaseVersion(tag: string, version: string): void` в .mjs с JSDoc types и CLI. Ошибка печатается кратко, publish при ней не выполняется.
-- [ ] CI на Node 24: npm ci, typecheck, lint, format:check, все поведенческие тесты и release-script tests, licenses:check, build, build:gallery, test:package на минимальной и lockfile Preact. Для независимой проверяемости архива сохранить tarball, hash и размеры как artifacts.
+- [ ] CI на Node 24 из `.node-version`: npm ci, `check` для typecheck, lint, format:check, всех поведенческих и release-script tests, licenses:check; затем build, build:gallery и `test:package:all`, который создаёт один архив и проверяет его на минимальной и lockfile Preact. Для независимой проверяемости архива сохранить tarball, hash и размеры как artifacts.
 - [ ] Publish запускается на `release: published`, checkout именно release tag, проверяет `v0.1.0` против package.version, повторяет проверки, создаёт один tarball и проверяет его через `test:package --tarball`. После проверки публикует именно этот файл с public access, не пересобирает перед publish.
 - [ ] Основной вариант npm authentication: trusted publishing на GitHub-hosted runner, id-token:write и npm >=11.5.1. Repository metadata должна соответствовать фактическому GitHub URL. Если владелец выбирает NPM_TOKEN, использовать отдельную явно настроенную ветку workflow, без скрытого fallback между способами.
 - [ ] В release.md описать настройку owner/repository/workflow в npm, начальную регистрацию нового пакета владельцем и выбранный способ первого выпуска. Фактический GitHub URL и доступ к scope `@violice` определяются при подключении репозитория. Это не блокирует локальные задачи 1–5; публикация не считается выполненной без проверки npm.

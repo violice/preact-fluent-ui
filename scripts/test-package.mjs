@@ -32,6 +32,11 @@ assert(!options.tarball || isAbsolute(options.tarball), '--tarball must be an ab
 
 function run(command, args, cwd, quiet = false) {
   return new Promise((resolveRun, reject) => {
+    // npm's JavaScript entry point avoids spawning npm.cmd with shell:false on Windows.
+    if (command === 'npm' && process.env.npm_execpath) {
+      args = [process.env.npm_execpath, ...args];
+      command = process.execPath;
+    }
     const child = spawn(command, args, {
       cwd,
       shell: false,
