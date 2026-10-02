@@ -8,7 +8,7 @@ import { Modal } from './modal';
 afterEach(() => {
   cleanup();
   document.body.replaceChildren();
-  document.body.style.overflow = '';
+  document.body.removeAttribute('style');
   document.body.removeAttribute('tabindex');
 });
 
@@ -341,3 +341,24 @@ it.each(['disabled', 'detached', 'hidden', 'inert'] as const)(
     expect(link).not.toBe(document.activeElement);
   },
 );
+
+it('restores mixed overflow priorities without reverting unrelated body style changes', () => {
+  document.body.style.setProperty('overflow-x', 'clip', 'important');
+  document.body.style.setProperty('overflow-y', 'scroll');
+  const { unmount } = render(
+    <Modal labelledBy="title" initialFocusRef={createRef<HTMLElement>()} onClose={vi.fn()}>
+      <h2 id="title">Dialog</h2>
+    </Modal>,
+  );
+  // jsdom preserves initial longhands when setting a shorthand, unlike Chromium.
+  // A real longhand update still exercises restoration of the owned properties.
+  document.body.style.setProperty('overflow-x', 'auto');
+  document.body.style.setProperty('overflow-y', 'auto', 'important');
+  document.body.style.color = 'red';
+  unmount();
+  expect(document.body.style.getPropertyValue('overflow-x')).toBe('clip');
+  expect(document.body.style.getPropertyPriority('overflow-x')).toBe('important');
+  expect(document.body.style.getPropertyValue('overflow-y')).toBe('scroll');
+  expect(document.body.style.getPropertyPriority('overflow-y')).toBe('');
+  expect(document.body.style.color).toBe('red');
+});

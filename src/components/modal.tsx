@@ -100,8 +100,12 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal(
       (element) => element !== backdropRef.current && !element.hasAttribute('inert'),
     );
     background.forEach((element) => element.setAttribute('inert', ''));
-    const overflow = document.body.style.overflow;
-    const overflowPriority = document.body.style.getPropertyPriority('overflow');
+    // Native CSSOM has no shorthand value when longhand priorities differ.
+    const overflow = ['overflow', 'overflow-x', 'overflow-y'].map((property) => ({
+      property,
+      value: document.body.style.getPropertyValue(property),
+      priority: document.body.style.getPropertyPriority(property),
+    }));
     document.body.style.overflow = 'hidden';
     focusDialog(dialog, latest.current.initialFocusRef.current);
 
@@ -112,7 +116,9 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal(
     return () => {
       document.removeEventListener('focusin', containFocus);
       background.forEach((element) => element.removeAttribute('inert'));
-      document.body.style.setProperty('overflow', overflow, overflowPriority);
+      overflow.forEach(({ property, value, priority }) => {
+        document.body.style.setProperty(property, value, priority);
+      });
       queueMicrotask(() => {
         if (!tryFocus(opener) && !tryFocus(fallback?.current)) focusBody();
       });
