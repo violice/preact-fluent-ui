@@ -1,0 +1,52 @@
+{
+  "name": "@violice/preact-fluent-ui",
+  "version": "0.1.0",
+  "description": "Preact components and explicit Fluent-style CSS for desktop web applications",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./theme.css": "./dist/theme.css",
+    "./styles.css": "./dist/styles.css",
+    "./reset.css": "./dist/reset.css",
+    "./native-controls.css": "./dist/native-controls.css"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist",
+    "licenses",
+    "THIRD_PARTY_NOTICES.txt"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint src scripts vite.config.ts vitest.config.ts --max-warnings 0",
+    "format": "oxfmt --write src scripts vite.config.ts vitest.config.ts tsconfig.json tsconfig.build.json package.json .oxlintrc.json .oxfmtrc.json",
+    "format:check": "oxfmt --check src scripts vite.config.ts vitest.config.ts tsconfig.json tsconfig.build.json package.json .oxlintrc.json .oxfmtrc.json",
+    "test": "vitest run",
+    "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-css.mjs && node scripts/check-dist.mjs",
+    "check:dist": "node scripts/check-dist.mjs"
+  },
+  "peerDependencies": {
+    "preact": "^10.27.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.2",
+    "@testing-library/preact": "^3.2.4",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^24.5.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "jsdom": "^30.1.1",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
+    "preact": "^10.27.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.1"
+  }
+}
