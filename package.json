@@ -4,6 +4,10 @@
   "description": "Preact components and explicit Fluent-style CSS for desktop web applications",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/violice/preact-fluent-ui.git"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
