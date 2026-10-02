@@ -496,7 +496,6 @@ it('keeps unnamed radios and same-name radios with distinct form owners independ
   expect(document.activeElement).toBe(radios[0]);
 });
 
-
 it('accepts the closed details root as an initial focus target', () => {
   const initial = createRef<HTMLDetailsElement>();
   render(
