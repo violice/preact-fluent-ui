@@ -28,6 +28,8 @@
     "format": "oxfmt --write src scripts tests/package-consumer examples/gallery vite.config.ts vitest.config.ts tsconfig.json tsconfig.build.json package.json .oxlintrc.json .oxfmtrc.json",
     "format:check": "oxfmt --check src scripts tests/package-consumer examples/gallery vite.config.ts vitest.config.ts tsconfig.json tsconfig.build.json package.json .oxlintrc.json .oxfmtrc.json",
     "test": "vitest run",
+    "test:release": "node --test scripts/check-release.test.mjs",
+    "check:release": "node scripts/check-release.mjs",
     "test:package": "node scripts/test-package.mjs",
     "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-css.mjs && node scripts/check-dist.mjs",
     "check:dist": "node scripts/check-dist.mjs",

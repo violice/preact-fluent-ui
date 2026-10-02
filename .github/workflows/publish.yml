@@ -1,0 +1,74 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: refs/tags/${{ github.event.release.tag_name }}
+          persist-credentials: false
+      - name: Check the release commit
+        env:
+          RELEASE_SHA: ${{ github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$RELEASE_SHA"
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      # Pin an OIDC-capable npm rather than relying on the runner's bundled version.
+      - run: npm install --global npm@12.1.0
+      - name: Check the release tag
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: npm run check:release -- "$RELEASE_TAG" package.json
+      - name: Require the connected repository metadata
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { readFile } from 'node:fs/promises';
+          const manifest = JSON.parse(await readFile('package.json', 'utf8'));
+          const expected = `git+https://github.com/${process.env.GITHUB_REPOSITORY}.git`;
+          assert.equal(manifest.repository?.type, 'git', 'Set repository.type to git before releasing');
+          assert.equal(manifest.repository?.url, expected, `Set repository.url to ${expected} before releasing`);
+          NODE
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm test
+      - run: npm run test:release
+      - run: npm run licenses:check
+      - run: npm run build
+      - run: npm run build:gallery
+      - name: Pack once after all builds
+        run: |
+          mkdir -p .artifacts/package
+          npm pack --ignore-scripts --pack-destination .artifacts/package
+      - name: Verify the archive with the locked peer
+        run: npm run test:package -- --tarball "$GITHUB_WORKSPACE/.artifacts/package/violice-preact-fluent-ui-0.1.0.tgz"
+      - name: Verify the same archive with the minimum peer
+        run: npm run test:package -- --tarball "$GITHUB_WORKSPACE/.artifacts/package/violice-preact-fluent-ui-0.1.0.tgz" --preact 10.27.0
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          name: release-package-evidence
+          path: .artifacts/package/
+          include-hidden-files: true
+          if-no-files-found: error
+      - name: Publish the verified archive with npm OIDC
+        working-directory: .artifacts/package
+        run: |
+          sha256sum --check violice-preact-fluent-ui-0.1.0.tgz.sha256
+          npm publish violice-preact-fluent-ui-0.1.0.tgz --access public --ignore-scripts --registry https://registry.npmjs.org
