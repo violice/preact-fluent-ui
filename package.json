@@ -29,7 +29,9 @@
     "format:check": "oxfmt --check src scripts vite.config.ts vitest.config.ts tsconfig.json tsconfig.build.json package.json .oxlintrc.json .oxfmtrc.json",
     "test": "vitest run",
     "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-css.mjs && node scripts/check-dist.mjs",
-    "check:dist": "node scripts/check-dist.mjs"
+    "check:dist": "node scripts/check-dist.mjs",
+    "licenses:generate": "node scripts/generate-third-party-notices.mjs",
+    "licenses:check": "node scripts/generate-third-party-notices.mjs --check"
   },
   "peerDependencies": {
     "preact": "^10.27.0"

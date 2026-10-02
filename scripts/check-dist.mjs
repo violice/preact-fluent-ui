@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, readdir, stat } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
@@ -61,15 +60,29 @@ assert(
   `Unexpected runtime imports: ${graph.externalImports.join(', ')}`,
 );
 
-const declarations = await readFile(new URL('dist/components/button.d.ts', root), 'utf8');
-assert(
-  !/\.css|vite|vitest|class-variance-authority|clsx/.test(declarations),
-  'Public declarations must not expose build dependencies',
+const declarationFiles = (await readdir(new URL('dist/', root), { recursive: true })).filter(
+  (file) => file.endsWith('.d.ts'),
 );
+for (const file of declarationFiles) {
+  const declarations = await readFile(new URL(`dist/${file}`, root), 'utf8');
+  assert(
+    !/\.css|vite|vitest|class-variance-authority|clsx/.test(declarations),
+    `Declaration exposes build dependencies: ${file}`,
+  );
+  for (const match of declarations.matchAll(/\b(?:from\s*|import\s*\()\s*['"]([^'"]+)['"]/g)) {
+    const specifier = match[1];
+    assert(
+      specifier.startsWith('.') || specifier === 'preact' || specifier.startsWith('preact/'),
+      `Unexpected declaration dependency: ${specifier}`,
+    );
+  }
+}
 
 const exportProbe = `
   const library = await import(${JSON.stringify(jsUrl.href)});
-  if (typeof library.Button !== 'function') throw new Error('Button export is missing');
+  for (const name of ['Button', 'Card', 'InfoBar', 'StatusBadge', 'Select', 'PageHeader', 'EmptyState', 'Icon']) {
+    if (typeof library[name] !== 'function') throw new Error(name + ' export is missing');
+  }
 `;
 // First check a cold import in ordinary Node without DOM globals.
 execFileSync(process.execPath, ['--input-type=module', '--eval', exportProbe], { stdio: 'pipe' });
@@ -86,17 +99,44 @@ execFileSync(process.execPath, ['--input-type=module', '--eval', importProbe], {
   stdio: 'pipe',
 });
 
-const notices = new URL('THIRD_PARTY_NOTICES.txt', root);
-if (existsSync(notices)) {
-  assert((await stat(notices)).size > 0, 'Third-party notices must not be empty');
-  const generator = new URL('scripts/generate-third-party-notices.mjs', root);
-  if (existsSync(generator))
-    execFileSync(process.execPath, [fileURLToPath(generator), '--check'], {
-      cwd: fileURLToPath(root),
-      stdio: 'pipe',
-    });
+const requiredPackageFiles = [
+  'README.md',
+  'LICENSE',
+  'THIRD_PARTY_NOTICES.txt',
+  'licenses/fluent-system-icons.txt',
+];
+for (const file of requiredPackageFiles) {
+  assert((await stat(new URL(file, root))).size > 0, `Missing or empty package document: ${file}`);
+}
+execFileSync(
+  process.execPath,
+  [fileURLToPath(new URL('scripts/generate-third-party-notices.mjs', root)), '--check'],
+  {
+    cwd: fileURLToPath(root),
+    stdio: 'pipe',
+  },
+);
+const packOutput = JSON.parse(
+  execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], {
+    cwd: fileURLToPath(root),
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  }),
+);
+// npm 10/11 return an array; npm 12 keys this object by package name.
+const archives = Array.isArray(packOutput) ? packOutput : Object.values(packOutput);
+assert.equal(archives.length, 1, 'Expected one package from npm pack');
+const [archive] = archives;
+const packedFiles = new Set(archive.files.map((file) => file.path));
+for (const file of [
+  ...requiredPackageFiles,
+  ...[...targets].map((target) => target.slice(2)),
+  'dist/index.js.map',
+  ...declarationFiles.map((file) => `dist/${file}`),
+]) {
+  assert(packedFiles.has(file), `Required file missing from npm pack: ${file}`);
 }
 
 console.log(
-  `Verified ${targets.size} export targets, four CSS files, sourcemap, bundled helpers, external Preact, and DOM-free import.`,
+  `Verified ${targets.size} export targets, four CSS files, sourcemap, bundled helpers, external Preact, DOM-free import, declarations, notices, and npm pack contents.`,
 );

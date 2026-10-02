@@ -1,7 +1,7 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { cva } from 'class-variance-authority';
-import clsx from 'clsx';
+import { mergeClasses } from '../classes';
 import styles from './button.module.css';
 
 const buttonClasses = cva(styles.button, {
@@ -35,7 +35,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {...props}
       ref={ref}
       type={type}
-      class={clsx(buttonClasses({ variant, size }), classProp, className)}
+      class={mergeClasses(buttonClasses({ variant, size }), classProp, className)}
     />
   );
 });

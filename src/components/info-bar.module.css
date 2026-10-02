@@ -1,0 +1,47 @@
+.infoBar {
+  box-sizing: border-box;
+  font-family: var(--font-body);
+  font-synthesis: none;
+  display: grid;
+  gap: var(--space-1);
+  padding: 10px var(--space-3);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  background: var(--color-info-bg);
+  font-size: 13px;
+  line-height: 18px;
+}
+.title {
+  font-weight: 650;
+}
+.content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.content :global(p) {
+  margin: 0;
+}
+.content :global(pre) {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.success {
+  border-left-color: var(--color-success);
+  background: var(--color-success-bg);
+}
+.warning {
+  border-left-color: var(--color-warning);
+  background: var(--color-warning-bg);
+}
+.error {
+  border-left-color: var(--color-danger);
+  background: var(--color-danger-bg);
+}
+@media (forced-colors: active) {
+  .infoBar {
+    border: 1px solid CanvasText;
+    border-left-width: 3px;
+  }
+}

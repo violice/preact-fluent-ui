@@ -1,0 +1,13 @@
+import type { JSX } from 'preact';
+import { forwardRef } from 'preact/compat';
+import { mergeClasses } from '../classes';
+import styles from './card.module.css';
+
+export type CardProps = JSX.HTMLAttributes<HTMLElement>;
+
+export const Card = forwardRef<HTMLElement, CardProps>(function Card(
+  { class: classProp, className, ...props },
+  ref,
+) {
+  return <section {...props} ref={ref} class={mergeClasses(styles.card, classProp, className)} />;
+});

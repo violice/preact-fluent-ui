@@ -1,0 +1,47 @@
+.badge {
+  box-sizing: border-box;
+  font-family: var(--font-body);
+  font-synthesis: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-height: 24px;
+  padding: 3px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  color: var(--color-text-muted);
+  background: var(--color-surface-muted);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: center;
+}
+.badge::before {
+  content: '';
+  flex: none;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.success {
+  color: var(--color-success);
+  background: var(--color-success-bg);
+  border-color: transparent;
+}
+.warning {
+  color: var(--color-warning);
+  background: var(--color-warning-bg);
+  border-color: transparent;
+}
+.error {
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+  border-color: transparent;
+}
+@media (forced-colors: active) {
+  .badge {
+    border-color: CanvasText;
+  }
+}
