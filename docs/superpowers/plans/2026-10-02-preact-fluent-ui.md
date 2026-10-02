@@ -74,7 +74,7 @@
 | tsconfig.json, tsconfig.build.json, vite.config.ts, vitest.config.ts | Проверки, декларации, ESM/CSS-сборка, DOM-тесты |
 | .oxlintrc.json, .oxfmtrc.json | Знакомые настройки lint/format без правил FSD для библиотеки |
 | src/index.ts | Только публичные компоненты и types |
-| src/components/{button,card,info-bar,status-badge,select,page-header,empty-state,modal,confirm-dialog,dialog-content}.{tsx,module.css} | Компоненты и локальное оформление |
+| src/components/{button,card,info-bar,status-badge,select,page-header,empty-state,modal,dialog-content}.{tsx,module.css}, src/components/confirm-dialog.tsx | Компоненты и локальное оформление |
 | src/icons/{icon.tsx,icon.module.css,fluent-icon-paths.ts} | Icon и ограниченный набор SVG |
 | src/styles/{theme,reset,native-controls}.css | Явные глобальные CSS entry points |
 | src/vite-env.d.ts | Типы CSS Modules для исходников, не dependency деклараций потребителя |
@@ -135,7 +135,7 @@
 
 ### Task 3: Modal, части диалога и локализуемый ConfirmDialog
 
-**Files:** Create `src/components/{modal,confirm-dialog,dialog-content}.{tsx,module.css}`, `modal.test.tsx`, `confirm-dialog.test.tsx`; modify `src/index.ts`.
+**Files:** Create `src/components/{modal,dialog-content}.{tsx,module.css}`, `src/components/confirm-dialog.tsx`, `modal.test.tsx`, `confirm-dialog.test.tsx`; modify `src/index.ts`. ConfirmDialog использует стили составляющих компонентов, отдельный CSS-модуль не нужен.
 
 **Interfaces:** Consumes Button и тему. Produces ModalProps, ConfirmDialogProps, DialogHeaderProps, DialogBodyProps, DialogFooterProps и компоненты из таблицы. Внутренние helpers фокуса, если понадобятся, остаются в modal.tsx и не экспортируются.
 
