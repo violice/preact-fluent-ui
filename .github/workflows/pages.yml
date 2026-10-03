@@ -1,0 +1,82 @@
+name: Gallery
+
+on:
+  workflow_run:
+    workflows: [Publish]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - name: Resolve the latest stable GitHub release
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'NODE'
+          const response = await fetch(`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/releases/latest`, {
+            headers: { Authorization: `Bearer ${process.env.GH_TOKEN}`, Accept: 'application/vnd.github+json' },
+          });
+          if (!response.ok) throw new Error(`Release lookup failed: ${response.status}`);
+          const release = await response.json();
+          if (!/^v\d+\.\d+\.\d+$/.test(release.tag_name)) throw new Error('Expected a stable v<version> release');
+          const { appendFileSync } = await import('node:fs');
+          appendFileSync(process.env.GITHUB_OUTPUT, `version=${release.tag_name.slice(1)}\n`);
+          NODE
+      - name: Install the published release for the gallery
+        env:
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          # npm may need a few minutes to make a newly published version available.
+          for attempt in {1..12}; do
+            if npm install --prefix "$RUNNER_TEMP/gallery-release" --no-package-lock --ignore-scripts \
+              "@violice/preact-fluent-ui@$RELEASE_VERSION" --registry https://registry.npmjs.org; then
+              break
+            fi
+            if [ "$attempt" -eq 12 ]; then exit 1; fi
+            sleep 20
+          done
+          cp -R "$RUNNER_TEMP/gallery-release/node_modules/@violice/preact-fluent-ui/dist" ./dist
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          const manifest = JSON.parse(readFileSync('package.json', 'utf8'));
+          manifest.version = process.env.RELEASE_VERSION;
+          writeFileSync('package.json', JSON.stringify(manifest, null, 2) + '\n');
+          NODE
+      - run: npm run build:gallery
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: .gallery-dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/deploy-pages@v4
+        id: deployment

@@ -16,6 +16,7 @@ import {
 } from '../../../dist/index.js';
 import type { ButtonProps, IconName } from '../../../dist/index.js';
 import styles from './gallery.module.css';
+import { version } from '../../../package.json';
 
 const iconNames: IconName[] = [
   'about',
@@ -71,18 +72,18 @@ export function Gallery({ mode }: { mode: 'full' | 'minimal' | 'green' }) {
   return (
     <main class={styles.gallery}>
       <nav class={styles.navigation} aria-label="Gallery pages">
-        <a href="/index.html" aria-current={mode === 'full' ? 'page' : undefined}>
+        <a href="./index.html" aria-current={mode === 'full' ? 'page' : undefined}>
           Full gallery
         </a>
-        <a href="/minimal.html" aria-current={mode === 'minimal' ? 'page' : undefined}>
+        <a href="./minimal.html" aria-current={mode === 'minimal' ? 'page' : undefined}>
           Minimal gallery
         </a>
-        <a href="/green.html" aria-current={mode === 'green' ? 'page' : undefined}>
+        <a href="./green.html" aria-current={mode === 'green' ? 'page' : undefined}>
           Green gallery
         </a>
       </nav>
       <PageHeader
-        title="Preact Fluent UI"
+        title={`Preact Fluent UI ${version}`}
         description="Buttons, forms, notices and dialogs for everyday desktop tasks."
         actions={
           <Button

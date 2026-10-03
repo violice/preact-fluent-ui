@@ -2,7 +2,7 @@
 
 `@violice/preact-fluent-ui` is an independent Fluent-style component library for Preact. It is not an official Microsoft package or a native WinUI wrapper. It requires Preact `^10.27.0` and an ESM build setup that handles CSS imports.
 
-[npm package](https://www.npmjs.com/package/@violice/preact-fluent-ui) · [API reference](docs/api.md) · [Theme tokens](docs/tokens.md)
+[Live examples](https://violice.github.io/preact-fluent-ui/) · [npm package](https://www.npmjs.com/package/@violice/preact-fluent-ui) · [API reference](docs/api.md) · [Theme tokens](docs/tokens.md)
 
 ## Installation
 
@@ -42,6 +42,8 @@ Only one Modal may be active, and portaled dialogs use the root theme. Nested th
 `styles.css` includes all component styles, even when you import only one component. Preact is a peer dependency; CVA and clsx are bundled and need no separate installation.
 
 Forced-colors and reduced-motion CSS rules are included, but manual Windows verification is still pending. See [the pending Windows checks](docs/visual-acceptance.md#pending-windows-checks).
+
+The [live gallery](https://violice.github.io/preact-fluent-ui/) uses the latest stable release from npm.
 
 ## Development
 

@@ -73,3 +73,9 @@ The workflow requires the exact `v<package.version>` tag and connected repositor
 After the workflow succeeds, inspect the public npm version and provenance. In a new temporary consumer, install the exact newly released version of `@violice/preact-fluent-ui` from `https://registry.npmjs.org`, compile the public TypeScript API, and build with the CSS imports. Save the installed version and registry/integrity evidence. Only that registry check establishes publication success. npm may report that the package is still being processed for a few minutes after a successful publish; wait for registry availability rather than publishing the same version again. A local tarball pass alone does not establish npm publication.
 
 Windows forced-colors and reduced-motion acceptance remains pending as recorded in [visual acceptance](visual-acceptance.md). The workflow's DOM and archive checks do not replace those manual checks.
+
+## Public gallery
+
+The [GitHub Pages gallery](https://violice.github.io/preact-fluent-ui/) displays the latest stable GitHub release using its exact npm package version. The Gallery workflow runs after a successful Publish workflow and can also be started manually. It installs the published package, uses its JavaScript, declarations and CSS, and displays the version in the page heading. It retries installation while npm processes a new release.
+
+Gallery page sources come from `main`; the showcased library comes from npm. Changes to `main` do not automatically redeploy the public gallery. Local `npm run dev` continues to build and use the library sources in the checkout.
