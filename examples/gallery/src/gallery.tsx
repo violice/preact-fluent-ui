@@ -17,6 +17,9 @@ import {
 import type { ButtonProps, IconName } from '../../../dist/index.js';
 import styles from './gallery.module.css';
 import { version } from '../../../package.json';
+import { CodeExample } from './code-block';
+import { samples } from './code-samples';
+import { GalleryControls, useGallerySettings } from './gallery-controls';
 
 const iconNames: IconName[] = [
   'about',
@@ -45,7 +48,8 @@ const iconNames: IconName[] = [
 const variants: NonNullable<ButtonProps['variant']>[] = ['default', 'primary', 'subtle', 'danger'];
 type Scenario = 'standard' | 'hidden' | 'empty' | 'removed' | 'confirmation';
 
-export function Gallery({ mode }: { mode: 'full' | 'minimal' | 'green' }) {
+export function Gallery() {
+  const { settings, update } = useGallerySettings();
   const [choice, setChoice] = useState('automatic');
   const [scenario, setScenario] = useState<Scenario>('standard');
   const [open, setOpen] = useState(false);
@@ -71,17 +75,6 @@ export function Gallery({ mode }: { mode: 'full' | 'minimal' | 'green' }) {
   };
   return (
     <main class={styles.gallery}>
-      <nav class={styles.navigation} aria-label="Gallery pages">
-        <a href="./index.html" aria-current={mode === 'full' ? 'page' : undefined}>
-          Full gallery
-        </a>
-        <a href="./minimal.html" aria-current={mode === 'minimal' ? 'page' : undefined}>
-          Minimal gallery
-        </a>
-        <a href="./green.html" aria-current={mode === 'green' ? 'page' : undefined}>
-          Green gallery
-        </a>
-      </nav>
       <PageHeader
         title={`Preact Fluent UI ${version}`}
         description="Buttons, forms, notices and dialogs for everyday desktop tasks."
@@ -96,19 +89,30 @@ export function Gallery({ mode }: { mode: 'full' | 'minimal' | 'green' }) {
             Reset samples
           </Button>
         }
-        notices={
-          <InfoBar
-            title={
-              mode === 'minimal' ? 'Minimal setup' : mode === 'green' ? 'Green theme' : 'Full setup'
-            }
-          >
-            {mode === 'minimal'
-              ? 'Components with the required theme and styles.'
-              : 'Components with document defaults and ordinary form fields.'}
-          </InfoBar>
-        }
       />
       <div class={styles.sections}>
+        <GalleryControls settings={settings} onChange={update} />
+        <Card aria-labelledby="setup-heading">
+          <h2 id="setup-heading" class={styles.heading}>
+            Installation
+          </h2>
+          <CodeExample language="shell" code="npm install @violice/preact-fluent-ui preact" />
+          <CodeExample
+            code={[
+              "import { Button, Card } from '@violice/preact-fluent-ui';",
+              "import '@violice/preact-fluent-ui/theme.css';",
+              "import '@violice/preact-fluent-ui/styles.css';",
+              ...(settings.preset === 'full'
+                ? [
+                    "import '@violice/preact-fluent-ui/reset.css';",
+                    "import '@violice/preact-fluent-ui/native-controls.css';",
+                  ]
+                : []),
+              '',
+              '<Card><Button variant="primary">Save</Button></Card>',
+            ].join('\n')}
+          />
+        </Card>
         <Card aria-labelledby="buttons-heading">
           <h2 class={styles.heading} id="buttons-heading">
             Buttons
@@ -131,6 +135,7 @@ export function Gallery({ mode }: { mode: 'full' | 'minimal' | 'green' }) {
               </div>
             ))}
           </div>
+          <CodeExample code={samples.buttons} />
         </Card>
         <Card aria-labelledby="notices-heading">
           <h2 class={styles.heading} id="notices-heading">
@@ -154,6 +159,7 @@ export function Gallery({ mode }: { mode: 'full' | 'minimal' | 'green' }) {
           <StatusBadge>
             Waiting for a very long status description to finish across several lines
           </StatusBadge>
+          <CodeExample code={samples.notices} />
         </Card>
         <Card aria-labelledby="forms-heading">
           <h2 class={styles.heading} id="forms-heading">
@@ -214,6 +220,7 @@ export function Gallery({ mode }: { mode: 'full' | 'minimal' | 'green' }) {
               Save sample
             </Button>
           </form>
+          <CodeExample code={samples.forms} />
         </Card>
         <Card aria-labelledby="icons-heading">
           <h2 class={styles.heading} id="icons-heading">
@@ -229,16 +236,20 @@ export function Gallery({ mode }: { mode: 'full' | 'minimal' | 'green' }) {
               </div>
             ))}
           </div>
+          <CodeExample code={samples.icons} />
         </Card>
-        <EmptyState title="No connections yet">
-          <p>
-            Add a sample connection to start. Longer descriptions fit inside the available space.
-          </p>
-          <Button onClick={() => setMessage('A sample connection was added.')}>
-            <Icon name="add" />
-            Add connection
-          </Button>
-        </EmptyState>
+        <div class={styles.stack}>
+          <EmptyState title="No connections yet">
+            <p>
+              Add a sample connection to start. Longer descriptions fit inside the available space.
+            </p>
+            <Button onClick={() => setMessage('A sample connection was added.')}>
+              <Icon name="add" />
+              Add connection
+            </Button>
+          </EmptyState>
+          <CodeExample code={samples.empty} />
+        </div>
         <Card aria-labelledby="dialogs-heading">
           <h2 class={styles.heading} id="dialogs-heading">
             Dialogs
@@ -295,6 +306,7 @@ export function Gallery({ mode }: { mode: 'full' | 'minimal' | 'green' }) {
             )}
             {removed && <p>The opener was removed. Reset samples restores it.</p>}
           </div>
+          <CodeExample code={samples.dialogs} />
         </Card>
         <InfoBar title="Sample result">{message}</InfoBar>
       </div>

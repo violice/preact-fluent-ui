@@ -1,0 +1,5 @@
+Generated with the built-in image_gen tool on 2026-10-03.
+Source: gallery-icon.png. Transparent background requested.
+Favicon PNG and ICO are resized exports of this source.
+
+Use case: logo-brand. Asset type: project icon and browser favicon for Preact Fluent UI, an independent Fluent-style Preact component library. Create one polished original abstract icon representing modular UI panels: three broad interlocking rounded geometric panels forming a compact folded ribbon-like monogram, a strong simple silhouette with balanced negative space. Fluent-inspired restrained dimensional layering, crisp edges, subtle depth, blue with cool cyan highlights consistent with the gallery's blue accent. Centered square composition, symbol fills about 82 percent of canvas with safe padding. Designed to remain distinct at 16 and 32 pixels; few large forms, no fine details. Transparent background outside the symbol. No letters, no words, no border frame, no mockup, no watermark, no extra objects. Do not resemble the Microsoft Windows logo or the React atom logo. Render as a finished square bitmap icon.

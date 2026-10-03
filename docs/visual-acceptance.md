@@ -91,3 +91,17 @@ A light-theme 320px minimal dialog also opened through keyboard Space after Tab 
 Enable a Windows contrast theme and reload each gallery page at 1280, 720 and 320 widths. Confirm Canvas/CanvasText surfaces, Highlight/HighlightText primary and accent, GrayText disabled states, visible borders and keyboard outlines. Verify Select uses the native arrow and dialogs remain readable. Include green.html to check that its later overrides do not undo system colors. Save screenshots and record the selected contrast theme.
 
 Turn off Windows animation effects, reload the three pages, and verify matchMedia('(prefers-reduced-motion: reduce)').matches. Inspect Button, Select and ordinary fields: their computed transition duration should be 0s. App animations outside these controls must remain under the app's own policy. Record these results before treating visual acceptance as fully complete.
+
+## Unified gallery checks, 2026-10-03
+
+Checked through T3 native preview at localhost:5173 and the production build at localhost:5174. Full and Minimal are now CSS presets; Green is a palette. Old page links select the corresponding preset on the unified gallery.
+
+- Switching to Minimal removes both optional stylesheet links. Native fields regain browser defaults; body margin is 8px and font is Times New Roman. Full loads reset and native-controls successfully; body margin is 0 and the text field is 36px high.
+- Production custom colors restore from the URL: accent `#008080`, primary `#663399`. Explicit dark on a light OS and explicit light on a dark OS select the appropriate component and syntax colors. System appearance responds to browser color-scheme changes. Reset restores the default settings and clears their URL parameters.
+- At 320px, with all code examples expanded, document scroll width and client width are both 305px. Code blocks scroll internally. Green dark uses accent `#91d981` and primary `#3d6b47`.
+- The portaled dialog inherits the selected dark scheme and green primary; opening focuses Close dialog. Closing and copying an installation example through the native browser report Copied.
+- Automated coverage includes URL validation/round-trip/navigation, actual optional link changes, source copying and clipboard refusal, minified token-block declaration boundaries, and contrast-preserving custom interaction shades.
+
+Screenshot of the unified gallery: `/home/violice/.t3/userdata/browser-artifacts/browser-screenshot-localhost-muspzmwq-d3caffa9.png`.
+
+The Windows forced-colors and reduced-motion checks above remain pending. This focused pass does not replace the earlier full component acceptance matrix.

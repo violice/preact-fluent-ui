@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { mkdir, readFile } from 'node:fs/promises';
+import { appendFile, mkdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -47,6 +47,9 @@ try {
   const lock = JSON.parse(await readFile(join(root, 'package-lock.json'), 'utf8'));
   for (const preact of [lock.packages['node_modules/preact'].version, '10.27.0']) {
     await run([join(root, 'scripts/test-package.mjs'), '--tarball', archive, '--preact', preact]);
+  }
+  if (process.env.GITHUB_OUTPUT) {
+    await appendFile(process.env.GITHUB_OUTPUT, `archive=${packed[0].filename}\n`);
   }
 } catch (error) {
   console.error(error.message);
