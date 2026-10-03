@@ -47,7 +47,7 @@ The [live gallery](https://violice.github.io/preact-fluent-ui/) uses the latest 
 
 ## Development
 
-Use Node 24 and `npm ci`. `npm run dev` builds the library and starts the gallery at `http://localhost:5173`. The gallery offers Full/Minimal CSS presets, system/light/dark appearance, and standard/green/custom palettes. Settings are saved in the URL. Code examples use TanStack Highlight and can be copied. Older `/minimal.html` and `/green.html` links open the corresponding presets. Rebuild or restart after editing library sources; the gallery imports built library artifacts.
+Use Node 24 and `npm ci`. `npm run dev` builds the library and starts the gallery at `http://localhost:5173`. The gallery offers Full/Minimal CSS presets, system/light/dark appearance, and standard/green/custom palettes. Settings are saved in the URL. Code examples use TanStack Highlight and can be copied. Rebuild or restart after editing library sources; the gallery imports built library artifacts.
 
 Run the checks on a clean checkout:
 

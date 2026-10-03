@@ -10,12 +10,5 @@ export default defineConfig({
   build: {
     outDir: '../../.gallery-dist',
     emptyOutDir: true,
-    rolldownOptions: {
-      input: {
-        full: fileURLToPath(new URL('index.html', import.meta.url)),
-        minimal: fileURLToPath(new URL('minimal.html', import.meta.url)),
-        green: fileURLToPath(new URL('green.html', import.meta.url)),
-      },
-    },
   },
 });
