@@ -31,7 +31,23 @@ Put overrides after the library styles. Define light values at `:root`, dark val
 
 ## Component usage
 
-All components with a DOM root accept native props and forward their DOM ref. `class` and `className` merge with internal classes. Select also accepts `wrapperClassName` for its span. Icon is always decorative: give an icon-only Button an `aria-label` such as `<Button size="icon" aria-label="Refresh"><Icon name="refresh" /></Button>`.
+All components with a DOM root accept native props and forward their DOM ref. Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and `className` with internal classes. Field, Input, Textarea, Checkbox, Switch, Select, PageHeader, EmptyState, InfoBar, DialogHeader, Modal, and ConfirmDialog choose `class` first, use `className` as a fallback, without a `classes` prop on Input or Textarea. Only multipart components expose `classes`, with `root` and named internal slots; `classes.root` is additive. PageHeader exposes root/content/title/description/actions/notices; EmptyState root/icon/title/content; InfoBar root/title/content; DialogHeader root/title/description; Modal root/backdrop; ConfirmDialog root/backdrop/header/title/body/footer/cancelButton/confirmButton. Select accepts `classes.wrapper` for its span and `classes.icon` for its decorative icon. Icon is always decorative: give an icon-only Button an `aria-label` such as `<Button size="icon" aria-label="Refresh"><Icon name="refresh" /></Button>`.
+
+Field links one control to a label, hint and validation message. Input and Textarea keep native text editing; Checkbox and Switch keep native checked state and form submission. Values and validation belong to your app. All five controls work with theme.css and styles.css alone.
+
+```tsx
+import { Field, Input } from '@violice/preact-fluent-ui';
+
+export function PortField() {
+  return (
+    <Field label="Port" hint="A number from 1 to 65535" required>
+      {(control) => <Input {...control} type="number" name="port" min={1} max={65535} />}
+    </Field>
+  );
+}
+```
+
+Use Field's controlId for explicit unique ids across independent Preact roots. Checkbox supports indeterminate independently of checked. See the [form API](docs/api.md#forms) for ref targets, class slots, ARIA composition and reset behavior.
 
 Render only one active Modal. Give Modal `labelledBy` the unique id used by its DialogHeader, plus `initialFocusRef` and `onClose`. Supply a `fallbackFocusRef` when the opener can disappear. ConfirmDialog generates its title id and requires `cancelLabel`, `confirmLabel`, and `pendingLabel`; the caller owns its language, busy state, and operation. Keep ConfirmDialog in one persistent application root. Independent Preact roots can generate colliding ids; use manually named Modal headings if your page needs cross-root id coordination.
 

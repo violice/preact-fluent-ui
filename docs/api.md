@@ -6,23 +6,28 @@ Import components and their exported props types from `@violice/preact-fluent-ui
 
 The table lists every component-specific prop. Native props include events, children where allowed, `aria-*`, `data-*`, `id`, `style`, and the element's attributes. The exported types use Preact JSX types. Components with a DOM root forward `ref` to the element in the table. ConfirmDialog is composed and has no root ref or arbitrary native props.
 
-`class` and `className` merge with internal classes, including Preact signal-like class values. Native fields and events stay controlled by the caller. Custom props never reach DOM attributes. Select's class props style the select itself; `wrapperClassName` styles its wrapping span. ConfirmDialog does not accept class props; style its constituent components through tokens or compose a Modal for custom structure.
+Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and `className` with internal classes, including Preact signal-like values. Field, Input, Textarea, Checkbox, Switch, Select, PageHeader, EmptyState, InfoBar, DialogHeader, Modal, and ConfirmDialog read signal-like values before choosing `class ?? className`, then append `classes.root` when the component has multiple parts. An empty `class` suppresses the fallback. Native fields and events stay controlled by the caller. Custom props never reach DOM attributes. Select's class props style the select itself; `classes.wrapper` styles its wrapping span and `classes.icon` styles the decorative icon. ConfirmDialog accepts class/className on its dialog root and delegates its classes slots to its constituent components; it does not forward arbitrary native props.
 
 | Component / exported type | Native props and ref | Component-specific props and defaults |
 | --- | --- | --- |
 | Button / ButtonProps | button | `variant?: 'default' \| 'primary' \| 'subtle' \| 'danger'` defaults to default; `size?: 'default' \| 'compact' \| 'icon'` defaults to default; native `type` defaults to button |
 | Card / CardProps | section | Native props and children |
-| InfoBar / InfoBarProps | div | `tone?: 'info' \| 'success' \| 'warning' \| 'error'` defaults to info; `title?: string`; role defaults to alert for error, status otherwise; explicit role is allowed |
+| InfoBar / InfoBarProps | div | `tone?: 'info' \| 'success' \| 'warning' \| 'error'` defaults to info; `title?: string`; role defaults to alert for error, status otherwise; explicit role is allowed; `classes?: { root?, title?, content? }` |
 | StatusBadge / StatusBadgeProps | span | `tone?: 'neutral' \| 'success' \| 'warning' \| 'error'` defaults to neutral |
 | Icon / IconProps | svg, excluding children/width/height | required `name: IconName`; `size?: 16 \| 20 \| 24` defaults to 20; `aria-hidden=true` and `focusable=false` are invariants |
-| Select / SelectProps | select | `wrapperClassName?: string`; children are native option/optgroup elements |
-| PageHeader / PageHeaderProps | header, excluding children/title | required `title: string`, `description: string`; `actions?: ComponentChildren`, `notices?: ComponentChildren`; notices render after the header |
-| EmptyState / EmptyStateProps | section, excluding title | required `title: string`; `icon?: IconName` defaults to routes; children optional; role defaults to status |
-| DialogHeader / DialogHeaderProps | header, excluding id/title/children | required `id: string`, `title: string`; `description?: ComponentChildren`; id belongs to its h2, native attrs/ref to header |
+| Field / FieldProps | div, excluding children | required `label: ComponentChildren`, `children: (props: FieldControlProps) => ComponentChildren`; optional `controlId`, `hint`, `validationMessage`, `required`; `validationState?: ValidationState` defaults to none; `classes?: { root?, label?, hint?, validation? }` |
+| Checkbox / CheckboxProps | input, excluding type/children | required `label: ComponentChildren`; `indeterminate?: boolean` defaults false; `classes?: { root?, wrapper?, label?, indicator? }` |
+| Switch / SwitchProps | input, excluding type/children/role | required `label: ComponentChildren`; fixed checkbox type and switch role; `classes?: { root?, wrapper?, label?, track?, thumb? }` |
+| Input / InputProps | input | `type?: 'text' \| 'search' \| 'email' \| 'url' \| 'tel' \| 'password' \| 'number'` defaults to text |
+| Textarea / TextareaProps | textarea | Native rows/cols/maxLength and multiline values |
+| Select / SelectProps | select | `classes?: { root?, wrapper?, icon? }`; children are native option/optgroup elements |
+| PageHeader / PageHeaderProps | header, excluding children/title | required `title: string`, `description: string`; `actions?: ComponentChildren`, `notices?: ComponentChildren`; notices render after the header; `classes?: { root?, content?, title?, description?, actions?, notices? }` |
+| EmptyState / EmptyStateProps | section, excluding title | required `title: string`; `icon?: IconName` defaults to routes; children optional; role defaults to status; `classes?: { root?, icon?, title?, content? }` |
+| DialogHeader / DialogHeaderProps | header, excluding id/title/children | required `id: string`, `title: string`; `description?: ComponentChildren`; id belongs to its h2, native attrs/ref to header; `classes?: { root?, title?, description? }` |
 | DialogBody / DialogBodyProps | div | Native props and children |
 | DialogFooter / DialogFooterProps | footer | Native props and children |
-| Modal / ModalProps | dialog div, excluding children/onClose/role/aria-modal/aria-labelledby | required `labelledBy: string`, `initialFocusRef: RefObject<HTMLElement>`, `onClose(): void`, `children: ComponentChildren`; optional `fallbackFocusRef: RefObject<HTMLElement>` |
-| ConfirmDialog / ConfirmDialogProps | composed, no root ref | required `title: string`, `children: ComponentChildren`, `cancelLabel: string`, `confirmLabel: string`, `pendingLabel: string`, `onClose(): void`, `onConfirm(): void`; optional `busy`, `confirmDisabled`, `danger` default false; optional `fallbackFocusRef: RefObject<HTMLElement>` |
+| Modal / ModalProps | dialog div, excluding children/onClose/role/aria-modal/aria-labelledby | required `labelledBy: string`, `initialFocusRef: RefObject<HTMLElement>`, `onClose(): void`, `children: ComponentChildren`; optional `fallbackFocusRef: RefObject<HTMLElement>`; `classes?: { root?, backdrop? }` |
+| ConfirmDialog / ConfirmDialogProps | composed, no root ref | required `title: string`, `children: ComponentChildren`, `cancelLabel: string`, `confirmLabel: string`, `pendingLabel: string`, `onClose(): void`, `onConfirm(): void`; optional `busy`, `confirmDisabled`, `danger` default false; optional `fallbackFocusRef: RefObject<HTMLElement>`; `classes?: { root?, backdrop?, header?, title?, body?, footer?, cancelButton?, confirmButton? }`; `class?`, `className?` |
 
 `IconName` contains exactly 22 names: `about`, `adapter`, `add`, `chevron-down`, `connected`, `copy`, `delete`, `diagnostics`, `disconnected`, `edit`, `eye`, `info`, `network`, `open`, `profile`, `refresh`, `restore`, `routes`, `settings`, `shield`, `vpn`, `warning`. Icon supplies no accessible label. Name the parent icon button with visible text or `aria-label`.
 
@@ -32,13 +37,41 @@ The table lists every component-specific prop. Native props include events, chil
 <label for="connection-mode">Connection mode</label>
 <Select id="connection-mode" name="mode" value={mode}
   onChange={event => setMode(event.currentTarget.value)}
-  className="select" wrapperClassName="field">
+  class="select" classes={{ wrapper: "field" }}>
   <option value="automatic">Automatic</option>
   <option value="manual">Manual</option>
 </Select>
 ```
 
 Select retains native keyboard, form, disabled, and option behavior. It requires no native-controls CSS.
+
+### Field composition and accessibility
+
+Field labels exactly one control through a render prop. `FieldControlProps` contains `id: string`, optional `aria-describedby: string`, `aria-invalid: true`, and `required: true`. `ValidationState` is `'none' | 'error' | 'warning' | 'success'`. Spread the supplied props onto Input, Textarea, Select, or a native input. Field's `id` and ref belong to its div; `controlId` belongs to the control. A missing controlId uses Preact useId, stable within one application root. Independent roots may generate matching ids; provide explicit unique controlId values there.
+
+Field renders label, hint and validation message. Hint and message ids append `-hint` and `-validation` to the control id. Only rendered blocks appear in aria-describedby, hint first. Null, undefined, false and empty strings omit a block; numeric zero renders. Only error sets aria-invalid. Required adds a decorative star and forwards native required. Field does not validate values, disable controls, or assign alert/live semantics. The application chooses validation timing and error announcements.
+
+```tsx
+import { Field, Input } from '@violice/preact-fluent-ui';
+
+<Field label="Port" controlId="connection-port" hint="1 to 65535" required>
+  {(control) => <Input {...control} type="number" name="port" min={1} max={65535}
+    aria-describedby={[control['aria-describedby'], 'external-help'].filter(Boolean).join(' ')} />}
+</Field>
+<p id="external-help">Use the port assigned to this connection.</p>
+```
+
+Merge your own description ids with Field's ids explicitly as above. Replacing aria-describedby loses Field's hint/error connection. All visible strings come from the caller.
+
+### Native control behavior and class slots
+
+Input and Textarea have no wrapper. Their refs point to HTMLInputElement and HTMLTextAreaElement. They preserve native value/defaultValue, events, name/form, required, disabled and readOnly. Input supports only the text-like types listed above; use ordinary HTML for other types. No value formatting or separate onValueChange is supplied. The application owns state, submit and validation. To show custom errors for an empty required field on submit, use a form with noValidate and validate in its handler, keeping the control's required prop.
+
+Checkbox and Switch wrap their input in a label. Their refs point to HTMLInputElement. Native id, name/value, checked/defaultChecked, required, disabled, class and ARIA props belong to that input. Their required label supplies the visible accessible name; the caller must provide meaningful text. classes.wrapper styles the outer label and classes.label styles its text span. Indicator, track and thumb spans are decorative and aria-hidden. Switch derives its accessible checked state from the native input. Both use native label click, Space, keyboard focus and form submission. Disabled prevents interaction and Tab focus. Checked controls contribute name/value to FormData; unchecked ones are omitted.
+
+Checkbox's checked and indeterminate states are independent. Mixed state sets the DOM indeterminate property, never an HTML attribute, and does not change submission. Browser interaction clears mixed state; it is reapplied only when checked or indeterminate props change. Form reset restores native defaultChecked and defaultValue; the component does not manage indeterminate during reset. Ref cleanup clears the forwarded ref.
+
+Only components with multiple parts expose `classes`, with `root` and named internal slots. Single-element components such as Input and Textarea use `class` with `className` fallback and do not expose `classes`. A `classes` object whose only supported key is `root` must not be introduced. All class slot values use `JSX.Signalish<string | undefined>`. Slots are typed per component; unknown keys are rejected. Internal classes remain, followed by the resolved `class ?? className` and, for multipart components, classes.root. An explicit empty class suppresses className. Field's root slot styles the div, while Checkbox/Switch root styles the input. `hidden` on Field/Input/Textarea hides that root; on Checkbox/Switch it also hides the entire outer label. Select wrapper classes use classes.wrapper; wrapperClassName is no longer supported.
 
 ## Dialogs
 
@@ -70,3 +103,17 @@ Dialog tokens live at `:root` because the portal renders into body. A theme on a
 ```
 
 All three button labels are mandatory so the app chooses the language. ConfirmDialog generates its heading id through Preact useId. Keep it in one persistent application root. Independent Preact roots can generate the same id; use Modal with manually unique heading ids if you need cross-root coordination. Busy disables both actions and blocks Escape/backdrop. ConfirmDisabled disables only confirmation; cancel and dismissal remain available. Danger uses the danger Button variant. The caller starts and completes asynchronous work and decides when to close.
+
+## Styling multipart components
+
+Slots target existing owned elements; children supplied by the caller are not slots. PageHeader.root styles the header, and notices styles its following sibling. EmptyState.icon styles the decorative SVG. Modal.root and ConfirmDialog.root style the dialog, while backdrop styles the portal backdrop. ConfirmDialog.header/title/body/footer/cancelButton/confirmButton reach the corresponding header, h2, body div, footer and native buttons. Optional content does not render merely because its slot has a class. All slots accept signal-like values and preserve internal classes.
+
+```tsx
+<PageHeader title="Connections" description="Manage your connections"
+  class="page-header"
+  classes={{ title: "page-title", actions: "page-actions", notices: "page-notices" }}
+  actions={<Button>Add connection</Button>}
+  notices={<InfoBar classes={{ title: "notice-title", content: "notice-content" }}
+    title="Offline">Check your connection.</InfoBar>}
+/>
+```

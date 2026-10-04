@@ -58,8 +58,8 @@ describe('layout', () => {
     expect(footer.textContent).toBe('Actions');
     for (const element of [header, body, footer]) {
       expect(element.classList.contains('first')).toBe(true);
-      expect(element.classList.contains('second')).toBe(true);
-      expect(element.classList.length).toBeGreaterThan(2);
+      expect(element.classList.contains('second')).toBe(element !== header);
+      expect(element.classList.length).toBeGreaterThan(element === header ? 1 : 2);
       expect(element.hasAttribute('aria-label')).toBe(true);
       expect(element.hasAttribute('title')).toBe(false);
       expect(element.hasAttribute('description')).toBe(false);
@@ -91,8 +91,8 @@ describe('layout', () => {
     expect(header.tagName).toBe('HEADER');
     expect(header.getAttribute('aria-label')).toBe('Profiles header');
     expect(header.classList.contains('first')).toBe(true);
-    expect(header.classList.contains('second')).toBe(true);
-    expect(header.classList.length).toBeGreaterThan(2);
+    expect(header.classList.contains('second')).toBe(false);
+    expect(header.classList.length).toBeGreaterThan(1);
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Profiles');
     expect(header.contains(screen.getByRole('button', { name: 'Add' }))).toBe(true);
     expect(header.nextElementSibling?.contains(screen.getByText('Read only'))).toBe(true);
@@ -120,8 +120,8 @@ describe('layout', () => {
     expect(section.getAttribute('aria-label')).toBe('Empty profiles');
     expect(section.getAttribute('data-testid')).toBe('empty');
     expect(section.classList.contains('first')).toBe(true);
-    expect(section.classList.contains('second')).toBe(true);
-    expect(section.classList.length).toBeGreaterThan(2);
+    expect(section.classList.contains('second')).toBe(false);
+    expect(section.classList.length).toBeGreaterThan(1);
     expect(screen.getByRole('heading', { level: 2 }).textContent).toBe('No profiles');
     expect(screen.getByText('Add a profile')).toBeTruthy();
     const defaultPath = section.querySelector('path')?.getAttribute('d');

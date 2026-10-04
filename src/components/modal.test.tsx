@@ -158,8 +158,8 @@ it('closes on the backdrop while preserving native props, classes, ref and cance
   expect(dialog.getAttribute('data-testid')).toBe('dialog');
   expect(dialog.tabIndex).toBe(0);
   expect(dialog.classList.contains('first')).toBe(true);
-  expect(dialog.classList.contains('second')).toBe(true);
-  expect(dialog.classList.length).toBeGreaterThan(2);
+  expect(dialog.classList.contains('second')).toBe(false);
+  expect(dialog.classList.length).toBeGreaterThan(1);
   for (const prop of ['labelledBy', 'initialFocusRef', 'fallbackFocusRef', 'onClose'])
     expect(dialog.hasAttribute(prop)).toBe(false);
   fireEvent.click(initial.current!);

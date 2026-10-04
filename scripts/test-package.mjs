@@ -286,7 +286,7 @@ async function inspectConsumer(directory, mode) {
     'Button must have live generated mappings',
   );
   const unusedSources = Object.keys(mapped).filter((source) =>
-    /\/src\/(?:components\/(?:modal|confirm-dialog|dialog-content|card|info-bar|status-badge|select|page-header|empty-state)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
+    /\/src\/(?:components\/(?:modal|confirm-dialog|dialog-content|card|info-bar|status-badge|select|field|input|textarea|checkbox|switch|page-header|empty-state)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
       source,
     ),
   );
@@ -321,14 +321,14 @@ async function inspectConsumer(directory, mode) {
   );
   if (mode === 'minimal') {
     const forbiddenSources = unusedSources.filter((source) =>
-      /\/(?:components\/(?:modal|confirm-dialog)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
+      /\/(?:components\/(?:modal|confirm-dialog|field|input|textarea|checkbox|switch)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
         source,
       ),
     );
     assert.deepEqual(
       forbiddenSources,
       [],
-      'Button-only consumer retains unused Modal or SVG catalog in generated mappings',
+      'Button-only consumer retains unused form controls, Modal or SVG catalog in generated mappings',
     );
     const renderedExports = graph.chunks
       .flatMap((chunk) => chunk.modules)
@@ -342,6 +342,12 @@ async function inspectConsumer(directory, mode) {
       'Only Button may remain a rendered library export',
     );
   } else {
+    for (const control of ['field', 'input', 'textarea', 'checkbox', 'switch']) {
+      assert(
+        unusedSources.some((source) => source.endsWith(`/components/${control}.tsx`)),
+        `Full consumer must retain a live ${control} control`,
+      );
+    }
     assert(
       unusedSources.some((source) => source.endsWith('/components/modal.tsx')),
       'Full consumer must provide a live Modal control for the tree-shaking comparison',

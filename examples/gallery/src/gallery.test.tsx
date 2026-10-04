@@ -23,3 +23,22 @@ it('switches optional styles and restores settings on browser navigation', async
   expect(document.querySelectorAll('link[data-gallery-optional]').length).toBe(0);
   expect((screen.getByLabelText('Appearance') as HTMLSelectElement).value).toBe('dark');
 });
+
+it('validates the required port inline and submits checkbox and switch selections', async () => {
+  render(<Gallery />);
+  const user = userEvent.setup();
+  const port = screen.getByLabelText(/^Порт/);
+  await user.click(screen.getByRole('button', { name: 'Сохранить подключение' }));
+  expect(screen.getByText('Введите целый порт от 1 до 65535.')).toBeTruthy();
+  expect(port.getAttribute('aria-invalid')).toBe('true');
+  await user.type(port, '8080');
+  await user.selectOptions(screen.getByLabelText('Адаптер'), 'ethernet');
+  await user.click(screen.getByLabelText('Запомнить подключение'));
+  await user.click(screen.getByRole('switch', { name: 'Автоматическое подключение' }));
+  await user.click(screen.getByRole('button', { name: 'Сохранить подключение' }));
+  expect(screen.queryByText('Введите целый порт от 1 до 65535.')).toBeNull();
+  expect(port.hasAttribute('aria-invalid')).toBe(false);
+  expect(
+    screen.getByText('Сохранено: порт 8080, адаптер ethernet, запомнить да, автоматически да.'),
+  ).toBeTruthy();
+});

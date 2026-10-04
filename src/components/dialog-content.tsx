@@ -1,12 +1,17 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../classes';
+import { mergeClasses, resolveClass } from '../classes';
 import styles from './dialog-content.module.css';
 
 export type DialogHeaderProps = Omit<
   JSX.HTMLAttributes<HTMLElement>,
   'id' | 'title' | 'children'
 > & {
+  classes?: {
+    root?: JSX.Signalish<string | undefined>;
+    title?: JSX.Signalish<string | undefined>;
+    description?: JSX.Signalish<string | undefined>;
+  };
   id: string;
   title: string;
   description?: ComponentChildren;
@@ -15,13 +20,22 @@ export type DialogBodyProps = JSX.HTMLAttributes<HTMLDivElement>;
 export type DialogFooterProps = JSX.HTMLAttributes<HTMLElement>;
 
 export const DialogHeader = /* @__PURE__ */ forwardRef<HTMLElement, DialogHeaderProps>(
-  function DialogHeader({ id, title, description, class: classProp, className, ...props }, ref) {
+  function DialogHeader(
+    { id, title, description, classes, class: classProp, className, ...props },
+    ref,
+  ) {
     return (
-      <header {...props} ref={ref} class={mergeClasses(styles.header, classProp, className)}>
-        <h2 id={id} class={styles.title}>
+      <header
+        {...props}
+        ref={ref}
+        class={mergeClasses(styles.header, resolveClass(classProp, className), classes?.root)}
+      >
+        <h2 id={id} class={mergeClasses(styles.title, classes?.title)}>
           {title}
         </h2>
-        {description != null && <p class={styles.description}>{description}</p>}
+        {description != null && (
+          <p class={mergeClasses(styles.description, classes?.description)}>{description}</p>
+        )}
       </header>
     );
   },

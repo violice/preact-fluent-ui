@@ -1,0 +1,43 @@
+.field {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-inline-size: 0;
+  font-family: var(--font-body);
+  font-synthesis: none;
+  color: var(--color-text);
+}
+.label {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.required {
+  margin-inline-start: 4px;
+  color: var(--color-danger);
+}
+.hint,
+.validation {
+  min-inline-size: 0;
+  font-size: 12px;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+}
+.hint {
+  color: var(--color-text-muted);
+}
+.error {
+  color: var(--color-danger);
+}
+.warning {
+  color: var(--color-warning);
+}
+.success {
+  color: var(--color-success);
+}
+.field[hidden] {
+  display: none;
+}

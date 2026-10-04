@@ -1,29 +1,44 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../classes';
+import { mergeClasses, resolveClass } from '../classes';
 import { Icon, type IconName } from '../icons/icon';
 import styles from './empty-state.module.css';
 
 export type EmptyStateProps = Omit<JSX.HTMLAttributes<HTMLElement>, 'title'> & {
+  classes?: {
+    root?: JSX.Signalish<string | undefined>;
+    icon?: JSX.Signalish<string | undefined>;
+    title?: JSX.Signalish<string | undefined>;
+    content?: JSX.Signalish<string | undefined>;
+  };
   title: string;
   icon?: IconName;
 };
 
 export const EmptyState = /* @__PURE__ */ forwardRef<HTMLElement, EmptyStateProps>(
   function EmptyState(
-    { title, children, icon = 'routes', class: classProp, className, role = 'status', ...props },
+    {
+      title,
+      children,
+      icon = 'routes',
+      classes,
+      class: classProp,
+      className,
+      role = 'status',
+      ...props
+    },
     ref,
   ) {
     return (
       <section
         {...props}
         ref={ref}
-        class={mergeClasses(styles.empty, classProp, className)}
+        class={mergeClasses(styles.empty, resolveClass(classProp, className), classes?.root)}
         role={role}
       >
-        <Icon name={icon} size={24} />
-        <h2>{title}</h2>
-        <div class={styles.content}>{children}</div>
+        <Icon name={icon} size={24} class={mergeClasses(classes?.icon)} />
+        <h2 class={mergeClasses(classes?.title)}>{title}</h2>
+        <div class={mergeClasses(styles.content, classes?.content)}>{children}</div>
       </section>
     );
   },

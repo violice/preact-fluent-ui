@@ -19,6 +19,7 @@ import styles from './gallery.module.css';
 import { version } from '../../../package.json';
 import { CodeExample } from './code-block';
 import { samples } from './code-samples';
+import { ConnectionForm, FormStates } from './forms-demo';
 import { GalleryControls, useGallerySettings } from './gallery-controls';
 
 const iconNames: IconName[] = [
@@ -165,6 +166,12 @@ export function Gallery() {
           <h2 class={styles.heading} id="forms-heading">
             Forms
           </h2>
+          <ConnectionForm />
+          <CodeExample code={samples.connectionForm} />
+          <h3>Control states</h3>
+          <FormStates />
+          <CodeExample code={samples.formStates} />
+          <h3>Native fields and Select</h3>
           <form
             class={styles.form}
             onSubmit={(event) => {

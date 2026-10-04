@@ -127,7 +127,11 @@ describe('shared controls', () => {
     const { rerender } = render(content());
     for (const element of screen.getAllByTestId(/^signal-/)) {
       expect(element.classList.contains('first')).toBe(true);
-      expect(element.classList.contains('second')).toBe(true);
+      expect(element.classList.contains('second')).toBe(
+        !['signal-select', 'signal-info', 'signal-header', 'signal-empty'].includes(
+          element.dataset.testid!,
+        ),
+      );
       expect(element.classList.contains('value')).toBe(false);
     }
     classProp.value = 'updated';
@@ -135,7 +139,11 @@ describe('shared controls', () => {
     rerender(content());
     for (const element of screen.getAllByTestId(/^signal-/)) {
       expect(element.classList.contains('updated')).toBe(true);
-      expect(element.classList.contains('changed')).toBe(true);
+      expect(element.classList.contains('changed')).toBe(
+        !['signal-select', 'signal-info', 'signal-header', 'signal-empty'].includes(
+          element.dataset.testid!,
+        ),
+      );
       expect(element.classList.contains('first')).toBe(false);
       expect(element.classList.contains('second')).toBe(false);
     }
@@ -195,7 +203,7 @@ describe('shared controls', () => {
     );
     expect(ref.current).toBe(screen.getByRole('alert'));
     expect(ref.current?.classList.contains('first')).toBe(true);
-    expect(ref.current?.classList.contains('second')).toBe(true);
+    expect(ref.current?.classList.contains('second')).toBe(false);
     expect(ref.current?.getAttribute('aria-label')).toBe('Operation');
     expect(ref.current?.getAttribute('data-testid')).toBe('notice');
     expect(ref.current?.hasAttribute('tone')).toBe(false);
@@ -212,7 +220,7 @@ describe('shared controls', () => {
     expect(screen.getByRole('region').textContent).toBe('Custom');
   });
 
-  it('keeps native Select behavior and applies wrapperClassName only to the span', async () => {
+  it('keeps native Select behavior and applies typed classes to their slots', async () => {
     const ref = createRef<HTMLSelectElement>();
     let selected = '';
     const { rerender } = render(
@@ -223,7 +231,7 @@ describe('shared controls', () => {
         value="one"
         class="first"
         className="second"
-        wrapperClassName="wrapper"
+        classes={{ root: 'root-slot', wrapper: 'wrapper', icon: 'icon-slot' }}
         aria-label="Adapter"
         data-testid="select"
         onChange={(event) => {
@@ -241,14 +249,16 @@ describe('shared controls', () => {
     expect(select.value).toBe('one');
     expect(select.getAttribute('data-testid')).toBe('select');
     expect(select.classList.contains('first')).toBe(true);
-    expect(select.classList.contains('second')).toBe(true);
+    expect(select.classList.contains('second')).toBe(false);
+    expect(select.classList.contains('root-slot')).toBe(true);
+    expect(select.parentElement?.querySelector('svg')?.classList.contains('icon-slot')).toBe(true);
+    expect(select.hasAttribute('classes')).toBe(false);
     expect(select.classList.length).toBeGreaterThan(2);
     expect(select.classList.contains('wrapper')).toBe(false);
     expect(select.parentElement?.tagName).toBe('SPAN');
     expect(select.parentElement?.classList.contains('wrapper')).toBe(true);
     expect(select.parentElement?.classList.contains('first')).toBe(false);
     expect(select.parentElement?.classList.contains('second')).toBe(false);
-    expect(select.hasAttribute('wrapperClassName')).toBe(false);
     await userEvent.setup().selectOptions(select, 'two');
     expect(selected).toBe('two');
     rerender(
@@ -260,4 +270,47 @@ describe('shared controls', () => {
     expect(select.disabled).toBe(true);
     expect(select.value).toBe('one');
   });
+});
+
+it('Select resolves missing and empty SignalLike classes before fallback', () => {
+  const primary: JSX.SignalLike<string | undefined> = {
+    value: undefined,
+    peek() {
+      return this.value;
+    },
+    subscribe() {
+      return () => {};
+    },
+  };
+  const root: JSX.SignalLike<string | undefined> = { ...primary, value: 'root-slot' };
+  const wrapper: JSX.SignalLike<string | undefined> = { ...primary, value: 'wrapper-slot' };
+  const icon: JSX.SignalLike<string | undefined> = { ...primary, value: 'icon-slot' };
+  const content = () => (
+    <Select
+      aria-label="Choice"
+      class={primary}
+      className="fallback"
+      classes={{ root, wrapper, icon }}
+    />
+  );
+  const { rerender } = render(content());
+  const select = screen.getByRole('combobox');
+  expect(select.className.split(' ').slice(-2)).toEqual(['fallback', 'root-slot']);
+  expect(select.parentElement?.classList.contains('wrapper-slot')).toBe(true);
+  expect(select.parentElement?.querySelector('svg')?.classList.contains('icon-slot')).toBe(true);
+  primary.value = 'primary';
+  root.value = 'updated-root';
+  wrapper.value = 'updated-wrapper';
+  icon.value = 'updated-icon';
+  rerender(content());
+  expect(select.className.split(' ').slice(-2)).toEqual(['primary', 'updated-root']);
+  expect(select.parentElement?.classList.contains('updated-wrapper')).toBe(true);
+  expect(select.parentElement?.querySelector('svg')?.classList.contains('updated-icon')).toBe(true);
+  expect(select.classList.contains('fallback')).toBe(false);
+  primary.value = '';
+  rerender(content());
+  expect(select.classList.contains('fallback')).toBe(false);
+  primary.value = undefined;
+  rerender(content());
+  expect(select.classList.contains('fallback')).toBe(true);
 });

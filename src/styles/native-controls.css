@@ -40,7 +40,7 @@
     ),
     select,
     textarea
-  ):hover:not(:disabled) {
+  ):hover:where(:not(:disabled)) {
   background: var(--color-control-hover);
   border-bottom-color: var(--color-text-subtle);
 }

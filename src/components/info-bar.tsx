@@ -1,7 +1,7 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { cva } from 'class-variance-authority';
-import { mergeClasses } from '../classes';
+import { mergeClasses, resolveClass } from '../classes';
 import styles from './info-bar.module.css';
 
 const infoBarClasses = cva(styles.infoBar, {
@@ -12,12 +12,17 @@ const infoBarClasses = cva(styles.infoBar, {
 });
 
 export type InfoBarProps = JSX.HTMLAttributes<HTMLDivElement> & {
+  classes?: {
+    root?: JSX.Signalish<string | undefined>;
+    title?: JSX.Signalish<string | undefined>;
+    content?: JSX.Signalish<string | undefined>;
+  };
   tone?: 'info' | 'success' | 'warning' | 'error';
   title?: string;
 };
 
 export const InfoBar = /* @__PURE__ */ forwardRef<HTMLDivElement, InfoBarProps>(function InfoBar(
-  { tone = 'info', title, children, class: classProp, className, role, ...props },
+  { tone = 'info', title, children, classes, class: classProp, className, role, ...props },
   ref,
 ) {
   return (
@@ -25,10 +30,16 @@ export const InfoBar = /* @__PURE__ */ forwardRef<HTMLDivElement, InfoBarProps>(
       {...props}
       ref={ref}
       role={role ?? (tone === 'error' ? 'alert' : 'status')}
-      class={mergeClasses(infoBarClasses({ tone }), classProp, className)}
+      class={mergeClasses(
+        infoBarClasses({ tone }),
+        resolveClass(classProp, className),
+        classes?.root,
+      )}
     >
-      {title && <strong class={styles.title}>{title}</strong>}
-      {children != null && <div class={styles.content}>{children}</div>}
+      {title && <strong class={mergeClasses(styles.title, classes?.title)}>{title}</strong>}
+      {children != null && (
+        <div class={mergeClasses(styles.content, classes?.content)}>{children}</div>
+      )}
     </div>
   );
 });

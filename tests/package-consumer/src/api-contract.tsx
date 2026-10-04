@@ -1,8 +1,13 @@
 import { createRef } from 'preact';
-import type { Ref } from 'preact';
+import type { JSX, Ref } from 'preact';
 import {
   Button,
   Card,
+  Checkbox,
+  Field,
+  Input,
+  Switch,
+  Textarea,
   ConfirmDialog,
   DialogBody,
   DialogFooter,
@@ -18,6 +23,13 @@ import {
 import type {
   ButtonProps,
   CardProps,
+  CheckboxProps,
+  FieldControlProps,
+  FieldProps,
+  InputProps,
+  SwitchProps,
+  TextareaProps,
+  ValidationState,
   ConfirmDialogProps,
   DialogBodyProps,
   DialogFooterProps,
@@ -55,6 +67,169 @@ export type NegativeContracts = [
   typeof badIcon,
   typeof badConfirm,
 ];
+
+// Each expression must fail for its public prop contract, not module resolution.
+// @ts-expect-error Unsupported public props.
+const inputCheckbox = <Input type="checkbox" />;
+// @ts-expect-error Unsupported public props.
+const inputDate = <Input type="date" />;
+const fieldState = (
+  // @ts-expect-error Unsupported public props.
+  <Field label="Name" validationState="invalid">
+    {() => null}
+  </Field>
+);
+// @ts-expect-error Unsupported public props.
+const fieldChildren = <Field label="Name">Text</Field>;
+// @ts-expect-error Unsupported public props.
+const switchMixed = <Switch label="Auto" indeterminate />;
+// @ts-expect-error Unsupported public props.
+const switchType = <Switch label="Auto" type="checkbox" />;
+// @ts-expect-error Unsupported public props.
+const switchRole = <Switch label="Auto" role="checkbox" />;
+// @ts-expect-error Unsupported public props.
+const checkboxType = <Checkbox label="Save" type="radio" />;
+// @ts-expect-error Unsupported public props.
+const fieldLabel = <Field>{() => null}</Field>;
+// @ts-expect-error Unsupported public props.
+const checkboxLabel = <Checkbox />;
+// @ts-expect-error Unsupported public props.
+const switchLabel = <Switch />;
+// @ts-expect-error Unsupported public props.
+const inputSlot = <Input classes={{ root: 'bad' }} />;
+// @ts-expect-error Unsupported public props.
+const textareaSlot = <Textarea classes={{ root: 'bad' }} />;
+const fieldSlot = (
+  // @ts-expect-error Unsupported public props.
+  <Field label="Label" classes={{ unknown: 'bad' }}>
+    {() => null}
+  </Field>
+);
+// @ts-expect-error Unsupported public props.
+const checkboxSlot = <Checkbox label="Label" classes={{ unknown: 'bad' }} />;
+// @ts-expect-error Unsupported public props.
+const switchSlot = <Switch label="Label" classes={{ unknown: 'bad' }} />;
+// @ts-expect-error Unsupported public props.
+const selectSlot = <Select classes={{ unknown: 'bad' }} />;
+// @ts-expect-error Unsupported public props.
+const selectWrapper = <Select wrapperClassName="bad" />;
+// @ts-expect-error Unsupported public props.
+const checkboxWrapper = <Checkbox label="Label" wrapperClassName="bad" />;
+// @ts-expect-error Unsupported public props.
+const switchWrapper = <Switch label="Label" wrapperClassName="bad" />;
+export const formNegativeContracts = [
+  inputCheckbox,
+  inputDate,
+  fieldState,
+  fieldChildren,
+  switchMixed,
+  switchType,
+  switchRole,
+  checkboxType,
+  fieldLabel,
+  checkboxLabel,
+  switchLabel,
+  inputSlot,
+  textareaSlot,
+  fieldSlot,
+  checkboxSlot,
+  switchSlot,
+  selectSlot,
+  selectWrapper,
+  checkboxWrapper,
+  switchWrapper,
+];
+
+const slotSignal: JSX.SignalLike<string | undefined> = {
+  value: 'slot',
+  peek: () => 'slot',
+  subscribe: () => () => {},
+};
+export const multipartContracts = (
+  <>
+    <PageHeader
+      title="Page"
+      description="Description"
+      classes={{
+        root: slotSignal,
+        content: slotSignal,
+        title: slotSignal,
+        description: slotSignal,
+        actions: slotSignal,
+        notices: slotSignal,
+      }}
+    />
+    <EmptyState
+      title="Empty"
+      classes={{ root: slotSignal, icon: slotSignal, title: slotSignal, content: slotSignal }}
+    />
+    <InfoBar classes={{ root: slotSignal, title: slotSignal, content: slotSignal }} />
+    <DialogHeader
+      id="title"
+      title="Dialog"
+      classes={{ root: slotSignal, title: slotSignal, description: slotSignal }}
+    />
+    <Modal
+      labelledBy="title"
+      initialFocusRef={createRef()}
+      onClose={() => {}}
+      classes={{ root: slotSignal, backdrop: slotSignal }}
+    >
+      Body
+    </Modal>
+    <ConfirmDialog
+      title="Confirm"
+      cancelLabel="Cancel"
+      confirmLabel="Confirm"
+      pendingLabel="Pending"
+      onClose={() => {}}
+      onConfirm={() => {}}
+      class={slotSignal}
+      className={slotSignal}
+      classes={{
+        root: slotSignal,
+        backdrop: slotSignal,
+        header: slotSignal,
+        title: slotSignal,
+        body: slotSignal,
+        footer: slotSignal,
+        cancelButton: slotSignal,
+        confirmButton: slotSignal,
+      }}
+    >
+      Body
+    </ConfirmDialog>
+    {/* @ts-expect-error Unknown PageHeader slot. */}
+    <PageHeader title="Page" description="Description" classes={{ unknown: 'bad' }} />
+    {/* @ts-expect-error Unknown EmptyState slot. */}
+    <EmptyState title="Empty" classes={{ unknown: 'bad' }} />
+    {/* @ts-expect-error Unknown InfoBar slot. */}
+    <InfoBar classes={{ unknown: 'bad' }} />
+    {/* @ts-expect-error Unknown DialogHeader slot. */}
+    <DialogHeader id="title" title="Dialog" classes={{ unknown: 'bad' }} />
+    <Modal
+      labelledBy="title"
+      initialFocusRef={createRef()}
+      onClose={() => {}}
+      // @ts-expect-error Unknown slot.
+      classes={{ unknown: 'bad' }}
+    >
+      Body
+    </Modal>
+    <ConfirmDialog
+      title="Confirm"
+      cancelLabel="Cancel"
+      confirmLabel="Confirm"
+      pendingLabel="Pending"
+      onClose={() => {}}
+      onConfirm={() => {}}
+      // @ts-expect-error Unknown slot.
+      classes={{ unknown: 'bad' }}
+    >
+      Body
+    </ConfirmDialog>
+  </>
+);
 
 function refFor<T extends Element>(callback: boolean): Ref<T> {
   return callback
@@ -115,7 +290,7 @@ export function ApiContract({ callback = false }: { callback?: boolean }) {
     name: 'mode',
     value: 'local',
     required: true,
-    wrapperClassName: 'wrapper',
+    classes: { wrapper: 'wrapper' },
     onChange: (event) => {
       event.currentTarget.value = 'local';
     },
@@ -188,8 +363,76 @@ export function ApiContract({ callback = false }: { callback?: boolean }) {
     onClose() {},
     onConfirm() {},
   };
+  const signal: JSX.SignalLike<string | undefined> = {
+    value: 'signal-class',
+    peek: () => 'signal-class',
+    subscribe: () => () => {},
+  };
+  const state: ValidationState = 'warning';
+  const input: InputProps = {
+    class: signal,
+    className: signal,
+    type: 'number',
+    onInput: (event) => {
+      event.currentTarget.valueAsNumber = 443;
+    },
+  };
+  const textarea: TextareaProps = {
+    class: signal,
+    className: signal,
+    rows: 3,
+    onInput: (event) => {
+      event.currentTarget.rows = 4;
+    },
+  };
+  const checkbox: CheckboxProps = {
+    class: signal,
+    className: signal,
+    label: 'Remember',
+    indeterminate: true,
+    classes: { root: signal, wrapper: signal, label: signal, indicator: signal },
+    onChange: (event) => {
+      event.currentTarget.indeterminate = false;
+    },
+  };
+  const toggle: SwitchProps = {
+    class: signal,
+    className: signal,
+    label: 'Automatic',
+    classes: { root: signal, wrapper: signal, label: signal, track: signal, thumb: signal },
+    onChange: (event) => {
+      event.currentTarget.checked = true;
+    },
+  };
+  const field: FieldProps = {
+    class: signal,
+    className: signal,
+    label: 'Mode',
+    validationState: state,
+    classes: { root: signal, label: signal, hint: signal, validation: signal },
+    onClick: (event) => {
+      event.currentTarget.dataset.clicked = 'true';
+    },
+    children: (control: FieldControlProps) => (
+      <Select
+        {...select}
+        {...control}
+        class={signal}
+        className={signal}
+        classes={{ root: signal, wrapper: signal, icon: signal }}
+        ref={refFor<HTMLSelectElement>(callback)}
+      >
+        <option value="local">Local</option>
+      </Select>
+    ),
+  };
   return (
     <>
+      <Input {...input} ref={refFor<HTMLInputElement>(callback)} />
+      <Textarea {...textarea} ref={refFor<HTMLTextAreaElement>(callback)} />
+      <Checkbox {...checkbox} ref={refFor<HTMLInputElement>(callback)} />
+      <Switch {...toggle} ref={refFor<HTMLInputElement>(callback)} />
+      <Field {...field} ref={refFor<HTMLDivElement>(callback)} />
       <Button {...button} ref={refFor<HTMLButtonElement>(callback)}>
         Save
       </Button>

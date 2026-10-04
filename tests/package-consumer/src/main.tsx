@@ -3,6 +3,11 @@ import { useRef, useState } from 'preact/hooks';
 import {
   Button,
   Card,
+  Checkbox,
+  Field,
+  Input,
+  Switch,
+  Textarea,
   ConfirmDialog,
   DialogBody,
   DialogFooter,
@@ -34,9 +39,21 @@ function App() {
         </InfoBar>
         <StatusBadge tone="success">Connected</StatusBadge>
         <Icon name="network" />
-        <Select aria-label="Connection">
-          <option>Local network</option>
-        </Select>
+        <Field label="Connection">
+          {(control) => (
+            <Select {...control} name="connection" classes={{ wrapper: 'connection' }}>
+              <option>Local network</option>
+            </Select>
+          )}
+        </Field>
+        <Field label="Port" required hint="Enter the connection port.">
+          {(control) => (
+            <Input {...control} name="port" type="number" defaultValue="443" class="port" />
+          )}
+        </Field>
+        <Field label="Notes">{(control) => <Textarea {...control} name="notes" rows={3} />}</Field>
+        <Checkbox name="remember" label="Remember connection" defaultChecked />
+        <Switch name="automatic" label="Connect automatically" />
         <Button ref={fallbackFocus} onClick={() => setDialog('modal')}>
           Open modal
         </Button>

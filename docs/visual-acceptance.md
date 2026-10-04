@@ -105,3 +105,17 @@ Checked through T3 native preview at localhost:5173 and the production build at 
 Screenshot of the unified gallery: `/home/violice/.t3/userdata/browser-artifacts/browser-screenshot-localhost-muspzmwq-d3caffa9.png`.
 
 The Windows forced-colors and reduced-motion checks above remain pending. This focused pass does not replace the earlier full component acceptance matrix.
+
+## Form controls phase 1, 2026-10-04
+
+The Forms gallery now contains Field, Input, Textarea, Checkbox and Switch, a custom noValidate port/adapter submission example, readOnly/disabled/error/checked/mixed states, long labels, an RTL switch, and hidden roots/wrappers. Existing native fields remain available for comparing Full and Minimal presets. Automated gallery coverage checks empty required submission, inline error correction, adapter selection, and checked Checkbox/Switch values in the submitted result.
+
+Checked through T3 native preview at localhost:5173 on Windows 10, T3Code Nightly 0.0.46-nightly.20261004.2652, Chromium 152.0.7977.130. Full/Minimal × light/dark at 1280px and 320px had no document horizontal overflow. Input remained 36px high, Checkbox 18px, and Switch 36×20px in both presets. Long labels fitted their containers, hidden roots/wrappers had zero layout size, and the checked RTL switch moved its thumb to the left.
+
+Label click and keyboard Space changed native Checkbox/Switch values in the submitted result. Clicking the mixed checkbox cleared its indeterminate state. Tab skipped disabled controls, reached readOnly controls, and showed a 2px focus outline. Empty submission connected the inline error through aria-describedby and set aria-invalid; correction removed the error association while retaining the hint. Actual hover retained the danger border on invalid Input, Textarea, Checkbox and Switch.
+
+CSS zoom 2 at 1280px passed the Full/Minimal × light/dark layout checks without horizontal overflow. The native browser zoom shortcut did not change the preview scale, so actual browser 200% zoom remains pending. Windows forced colors, reduced motion and screen reader checks also remain pending. The preview reported forced-colors and prefers-reduced-motion as inactive; this does not verify their active states.
+
+Final review reproduced a Full-only invalid hover override from the later optional native stylesheet. Its hover selector now keeps disabled filtering inside :where, so component error styles take precedence. After rebuilding, actual hover on Input and Textarea retained danger borders in all four Full/Minimal × light/dark combinations, rgb(164,38,44) in light and rgb(241,163,172) in dark.
+
+Narrow Minimal dark RTL screenshot: `/home/violice/.t3/userdata/browser-artifacts/browser-screenshot-localhost-muu9887n-40fbb0dc.png`.

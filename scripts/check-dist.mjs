@@ -103,7 +103,7 @@ for (const file of declarationFiles) {
 
 const exportProbe = `
   const library = await import(${JSON.stringify(jsUrl.href)});
-  for (const name of ['Button', 'Card', 'InfoBar', 'StatusBadge', 'Select', 'PageHeader', 'EmptyState', 'Icon', 'Modal', 'ConfirmDialog', 'DialogHeader', 'DialogBody', 'DialogFooter']) {
+  for (const name of ['Switch', 'Checkbox', 'Field', 'Input', 'Textarea', 'Button', 'Card', 'InfoBar', 'StatusBadge', 'Select', 'PageHeader', 'EmptyState', 'Icon', 'Modal', 'ConfirmDialog', 'DialogHeader', 'DialogBody', 'DialogFooter']) {
     if (typeof library[name] !== 'function') throw new Error(name + ' export is missing');
   }
 `;

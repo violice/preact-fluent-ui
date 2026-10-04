@@ -1,0 +1,122 @@
+.wrapper {
+  display: inline-grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 8px;
+  min-width: 0;
+  min-height: 32px;
+  font: var(--type-body) / 20px var(--font-body);
+  color: var(--color-text);
+  cursor: pointer;
+}
+.input {
+  appearance: none;
+  box-sizing: border-box;
+  grid-area: 1 / 1;
+  width: 36px;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-control-border);
+  border-radius: 10px;
+  background: var(--color-control);
+  cursor: inherit;
+}
+.input:hover:where(:not(:disabled)) {
+  background: var(--color-control-hover);
+  border-color: var(--color-text-subtle);
+}
+.input:checked {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.input:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+.input[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+.track {
+  position: relative;
+  grid-area: 1 / 1;
+  width: 36px;
+  height: 20px;
+  pointer-events: none;
+}
+.thumb {
+  position: absolute;
+  inset-block-start: 3px;
+  inset-inline-start: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-text-subtle);
+  transition: inset-inline-start 120ms ease;
+}
+.input:checked + .track .thumb {
+  inset-inline-start: 19px;
+  background: var(--color-on-accent);
+}
+.label {
+  grid-area: 1 / 2;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.input:disabled {
+  border-color: var(--color-disabled);
+  background: var(--color-surface-muted);
+  cursor: not-allowed;
+}
+.input:disabled + .track .thumb {
+  background: var(--color-disabled);
+}
+.input:disabled ~ .label {
+  color: var(--color-disabled);
+  cursor: not-allowed;
+}
+.wrapper[hidden],
+.input[hidden] {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .thumb {
+    transition: none;
+  }
+}
+@media (forced-colors: active) {
+  .input,
+  .input:hover:where(:not(:disabled)),
+  .input[aria-invalid='true'] {
+    forced-color-adjust: none;
+    background: Field;
+    border-color: FieldText;
+  }
+  .thumb {
+    forced-color-adjust: none;
+    background: FieldText;
+  }
+  .input:checked {
+    background: Highlight;
+    border-color: Highlight;
+  }
+  .input:checked + .track .thumb {
+    background: HighlightText;
+  }
+  .input:disabled {
+    background: Field;
+    border-color: GrayText;
+  }
+  .input:disabled + .track .thumb {
+    background: GrayText;
+  }
+  .input:disabled ~ .label {
+    color: GrayText;
+  }
+  .input:focus-visible {
+    outline-color: Highlight;
+  }
+  .input[aria-invalid='true'] {
+    border-style: dashed;
+  }
+}
