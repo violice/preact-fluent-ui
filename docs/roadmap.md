@@ -38,6 +38,16 @@ RadioGroup перенесён в последующие фазы: согласо
 
 Критерий выбора следующей фазы: реальная потребность приложений и результат проверки первой фазы, а не количество компонентов в каталоге.
 
+## Галерея документации и Sidebar
+
+Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem и SidebarFooter реализованы в текущем checkout. Они сохраняют нативные props/ref и не зависят от роутера. Английская галерея содержит 30 страниц, отдельные примеры всех 24 публичных компонентов и руководства Theming, Styling, Forms и Signals. preact-iso и @preact/signals используются только как devDependencies галереи.
+
+Prerender создаёт все известные страницы и 404.html для корневого и repository base. Pages проверяет Sidebar exports опубликованного пакета и останавливается с явной ошибкой, если их нет. Новая версия пакета и галерея пока не опубликованы.
+
+- [Дизайн](superpowers/specs/2026-10-04-gallery-navigation-design.md)
+- [План и проверки](superpowers/plans/2026-10-04-gallery-navigation.md)
+- [x] Итоговая готовность подтверждена после финального ревью и браузерной проверки. Windows forced colors, reduced motion, реальный screen reader и настоящий browser zoom 200% остаются отдельными ручными проверками.
+
 ## Источники
 
 - [Каталог Fluent Web](https://fluent2.microsoft.design/components/web/react)

@@ -79,3 +79,11 @@ Windows forced-colors and reduced-motion acceptance remains pending as recorded 
 The [GitHub Pages gallery](https://violice.github.io/preact-fluent-ui/) displays the latest stable GitHub release using its exact npm package version. The Gallery workflow runs after a successful Publish workflow and can also be started manually. It installs the published package, uses its JavaScript, declarations and CSS, and displays the version in the page heading. It retries installation while npm processes a new release.
 
 Gallery page sources come from `main`; the showcased library comes from npm. Changes to `main` do not automatically redeploy the public gallery. Local `npm run dev` continues to build and use the library sources in the checkout.
+
+## Gallery route artifacts and Sidebar release guard
+
+The English gallery prerenders 30 known pages and 404.html. Build locally with `GALLERY_BASE=/preact-fluent-ui/ npm run build:gallery` for repository hosting. The build runs `check:gallery`; rerun it with the same GALLERY_BASE after inspecting or changing the artifact. `test:gallery-artifact` checks rejection of missing pages, relative nested assets, unresolved templates and wrong titles. `test:gallery-preview` checks the real preview server's handling of malformed requests and missing fallback HTML.
+
+The Pages workflow supplies the repository base and clears local dist before copying the exact installed release. It then requires all six Sidebar exports. If the published package lacks them, the workflow fails with a diagnostic requiring publication of a Sidebar-capable release. The published 0.1.0 package predates Sidebar; do not expect the new gallery to deploy against that package. The workflow does not substitute local unpublished Sidebar code. Publish a reviewed new library version before requesting deployment of this gallery.
+
+The gallery's preact-iso and @preact/signals dependencies are development-only. They are not library runtime dependencies or peers. Unknown preview routes return the prerendered 404 with HTTP 404; known nested routes serve their own HTML under the configured base.

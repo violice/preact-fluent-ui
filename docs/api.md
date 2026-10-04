@@ -6,7 +6,7 @@ Import components and their exported props types from `@violice/preact-fluent-ui
 
 The table lists every component-specific prop. Native props include events, children where allowed, `aria-*`, `data-*`, `id`, `style`, and the element's attributes. The exported types use Preact JSX types. Components with a DOM root forward `ref` to the element in the table. ConfirmDialog is composed and has no root ref or arbitrary native props.
 
-Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and `className` with internal classes, including Preact signal-like values. Field, Input, Textarea, Checkbox, Switch, Select, PageHeader, EmptyState, InfoBar, DialogHeader, Modal, and ConfirmDialog read signal-like values before choosing `class ?? className`, then append `classes.root` when the component has multiple parts. An empty `class` suppresses the fallback. Native fields and events stay controlled by the caller. Custom props never reach DOM attributes. Select's class props style the select itself; `classes.wrapper` styles its wrapping span and `classes.icon` styles the decorative icon. ConfirmDialog accepts class/className on its dialog root and delegates its classes slots to its constituent components; it does not forward arbitrary native props.
+Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and `className` with internal classes, including Preact signal-like values. Field, Input, Textarea, Checkbox, Switch, Select, PageHeader, EmptyState, InfoBar, DialogHeader, Modal, ConfirmDialog, and all Sidebar parts read signal-like values before choosing `class ?? className`, then append `classes.root` when the component has multiple parts. An empty `class` suppresses the fallback. Native fields and events stay controlled by the caller. Custom props never reach DOM attributes. Select's class props style the select itself; `classes.wrapper` styles its wrapping span and `classes.icon` styles the decorative icon. ConfirmDialog accepts class/className on its dialog root and delegates its classes slots to its constituent components; it does not forward arbitrary native props.
 
 | Component / exported type | Native props and ref | Component-specific props and defaults |
 | --- | --- | --- |
@@ -28,6 +28,12 @@ Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and 
 | DialogFooter / DialogFooterProps | footer | Native props and children |
 | Modal / ModalProps | dialog div, excluding children/onClose/role/aria-modal/aria-labelledby | required `labelledBy: string`, `initialFocusRef: RefObject<HTMLElement>`, `onClose(): void`, `children: ComponentChildren`; optional `fallbackFocusRef: RefObject<HTMLElement>`; `classes?: { root?, backdrop? }` |
 | ConfirmDialog / ConfirmDialogProps | composed, no root ref | required `title: string`, `children: ComponentChildren`, `cancelLabel: string`, `confirmLabel: string`, `pendingLabel: string`, `onClose(): void`, `onConfirm(): void`; optional `busy`, `confirmDisabled`, `danger` default false; optional `fallbackFocusRef: RefObject<HTMLElement>`; `classes?: { root?, backdrop?, header?, title?, body?, footer?, cancelButton?, confirmButton? }`; `class?`, `className?` |
+| Sidebar / SidebarProps | aside, HTMLElement | Native props and children; no classes prop |
+| SidebarHeader / SidebarHeaderProps | div | Native props and children; no classes prop |
+| SidebarNav / SidebarNavProps | nav, HTMLElement | Required `aria-label` or `aria-labelledby`; no classes prop |
+| SidebarGroup / SidebarGroupProps | div | Optional `label: ComponentChildren`; `classes?: { root?, label?, content? }` |
+| SidebarItem / SidebarItemProps | a | Required native `href`; optional `icon: ComponentChildren`, `active: JSX.Signalish<boolean>`; `classes?: { root?, icon?, content? }` |
+| SidebarFooter / SidebarFooterProps | div | Native props and children; no classes prop |
 
 `IconName` contains exactly 22 names: `about`, `adapter`, `add`, `chevron-down`, `connected`, `copy`, `delete`, `diagnostics`, `disconnected`, `edit`, `eye`, `info`, `network`, `open`, `profile`, `refresh`, `restore`, `routes`, `settings`, `shield`, `vpn`, `warning`. Icon supplies no accessible label. Name the parent icon button with visible text or `aria-label`.
 
@@ -71,7 +77,7 @@ Checkbox and Switch wrap their input in a label. Their refs point to HTMLInputEl
 
 Checkbox's checked and indeterminate states are independent. Mixed state sets the DOM indeterminate property, never an HTML attribute, and does not change submission. Browser interaction clears mixed state; it is reapplied only when checked or indeterminate props change. Form reset restores native defaultChecked and defaultValue; the component does not manage indeterminate during reset. Ref cleanup clears the forwarded ref.
 
-Only components with multiple parts expose `classes`, with `root` and named internal slots. Single-element components such as Input and Textarea use `class` with `className` fallback and do not expose `classes`. A `classes` object whose only supported key is `root` must not be introduced. All class slot values use `JSX.Signalish<string | undefined>`. Slots are typed per component; unknown keys are rejected. Internal classes remain, followed by the resolved `class ?? className` and, for multipart components, classes.root. An explicit empty class suppresses className. Field's root slot styles the div, while Checkbox/Switch root styles the input. `hidden` on Field/Input/Textarea hides that root; on Checkbox/Switch it also hides the entire outer label. Select wrapper classes use classes.wrapper; wrapperClassName is no longer supported.
+Only components with multiple parts expose `classes`, with `root` and named internal slots. Single-element components such as Input and Textarea use `class` with `className` fallback and do not expose `classes`. A `classes` object whose only supported key is `root` must not be introduced. All class slot values use `JSX.Signalish<string | undefined>`. Slots are typed per component; unknown keys are rejected. Components with named slots, new form controls and Sidebar parts retain internal classes followed by the resolved `class ?? className` and any classes.root slot. An explicit empty class suppresses className on these components. Button, Card, StatusBadge, Icon, DialogBody and DialogFooter retain their existing behavior of merging both class and className. Field's root slot styles the div, while Checkbox/Switch root styles the input. `hidden` on Field/Input/Textarea hides that root; on Checkbox/Switch it also hides the entire outer label. Select wrapper classes use classes.wrapper; wrapperClassName is no longer supported.
 
 ## Dialogs
 
@@ -117,3 +123,15 @@ Slots target existing owned elements; children supplied by the caller are not sl
     title="Offline">Check your connection.</InfoBar>}
 />
 ```
+
+## Sidebar
+
+Sidebar is an aside with a vertical flex layout. SidebarHeader and SidebarFooter are divs; the footer uses margin-top: auto. SidebarNav is a native nav and must have an accessible name through aria-label or aria-labelledby. The application controls width, height, sticky positioning, scrolling and mobile disclosure. There are no hidden wrappers around these structural parts.
+
+SidebarGroup wraps its children in a content div. A nonempty label renders a label div with a generated id, sets aria-labelledby to that id, and defaults role to group. Without a label, caller-provided aria-labelledby and role remain usable. An explicit role overrides the default. IDs use Preact useId; coordinate independent roots when combining them on one page.
+
+SidebarItem is always an anchor. It requires href, forwards its HTMLAnchorElement ref and native anchor attributes/events, and does not intercept clicks or implement routing. The application chooses the active item; active defaults to false and accepts JSX.Signalish<boolean>. Only an active item receives aria-current="page"; a caller aria-current does not replace this behavior. The optional icon is inside an aria-hidden span, so visible text or an explicit accessible name must name the link. Children render in the content span. Use Button for actions in the header, group or footer.
+
+SidebarGroup slots are root/label/content, and SidebarItem slots are root/icon/content. Slots accept JSX.Signalish<string | undefined> and append to internal classes. class takes priority over className, including an explicit empty class; classes.root remains additive. Structural parts have no classes prop. Navigation uses native Tab and Enter, without menu roles or arrow-key handling. Styles support wrapping, focus-visible, logical RTL positioning and forced colors; active Windows contrast-theme acceptance remains a manual check.
+
+See the [composition example](../README.md#sidebar-composition). The library imports neither preact-iso nor @preact/signals. Their use in the documentation gallery does not require consumers to install them.

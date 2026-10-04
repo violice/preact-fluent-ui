@@ -119,3 +119,24 @@ CSS zoom 2 at 1280px passed the Full/Minimal × light/dark layout checks without
 Final review reproduced a Full-only invalid hover override from the later optional native stylesheet. Its hover selector now keeps disabled filtering inside :where, so component error styles take precedence. After rebuilding, actual hover on Input and Textarea retained danger borders in all four Full/Minimal × light/dark combinations, rgb(164,38,44) in light and rgb(241,163,172) in dark.
 
 Narrow Minimal dark RTL screenshot: `/home/violice/.t3/userdata/browser-artifacts/browser-screenshot-localhost-muu9887n-40fbb0dc.png`.
+
+## Documentation gallery navigation, 2026-10-05
+
+The gallery now uses English component pages and guides with a persistent Sidebar and appearance controls. Task 4 checked a production repository-base Button entry and reload with Dark/Full query settings, successful base-prefixed assets, an unknown Light/Minimal route returning 404, and narrow active-link keyboard selection moving focus to the heading. Evidence is in `.superpowers/sdd/2026-10-04-gallery-navigation/task-4-report.md`.
+
+The parent task's T3 production checks confirmed actual Signals input updates and disabled behavior, form submission with port 8080, scrolling through narrow navigation and heading focus after route selection, Light/Full dialog Escape dismissal and opener focus restoration, and Back restoring Dark/Minimal with zero optional stylesheet links. Expanded code at 320px in RTL had no document horizontal overflow. Foreground Copy reported Copied; browser automation denied clipboard reading, so clipboard contents were not independently verified.
+
+Automated routing, store, Sidebar and artifact tests do not establish real screen-reader behavior, active Windows forced colors/reduced motion or native browser 200% zoom. Forced colors and a real screen reader were unavailable in this pass. The pending Windows checks above still apply; substitute the current component and guide URLs for the old gallery entries. Final diff review and scoped rereview passed. At 320px the compact appearance disclosure starts collapsed and content begins at approximately 124px; real Enter/Space toggle it, and Tab skips hidden controls while closed. Native settings nodes remain mounted across navigation.
+
+
+The gallery refinement request supersedes the compact disclosure result above. Appearance settings now open from a native sidebar action in the library Modal. The persistent store remains in the shell, and controls mount while the dialog is open. Code examples render directly. The sidebar groups are Overview, Guides and Components, with a separate Styling guide. The current browser acceptance results are recorded by the refinement audit.
+
+## Gallery refinements, 2026-10-05
+
+The parent checked all 30 documentation routes at 1280px and 320px, in light and dark appearance, with Full and Minimal CSS: 240 route/configuration cases. All 237 initially passing cases remained clear. The three initial 320px/dark/Minimal overflow cases on Getting Started, Forms and Signals passed after the scoped preview border-box correction. Each recheck had document scrollWidth 305px in a 320px viewport and preview right edge 285px. No global Minimal reset was added.
+
+Desktop and mobile settings dialogs focus the CSS preset SELECT initially. Escape restores the desktop Appearance settings action or the visible mobile Navigation toggle. Custom primary #8b3366 survives route changes; About documentation links compute to rgb(139, 51, 102), matching that primary value. Clipboard permission and unavailable assistive/environment checks retain their earlier stated limits.
+
+Current navigation has Overview with Getting Started and About, Guides with Theming, Styling, Forms and Signals, and all 24 component pages. The root URL is About, the existing setup/guide/component URLs remain, and Styling adds the 30th route. Code examples remain visible. Appearance settings use the library Modal and a persistent shell store.
+
+A further PageHeader ordering correction moves its sole demonstration h1 before the purpose paragraph and documentation sections. Its ordering regression passed and the repository artifact rebuilt. Parent browser confirmation at desktop and narrow widths passed: exactly one h1, its title leads the document, and no horizontal overflow.

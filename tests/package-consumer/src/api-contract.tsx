@@ -1,6 +1,12 @@
 import { createRef } from 'preact';
 import type { JSX, Ref } from 'preact';
 import {
+  Sidebar,
+  SidebarHeader,
+  SidebarNav,
+  SidebarGroup,
+  SidebarItem,
+  SidebarFooter,
   Button,
   Card,
   Checkbox,
@@ -21,6 +27,12 @@ import {
   StatusBadge,
 } from '@violice/preact-fluent-ui';
 import type {
+  SidebarProps,
+  SidebarHeaderProps,
+  SidebarNavProps,
+  SidebarGroupProps,
+  SidebarItemProps,
+  SidebarFooterProps,
   ButtonProps,
   CardProps,
   CheckboxProps,
@@ -465,3 +477,57 @@ export function ApiContract({ callback = false }: { callback?: boolean }) {
     </>
   );
 }
+
+const sidebarProps: SidebarProps = { class: slotSignal, className: slotSignal };
+const sidebarHeaderProps: SidebarHeaderProps = { title: 'Brand' };
+const sidebarNavProps: SidebarNavProps = { 'aria-label': 'Documentation' };
+const sidebarGroupProps: SidebarGroupProps = {
+  label: 'Start',
+  classes: { root: slotSignal, label: slotSignal, content: slotSignal },
+};
+const sidebarItemProps: SidebarItemProps = {
+  href: '/',
+  active: { value: true, peek: () => true, subscribe: () => () => {} },
+  icon: <Icon name="add" />,
+  classes: { root: slotSignal, icon: slotSignal, content: slotSignal },
+  onClick: (event) => {
+    event.currentTarget.focus();
+  },
+};
+const sidebarFooterProps: SidebarFooterProps = { title: 'Settings' };
+export const sidebarContracts = (
+  <Sidebar {...sidebarProps} ref={createRef<HTMLElement>()}>
+    <SidebarHeader {...sidebarHeaderProps} ref={createRef<HTMLDivElement>()}>
+      Brand
+    </SidebarHeader>
+    <SidebarNav {...sidebarNavProps} ref={createRef<HTMLElement>()}>
+      <SidebarGroup {...sidebarGroupProps} ref={createRef<HTMLDivElement>()}>
+        <SidebarItem {...sidebarItemProps} ref={createRef<HTMLAnchorElement>()}>
+          Overview
+        </SidebarItem>
+      </SidebarGroup>
+    </SidebarNav>
+    <SidebarNav aria-labelledby="navigation-heading" />
+    <SidebarFooter {...sidebarFooterProps} ref={createRef<HTMLDivElement>()} />
+  </Sidebar>
+);
+export const sidebarNegativeContracts = (
+  <>
+    {/* @ts-expect-error href is required. */}
+    <SidebarItem>Missing href</SidebarItem>
+    {/* @ts-expect-error A navigation label is required. */}
+    <SidebarNav />
+    {/* @ts-expect-error Unknown group slot. */}
+    <SidebarGroup classes={{ unknown: 'bad' }} />
+    {/* @ts-expect-error Unknown item slot. */}
+    <SidebarItem href="/" classes={{ unknown: 'bad' }} />
+    {/* @ts-expect-error Structural parts do not have slots. */}
+    <Sidebar classes={{ root: 'bad' }} />
+    {/* @ts-expect-error Structural parts do not have slots. */}
+    <SidebarHeader classes={{ root: 'bad' }} />
+    {/* @ts-expect-error Structural parts do not have slots. */}
+    <SidebarNav aria-label="Navigation" classes={{ root: 'bad' }} />
+    {/* @ts-expect-error Structural parts do not have slots. */}
+    <SidebarFooter classes={{ root: 'bad' }} />
+  </>
+);

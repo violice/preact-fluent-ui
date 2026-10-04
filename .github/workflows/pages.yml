@@ -55,6 +55,7 @@ jobs:
             if [ "$attempt" -eq 12 ]; then exit 1; fi
             sleep 20
           done
+          rm -rf ./dist
           cp -R "$RUNNER_TEMP/gallery-release/node_modules/@violice/preact-fluent-ui/dist" ./dist
           node --input-type=module <<'NODE'
           import { readFileSync, writeFileSync } from 'node:fs';
@@ -62,7 +63,18 @@ jobs:
           manifest.version = process.env.RELEASE_VERSION;
           writeFileSync('package.json', JSON.stringify(manifest, null, 2) + '\n');
           NODE
-      - run: npm run build:gallery
+      - name: Require the release gallery exports
+        run: |
+          node --input-type=module <<'NODE'
+          const release = await import('./dist/index.js');
+          const required = ['Sidebar', 'SidebarHeader', 'SidebarNav', 'SidebarGroup', 'SidebarItem', 'SidebarFooter'];
+          const missing = required.filter(name => typeof release[name] !== 'function');
+          if (missing.length) throw new Error(`The published release cannot build this gallery. Missing exports: ${missing.join(', ')}. Publish a Sidebar-capable package before deploying; unpublished components will not be substituted.`);
+          NODE
+      - name: Build the released gallery for the repository path
+        env:
+          GALLERY_BASE: /${{ github.event.repository.name }}/
+        run: npm run build:gallery
       - uses: actions/upload-pages-artifact@v4
         with:
           path: .gallery-dist

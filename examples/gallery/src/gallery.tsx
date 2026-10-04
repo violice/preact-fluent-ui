@@ -1,389 +1,185 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { ErrorBoundary, LocationProvider, Route, Router, useLocation } from 'preact-iso';
 import {
   Button,
-  Card,
-  ConfirmDialog,
+  Icon,
+  Modal,
+  DialogHeader,
   DialogBody,
   DialogFooter,
-  DialogHeader,
-  EmptyState,
-  Icon,
-  InfoBar,
-  Modal,
-  PageHeader,
-  Select,
-  StatusBadge,
+  Sidebar,
+  SidebarHeader,
+  SidebarNav,
+  SidebarGroup,
+  SidebarItem,
+  SidebarFooter,
 } from '../../../dist/index.js';
-import type { ButtonProps, IconName } from '../../../dist/index.js';
-import styles from './gallery.module.css';
 import { version } from '../../../package.json';
-import { CodeExample } from './code-block';
-import { samples } from './code-samples';
-import { ConnectionForm, FormStates } from './forms-demo';
 import { GalleryControls, useGallerySettings } from './gallery-controls';
-
-const iconNames: IconName[] = [
-  'about',
-  'adapter',
-  'add',
-  'chevron-down',
-  'connected',
-  'copy',
-  'delete',
-  'diagnostics',
-  'disconnected',
-  'edit',
-  'eye',
-  'info',
-  'network',
-  'open',
-  'profile',
-  'refresh',
-  'restore',
-  'routes',
-  'settings',
-  'shield',
-  'vpn',
-  'warning',
-];
-const variants: NonNullable<ButtonProps['variant']>[] = ['default', 'primary', 'subtle', 'danger'];
-type Scenario = 'standard' | 'hidden' | 'empty' | 'removed' | 'confirmation';
-
-export function Gallery() {
-  const { settings, update } = useGallerySettings();
-  const [choice, setChoice] = useState('automatic');
-  const [scenario, setScenario] = useState<Scenario>('standard');
-  const [open, setOpen] = useState(false);
-  const [removed, setRemoved] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [startBusy, setStartBusy] = useState(false);
-  const [confirmDisabled, setConfirmDisabled] = useState(false);
-  const [danger, setDanger] = useState(false);
-  const [message, setMessage] = useState('Choose a sample to try its controls.');
-  const fallback = useRef<HTMLButtonElement>(null);
-  const initial = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    if (!open || !busy) return;
-    const timer = setTimeout(() => {
-      setBusy(false);
-      setMessage('The demonstration finished.');
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [open, busy]);
-  const close = () => {
-    setOpen(false);
-    setBusy(false);
-  };
+import type { GalleryStore } from './gallery-store';
+import { defaultSettings } from './gallery-settings';
+import { GalleryContext } from './gallery-context';
+import { galleryBase, galleryHref, normalizeGalleryPath } from './gallery-routing';
+import { galleryPages, NotFound } from './gallery-pages';
+import styles from './gallery.module.css';
+export type GalleryProps = { base?: string; url?: string; store?: GalleryStore };
+function Shell({ base, store }: { base: string; store?: GalleryStore }) {
+  const { settings, update } = useGallerySettings(store);
+  const location = useLocation();
+  const path = normalizeGalleryPath(location.path, base);
+  const page = galleryPages.find((page) => page.path === path);
+  const [expanded, setExpanded] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const initialSettingsFocus = useRef<HTMLSelectElement>(null);
+  const main = useRef<HTMLElement>(null);
+  const navigationToggle = useRef<HTMLButtonElement>(null);
+  const previous = useRef(path);
+  useLayoutEffect(() => {
+    document.title = `${page?.title ?? 'Page not found'} | Preact Fluent UI`;
+    if (previous.current !== path) {
+      setExpanded(false);
+      setSettingsOpen(false);
+      // Modal cleanup restores focus in a microtask. Transfer focus after that cleanup.
+      queueMicrotask(() =>
+        queueMicrotask(() => main.current?.querySelector<HTMLElement>('h1')?.focus()),
+      );
+      previous.current = path;
+    }
+  }, [path, page]);
   return (
-    <main class={styles.gallery}>
-      <PageHeader
-        title={`Preact Fluent UI ${version}`}
-        description="Buttons, forms, notices and dialogs for everyday desktop tasks."
-        actions={
-          <Button
-            ref={fallback}
-            onClick={() => {
-              setRemoved(false);
-              setMessage('The samples have been restored.');
-            }}
-          >
-            Reset samples
-          </Button>
-        }
-      />
-      <div class={styles.sections}>
-        <GalleryControls settings={settings} onChange={update} />
-        <Card aria-labelledby="setup-heading">
-          <h2 id="setup-heading" class={styles.heading}>
-            Installation
-          </h2>
-          <CodeExample language="shell" code="npm install @violice/preact-fluent-ui preact" />
-          <CodeExample
-            code={[
-              "import { Button, Card } from '@violice/preact-fluent-ui';",
-              "import '@violice/preact-fluent-ui/theme.css';",
-              "import '@violice/preact-fluent-ui/styles.css';",
-              ...(settings.preset === 'full'
-                ? [
-                    "import '@violice/preact-fluent-ui/reset.css';",
-                    "import '@violice/preact-fluent-ui/native-controls.css';",
-                  ]
-                : []),
-              '',
-              '<Card><Button variant="primary">Save</Button></Card>',
-            ].join('\n')}
-          />
-        </Card>
-        <Card aria-labelledby="buttons-heading">
-          <h2 class={styles.heading} id="buttons-heading">
-            Buttons
-          </h2>
-          <div class={styles.stack}>
-            {variants.map((variant) => (
-              <div class={styles.row} key={variant}>
-                <Button variant={variant} onClick={() => setMessage(`${variant} button selected.`)}>
-                  {variant}
-                </Button>
-                <Button variant={variant} size="compact">
-                  Compact {variant}
-                </Button>
-                <Button variant={variant} size="icon" aria-label={`Refresh ${variant}`}>
-                  <Icon name="refresh" size={16} />
-                </Button>
-                <Button variant={variant} disabled>
-                  Disabled {variant}
-                </Button>
-              </div>
+    <GalleryContext.Provider value={{ settings, base }}>
+      <a class={styles.skipLink} href="#main-content" onClick={() => main.current?.focus()}>
+        Skip to content
+      </a>
+      <div class={styles.shell}>
+        <Button
+          ref={navigationToggle}
+          class={styles.navigationToggle}
+          aria-expanded={expanded}
+          aria-controls="gallery-navigation"
+          onClick={() => setExpanded(!expanded)}
+        >
+          Navigation
+        </Button>
+        <Sidebar
+          id="gallery-navigation"
+          class={`${styles.navigation} ${expanded ? styles.navigationOpen : ''}`}
+        >
+          <SidebarHeader>
+            <a class={styles.brand} href={galleryHref('/', settings, base)}>
+              <img src={`${galleryBase(base)}favicon.png`} alt="" width={32} height={32} />
+              <span>Preact Fluent UI</span>
+            </a>
+            <small>Documentation · {version}</small>
+          </SidebarHeader>
+          <SidebarNav aria-label="Documentation">
+            {(['Overview', 'Guides', 'Components'] as const).map((group) => (
+              <SidebarGroup key={group} label={group}>
+                {galleryPages
+                  .filter((page) => page.group === group)
+                  .sort((first, second) =>
+                    group === 'Components' ? first.title.localeCompare(second.title, 'en') : 0,
+                  )
+                  .map((page) => (
+                    <SidebarItem
+                      key={page.path}
+                      href={galleryHref(page.path, settings, base)}
+                      active={page.path === path}
+                      onClick={(event) => {
+                        if (
+                          event.button === 0 &&
+                          !event.ctrlKey &&
+                          !event.metaKey &&
+                          !event.shiftKey &&
+                          !event.altKey
+                        ) {
+                          const closesCurrentMobilePage =
+                            expanded &&
+                            page.path === path &&
+                            navigationToggle.current &&
+                            getComputedStyle(navigationToggle.current).display !== 'none';
+                          setExpanded(false);
+                          if (closesCurrentMobilePage) {
+                            queueMicrotask(() => {
+                              const heading = main.current?.querySelector<HTMLElement>('h1');
+                              (heading ?? main.current)?.focus();
+                            });
+                          }
+                        }
+                      }}
+                    >
+                      {page.title}
+                    </SidebarItem>
+                  ))}
+              </SidebarGroup>
             ))}
-          </div>
-          <CodeExample code={samples.buttons} />
-        </Card>
-        <Card aria-labelledby="notices-heading">
-          <h2 class={styles.heading} id="notices-heading">
-            Notices and status
-          </h2>
-          <div class={styles.stack}>
-            {(['info', 'success', 'warning', 'error'] as const).map((tone) => (
-              <InfoBar key={tone} tone={tone} title={tone}>
-                A long message remains readable when the window is narrow.
-                example-of-a-long-unbroken-message-that-needs-to-wrap-without-moving-the-page-sideways.
-              </InfoBar>
-            ))}
-          </div>
-          <p class={styles.row}>
-            {(['neutral', 'success', 'warning', 'error'] as const).map((tone) => (
-              <StatusBadge key={tone} tone={tone}>
-                {tone}
-              </StatusBadge>
-            ))}
-          </p>
-          <StatusBadge>
-            Waiting for a very long status description to finish across several lines
-          </StatusBadge>
-          <CodeExample code={samples.notices} />
-        </Card>
-        <Card aria-labelledby="forms-heading">
-          <h2 class={styles.heading} id="forms-heading">
-            Forms
-          </h2>
-          <ConnectionForm />
-          <CodeExample code={samples.connectionForm} />
-          <h3>Control states</h3>
-          <FormStates />
-          <CodeExample code={samples.formStates} />
-          <h3>Native fields and Select</h3>
-          <form
-            class={styles.form}
-            onSubmit={(event) => {
-              event.preventDefault();
-              setMessage(`Saved ${choice}.`);
-            }}
-          >
-            <label class={styles.label} for="connection-mode">
-              Connection mode
-              <Select
-                id="connection-mode"
-                name="mode"
-                value={choice}
-                onChange={(event) => setChoice(event.currentTarget.value)}
-              >
-                <option value="automatic">Automatic</option>
-                <option value="manual">Manual configuration with a long descriptive option</option>
-              </Select>
-            </label>
-            <label class={styles.label} for="disabled-mode">
-              Unavailable mode
-              <Select id="disabled-mode" disabled>
-                <option>Unavailable</option>
-              </Select>
-            </label>
-            <label class={styles.label} for="native-name">
-              Profile name
-              <input
-                class={styles.nativeField}
-                id="native-name"
-                name="profile"
-                placeholder="Sample profile"
-              />
-            </label>
-            <label class={styles.label} for="native-notes">
-              Notes
-              <textarea
-                class={styles.nativeField}
-                id="native-notes"
-                name="notes"
-                rows={2}
-                placeholder="Optional notes"
-              />
-            </label>
-            <label class={styles.label} for="native-region">
-              Region
-              <select class={styles.nativeField} id="native-region" name="region">
-                <option>Local</option>
-                <option>Remote</option>
-              </select>
-            </label>
-            <Button type="submit" variant="primary">
-              Save sample
-            </Button>
-          </form>
-          <CodeExample code={samples.forms} />
-        </Card>
-        <Card aria-labelledby="icons-heading">
-          <h2 class={styles.heading} id="icons-heading">
-            Icons
-          </h2>
-          <div class={styles.icons}>
-            {iconNames.map((name) => (
-              <div class={styles.iconSample} key={name}>
-                <Icon name={name} size={16} />
-                <Icon name={name} size={20} />
-                <Icon name={name} size={24} />
-                <span>{name}</span>
-              </div>
-            ))}
-          </div>
-          <CodeExample code={samples.icons} />
-        </Card>
-        <div class={styles.stack}>
-          <EmptyState title="No connections yet">
-            <p>
-              Add a sample connection to start. Longer descriptions fit inside the available space.
-            </p>
-            <Button onClick={() => setMessage('A sample connection was added.')}>
-              <Icon name="add" />
-              Add connection
-            </Button>
-          </EmptyState>
-          <CodeExample code={samples.empty} />
+          </SidebarNav>
+          <SidebarFooter class={styles.navigationFooter}>
+            <button
+              type="button"
+              class={styles.settingsAction}
+              onClick={() => {
+                setExpanded(false);
+                setSettingsOpen(true);
+              }}
+            >
+              <Icon name="settings" size={20} />
+              <span>Appearance settings</span>
+            </button>
+            <a href="https://github.com/violice/preact-fluent-ui" target="_blank" rel="noreferrer">
+              <Icon name="open" size={20} />
+              <span>Source on GitHub</span>
+            </a>
+          </SidebarFooter>
+        </Sidebar>
+        <div class={styles.workspace}>
+          <main id="main-content" tabIndex={-1} ref={main} class={styles.gallery}>
+            {!page?.demoOwnsHeading && <h1 tabIndex={-1}>{page?.title ?? 'Page not found'}</h1>}
+            <ErrorBoundary>
+              <Router>
+                {galleryPages.map((page) => (
+                  <Route
+                    key={page.path}
+                    path={galleryBase(base) + page.path.replace(/^\//, '')}
+                    component={page.component}
+                  />
+                ))}
+                <Route default component={NotFound} />
+              </Router>
+            </ErrorBoundary>
+          </main>
         </div>
-        <Card aria-labelledby="dialogs-heading">
-          <h2 class={styles.heading} id="dialogs-heading">
-            Dialogs
-          </h2>
-          <div class={styles.form}>
-            <label class={styles.label} for="dialog-scenario">
-              Dialog sample
-              <Select
-                id="dialog-scenario"
-                value={scenario}
-                onChange={(event) => setScenario(event.currentTarget.value as Scenario)}
-              >
-                <option value="standard">Standard dialog</option>
-                <option value="hidden">Hidden and unavailable controls</option>
-                <option value="empty">No controls</option>
-                <option value="removed">Removed opener</option>
-                <option value="confirmation">Confirmation</option>
-              </Select>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={startBusy}
-                onChange={(event) => setStartBusy(event.currentTarget.checked)}
-              />{' '}
-              Start confirmation busy for five seconds
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={confirmDisabled}
-                onChange={(event) => setConfirmDisabled(event.currentTarget.checked)}
-              />{' '}
-              Disable confirmation
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={danger}
-                onChange={(event) => setDanger(event.currentTarget.checked)}
-              />{' '}
-              Destructive confirmation
-            </label>
-            {!removed && (
-              <Button
-                onClick={() => {
-                  setBusy(startBusy);
-                  setOpen(true);
-                  if (scenario === 'removed') setRemoved(true);
-                }}
-              >
-                Open dialog
-              </Button>
-            )}
-            {removed && <p>The opener was removed. Reset samples restores it.</p>}
-          </div>
-          <CodeExample code={samples.dialogs} />
-        </Card>
-        <InfoBar title="Sample result">{message}</InfoBar>
       </div>
-      {open &&
-        (scenario === 'confirmation' ? (
-          <ConfirmDialog
-            title="Apply sample changes?"
-            cancelLabel="Cancel"
-            confirmLabel="Apply changes"
-            pendingLabel="Applying..."
-            busy={busy}
-            confirmDisabled={confirmDisabled}
-            danger={danger}
-            fallbackFocusRef={fallback}
-            onClose={close}
-            onConfirm={() => {
-              setBusy(true);
-              setMessage('Applying sample changes...');
-            }}
-          >
-            <p>This operation is a demonstration. Busy finishes after five seconds.</p>
-          </ConfirmDialog>
-        ) : (
-          <Modal
-            labelledBy="sample-dialog-title"
-            initialFocusRef={initial}
-            fallbackFocusRef={fallback}
-            onClose={close}
-          >
-            <DialogHeader
-              id="sample-dialog-title"
-              title="Sample dialog"
-              description="Try Tab, Shift+Tab and Escape."
+      {settingsOpen && (
+        <Modal
+          labelledBy="appearance-settings-title"
+          initialFocusRef={initialSettingsFocus}
+          fallbackFocusRef={navigationToggle}
+          onClose={() => setSettingsOpen(false)}
+        >
+          <DialogHeader id="appearance-settings-title" title="Appearance settings" />
+          <DialogBody>
+            <GalleryControls
+              settings={settings}
+              onChange={update}
+              initialFocusRef={initialSettingsFocus}
             />
-            <DialogBody>
-              <p class={styles.longText}>
-                Long descriptions wrap inside a narrow dialog.
-                example-of-a-long-unbroken-value-that-should-fit-without-horizontal-scrolling.
-              </p>
-              {scenario === 'empty' && (
-                <p>This dialog has no controls. Press Escape or select the backdrop to close.</p>
-              )}
-              {scenario === 'hidden' && (
-                <>
-                  <Button hidden>Hidden attribute</Button>
-                  <Button style={{ display: 'none' }}>Display none</Button>
-                  <Button style={{ visibility: 'hidden' }}>Visibility hidden</Button>
-                  <Button disabled>Disabled control</Button>
-                  <div inert>
-                    <Button>Inert control</Button>
-                  </div>
-                  <input type="hidden" value="hidden" />
-                </>
-              )}
-            </DialogBody>
-            {scenario !== 'empty' && (
-              <DialogFooter>
-                <Button ref={initial} onClick={close}>
-                  Close dialog
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={() => setMessage('A dialog action was selected.')}
-                >
-                  Try action
-                </Button>
-              </DialogFooter>
-            )}
-          </Modal>
-        ))}
-    </main>
+          </DialogBody>
+          <DialogFooter class={styles.settingsFooter}>
+            <Button onClick={() => update({ ...defaultSettings })}>Reset appearance</Button>
+            <Button onClick={() => setSettingsOpen(false)}>Close settings</Button>
+          </DialogFooter>
+        </Modal>
+      )}
+    </GalleryContext.Provider>
+  );
+}
+export function Gallery({ base = import.meta.env.BASE_URL, url, store }: GalleryProps) {
+  // preact-iso accepts url for prerender, though its public types no longer expose it.
+  const locationProps = { scope: galleryBase(base), ...(url ? { url } : {}) };
+  return (
+    <LocationProvider {...locationProps}>
+      <Shell base={base} store={store} />
+    </LocationProvider>
   );
 }

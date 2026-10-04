@@ -51,9 +51,34 @@ Use Field's controlId for explicit unique ids across independent Preact roots. C
 
 Render only one active Modal. Give Modal `labelledBy` the unique id used by its DialogHeader, plus `initialFocusRef` and `onClose`. Supply a `fallbackFocusRef` when the opener can disappear. ConfirmDialog generates its title id and requires `cancelLabel`, `confirmLabel`, and `pendingLabel`; the caller owns its language, busy state, and operation. Keep ConfirmDialog in one persistent application root. Independent Preact roots can generate colliding ids; use manually named Modal headings if your page needs cross-root id coordination.
 
+## Sidebar composition
+
+Compose navigation from Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem and SidebarFooter. Each component forwards its native element props and ref. SidebarNav requires `aria-label` or `aria-labelledby`; SidebarItem requires `href`.
+
+```tsx
+import { Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem,
+  SidebarFooter, Button, Icon } from '@violice/preact-fluent-ui';
+
+<Sidebar class="app-sidebar">
+  <SidebarHeader>Connection manager</SidebarHeader>
+  <SidebarNav aria-label="Main navigation">
+    <SidebarGroup label="Application">
+      <SidebarItem href="/connections" active={path === '/connections'}
+        icon={<Icon name="connected" />}>Connections</SidebarItem>
+      <SidebarItem href="/settings">Settings</SidebarItem>
+    </SidebarGroup>
+  </SidebarNav>
+  <SidebarFooter><Button onClick={signOut}>Sign out</Button></SidebarFooter>
+</Sidebar>
+```
+
+The caller supplies `path` and `signOut`. Sidebar has no router dependency; links retain native Tab, Enter, modifier-click and new-tab behavior. The caller decides URLs, active state, width, height, positioning and mobile disclosure. Active links receive `aria-current="page"`. Footer uses `margin-top: auto`.
+
+SidebarGroup has `classes` slots `root`, `label` and `content`; SidebarItem has `root`, `icon` and `content`. Structural parts have no `classes` prop. All parts use `class` with `className` fallback; slots are additive and accept `JSX.Signalish` values. See the [Sidebar API](docs/api.md#sidebar) for semantics and accessibility.
+
 ## Limitations
 
-Only one Modal may be active, and portaled dialogs use the root theme. Nested themes and ThemeProvider are not supported. The library does not provide application layouts, routing, or business state.
+Only one Modal may be active, and portaled dialogs use the root theme. Nested themes and ThemeProvider are not supported. The application owns layout sizing, responsive navigation, routing and business state.
 
 `styles.css` includes all component styles, even when you import only one component. Preact is a peer dependency; CVA and clsx are bundled and need no separate installation.
 
@@ -63,7 +88,7 @@ The [live gallery](https://violice.github.io/preact-fluent-ui/) uses the latest 
 
 ## Development
 
-Use Node 24 and `npm ci`. `npm run dev` builds the library and starts the gallery at `http://localhost:5173`. The gallery offers Full/Minimal CSS presets, system/light/dark appearance, and standard/green/custom palettes. Settings are saved in the URL. Code examples use TanStack Highlight and can be copied. Rebuild or restart after editing library sources; the gallery imports built library artifacts.
+Use Node 24 and `npm ci`. `npm run dev` builds the library and starts the gallery at `http://localhost:5173`. The English gallery has separate component pages, Overview pages for Getting Started and About, Guides for Theming, Styling, Forms and Signals, and a 404 page. preact-iso provides gallery routing/prerendering; @preact/signals owns gallery settings and live examples. Both are devDependencies and are absent from the library runtime and peer contract. The sidebar Appearance settings button opens a Modal with Full/Minimal CSS presets, system/light/dark appearance, and standard/green/custom palettes. Settings are saved in the URL. Code examples are visible without opening a disclosure, use TanStack Highlight and can be copied. Components links are alphabetical. Getting Started includes a local profile form, and live Sidebar demos change their own selection without navigating the gallery. Rebuild or restart after editing library sources; the gallery imports built library artifacts.
 
 Run the checks on a clean checkout:
 
@@ -72,9 +97,21 @@ npm run build
 npm run check
 npm run build:gallery
 npm run test:package:all
+npm run test:gallery-artifact
+npm run test:gallery-preview
 ```
 
 Build before checking because the gallery needs the library's generated declarations. `check` runs type, lint, formatting, test, and license checks. `test:package:all` verifies the packed library with the locked and minimum supported Preact versions.
+
+`build:gallery` prerenders every known route and `404.html`, then verifies the artifact. The default base is `/`. For GitHub Pages, build and preview the repository base:
+
+```sh
+GALLERY_BASE=/preact-fluent-ui/ npm run build:gallery
+GALLERY_BASE=/preact-fluent-ui/ npm run test:gallery-artifact
+GALLERY_BASE=/preact-fluent-ui/ npx vite preview --config examples/gallery/vite.config.ts --port 4173
+```
+
+Open `http://localhost:4173/preact-fluent-ui/components/button` to test a direct nested entry. Use the same base for build, artifact checks and preview. On Windows, set `GALLERY_BASE` with your shell's environment syntax.
 
 See [release documentation](docs/release.md) for archive verification and publishing.
 

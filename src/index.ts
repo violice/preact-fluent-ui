@@ -34,3 +34,19 @@ export { Checkbox } from './components/checkbox';
 export type { CheckboxProps } from './components/checkbox';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch';
+export {
+  Sidebar,
+  SidebarHeader,
+  SidebarNav,
+  SidebarGroup,
+  SidebarItem,
+  SidebarFooter,
+} from './components/sidebar';
+export type {
+  SidebarProps,
+  SidebarHeaderProps,
+  SidebarNavProps,
+  SidebarGroupProps,
+  SidebarItemProps,
+  SidebarFooterProps,
+} from './components/sidebar';

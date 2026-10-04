@@ -37,7 +37,7 @@ export function FormStates() {
       <Switch label="Off switch" />
       <Switch label="Disabled switch" disabled defaultChecked />
       <div dir="rtl">
-        <Switch label="اتصال تلقائي" defaultChecked />
+        <Switch label="Automatic connection in RTL" defaultChecked />
       </div>
       <Switch label="A long switch label wraps across several lines so its full description remains readable in a narrow window." />
       <Field label="Hidden field" hidden>
@@ -52,41 +52,43 @@ export function FormStates() {
 }
 `,
   connectionForm: `import { useState } from 'preact/hooks';
-import { Button, Checkbox, Field, Input, Select, Switch } from '@violice/preact-fluent-ui';
+import { Button, Checkbox, Field, InfoBar, Input, Select, Switch } from '@violice/preact-fluent-ui';
 
 export function ConnectionForm() {
   const [port, setPort] = useState('');
   const [error, setError] = useState('');
-  const [result, setResult] = useState('');
+  const [result, setResult] = useState('Save the sample connection to preview its values.');
   return (
+    <>
     <form noValidate onSubmit={(event) => {
       event.preventDefault();
       const number = Number(port);
       if (!port.trim() || !Number.isInteger(number) || number < 1 || number > 65535) {
-        setError('Введите целый порт от 1 до 65535.');
+        setError('Enter a whole port number from 1 to 65535.');
         setResult('');
         return;
       }
       setError('');
       const data = new FormData(event.currentTarget);
-      setResult(\`Сохранено: порт \${port}, адаптер \${data.get('adapter')}, запомнить \${data.has('remember') ? 'да' : 'нет'}, автоматически \${data.has('automatic') ? 'да' : 'нет'}.\`);
+      setResult(\`Saved: port \${port}, adapter \${data.get('adapter')}, remember \${data.has('remember') ? 'yes' : 'no'}, automatic \${data.has('automatic') ? 'yes' : 'no'}.\`);
     }}>
-      <Field label="Порт" hint="Целое число от 1 до 65535" required
+      <Field label="Port" hint="A whole number from 1 to 65535" required
         validationState={error ? 'error' : 'none'} validationMessage={error}>
         {(control) => <Input {...control} name="port" type="number" min={1} max={65535}
           value={port} onInput={(event) => setPort(event.currentTarget.value)} />}
       </Field>
-      <Field label="Адаптер">
+      <Field label="Adapter">
         {(control) => <Select {...control} name="adapter">
-          <option value="auto">Автоматически</option>
+          <option value="auto">Automatic</option>
           <option value="ethernet">Ethernet</option>
         </Select>}
       </Field>
-      <Checkbox name="remember" value="yes" label="Запомнить подключение" />
-      <Switch name="automatic" value="yes" label="Автоматическое подключение" />
-      <Button type="submit" variant="primary">Сохранить подключение</Button>
-      <p role="status">{result}</p>
+      <Checkbox name="remember" value="yes" label="Remember connection" />
+      <Switch name="automatic" value="yes" label="Automatic connection" />
+      <Button type="submit" variant="primary">Save connection</Button>
     </form>
+    <InfoBar title="Sample result">{result}</InfoBar>
+    </>
   );
 }`,
   buttons: `import { Button, Icon } from '@violice/preact-fluent-ui';

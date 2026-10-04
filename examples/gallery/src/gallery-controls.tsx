@@ -1,57 +1,24 @@
-import { useEffect, useLayoutEffect, useState } from 'preact/hooks';
-import { Button, Card, Select } from '../../../dist/index.js';
-import resetUrl from '../../../dist/reset.css?url';
-import nativeControlsUrl from '../../../dist/native-controls.css?url';
-import { defaultSettings, readSettings, settingsUrl, themeOverrides } from './gallery-settings';
+import type { RefObject } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
+import { Select } from '../../../dist/index.js';
+import { createGalleryStore } from './gallery-store';
+import type { GalleryStore } from './gallery-store';
 import type { GallerySettings } from './gallery-settings';
 import styles from './gallery.module.css';
 
-export function useGallerySettings() {
-  const [settings, setSettings] = useState(() => readSettings(new URL(window.location.href)));
-  const [systemDark, setSystemDark] = useState(
-    () => window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false,
-  );
-  useEffect(() => {
-    const media = window.matchMedia?.('(prefers-color-scheme: dark)');
-    const change = () => setSystemDark(media?.matches ?? false);
-    const navigate = () => setSettings(readSettings(new URL(window.location.href)));
-    media?.addEventListener('change', change);
-    window.addEventListener('popstate', navigate);
-    return () => {
-      media?.removeEventListener('change', change);
-      window.removeEventListener('popstate', navigate);
-    };
-  }, []);
-  useLayoutEffect(() => {
-    const style = document.createElement('style');
-    style.dataset.galleryTheme = '';
-    style.textContent = themeOverrides(settings, systemDark);
-    document.head.append(style);
-    return () => style.remove();
-  }, [settings, systemDark]);
-  useLayoutEffect(() => {
-    if (settings.preset !== 'full') return;
-    const links = [resetUrl, nativeControlsUrl].map((href) => {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = href;
-      link.dataset.galleryOptional = '';
-      document.head.append(link);
-      return link;
-    });
-    return () => links.forEach((link) => link.remove());
-  }, [settings.preset]);
-  const update = (next: GallerySettings) => {
-    window.history.replaceState(null, '', settingsUrl(new URL(window.location.href), next));
-    setSettings(next);
-  };
-  return { settings, update };
+// Mount this hook once in the persistent application shell.
+export function useGallerySettings(providedStore?: GalleryStore) {
+  const [store] = useState(() => providedStore ?? createGalleryStore());
+  useEffect(() => store.connectBrowser(), [store]);
+  return { settings: store.settings.value, update: store.update, store };
 }
 
 export function GalleryControls({
   settings,
   onChange,
+  initialFocusRef,
 }: {
+  initialFocusRef?: RefObject<HTMLSelectElement>;
   settings: GallerySettings;
   onChange: (settings: GallerySettings) => void;
 }) {
@@ -63,6 +30,7 @@ export function GalleryControls({
     <label class={styles.label}>
       {label}
       <Select
+        ref={key === 'preset' ? initialFocusRef : undefined}
         value={settings[key]}
         onChange={(event) => onChange({ ...settings, [key]: event.currentTarget.value })}
       >
@@ -75,10 +43,7 @@ export function GalleryControls({
     </label>
   );
   return (
-    <Card aria-labelledby="settings-heading">
-      <h2 id="settings-heading" class={styles.heading}>
-        Gallery settings
-      </h2>
+    <div class={styles.appearanceControls}>
       <div class={styles.settingsGrid}>
         {select('preset', 'CSS preset', [
           ['full', 'Full'],
@@ -89,13 +54,15 @@ export function GalleryControls({
           ['light', 'Light'],
           ['dark', 'Dark'],
         ])}
-        {select('palette', 'Palette', [
-          ['standard', 'Standard'],
-          ['green', 'Green'],
-          ['custom', 'Custom'],
-        ])}
-        {settings.palette === 'custom' &&
-          (['accent', 'primary'] as const).map((key) => (
+      </div>
+      {select('palette', 'Palette', [
+        ['standard', 'Standard'],
+        ['green', 'Green'],
+        ['custom', 'Custom'],
+      ])}
+      {settings.palette === 'custom' && (
+        <div class={styles.settingsColors}>
+          {(['accent', 'primary'] as const).map((key) => (
             <label class={styles.label} key={key}>
               {key === 'accent' ? 'Accent color' : 'Primary color'}
               <input
@@ -105,14 +72,14 @@ export function GalleryControls({
               />
             </label>
           ))}
-        <Button onClick={() => onChange({ ...defaultSettings })}>Reset appearance</Button>
-      </div>
+        </div>
+      )}
       <p class={styles.settingsNote}>
         {settings.preset === 'full'
-          ? 'Theme and component styles, document reset and native form controls.'
-          : 'Theme and component styles only. Native fields retain browser defaults.'}{' '}
+          ? 'Full includes theme and component styles, a document reset, and native form controls.'
+          : 'Minimal includes theme and component styles. Native fields retain browser defaults.'}{' '}
         Settings are saved in the page URL.
       </p>
-    </Card>
+    </div>
   );
 }

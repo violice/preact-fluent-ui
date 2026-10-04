@@ -65,10 +65,5 @@ export function CodeExample({
   code: string;
   language?: 'tsx' | 'css' | 'shell';
 }) {
-  return (
-    <details class={styles.example}>
-      <summary>Show code</summary>
-      <CodeBlock code={code} language={language} />
-    </details>
-  );
+  return <CodeBlock code={code} language={language} />;
 }

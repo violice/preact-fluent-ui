@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.0 (2026-10-05)
+
+- Add native Input, Textarea, Field, Checkbox and Switch components with labels, validation, refs and form integration.
+- Add composable Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem and SidebarFooter components.
+- Expose named class slots on multipart components; single-element controls use class or className.
+- Rebuild the English gallery with Preact ISO routing, Signals appearance settings and 30 prerendered documentation pages.
+- Add Getting Started, About, Theming and Styling guides, alphabetical component navigation, visible code and isolated interactive examples.
+- Present example feedback below previews and provide responsive appearance settings with custom palettes.
+- Verify repository-base gallery artifacts and serve malformed requests and unknown routes safely.
+
+### Migration from 0.1.0
+
+- Replace Select's `wrapperClassName` with `classes={{ wrapper: 'your-class' }}`.
+- Select, Modal, PageHeader, DialogHeader and EmptyState now give `class` precedence over `className` instead of merging both. Use one combined `class` value when both sets of classes are needed. New form controls and Sidebar parts use the same precedence.
+
 ## 0.1.0 (2026-10-02)
 
 - Initial ESM library with 13 components and exported TypeScript props.

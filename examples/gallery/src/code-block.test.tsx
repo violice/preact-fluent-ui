@@ -1,7 +1,7 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { CodeBlock } from './code-block';
+import { CodeBlock, CodeExample } from './code-block';
 
 afterEach(() => {
   cleanup();
@@ -23,4 +23,10 @@ it('reports clipboard refusal without claiming that copying succeeded', async ()
   render(<CodeBlock code="const value = 1;" />);
   await user.click(screen.getByRole('button', { name: 'Copy code' }));
   expect(screen.getByRole('status').textContent).toContain('Could not copy');
+});
+
+it('shows example source immediately without a disclosure', () => {
+  const { container } = render(<CodeExample code="const ready = true;" />);
+  expect(container.querySelector('details')).toBeNull();
+  expect(container.querySelector('pre')?.textContent).toBe('const ready = true;');
 });
