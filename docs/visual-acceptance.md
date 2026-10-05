@@ -225,3 +225,11 @@ A further PageHeader ordering correction moves its sole demonstration h1 before 
 The unreleased gallery has 40 documentation routes: the previous 30, SidebarBrand, five AppShell parts and four Utils pages. Navigation order is Overview, Guides, Components, Utils; the last two groups are alphabetical. Shell examples load a separate preview document so Workspace never nests a main inside the gallery main. Preview URLs carry the selected base, theme, palette and CSS preset.
 
 Task 7 must verify the new pages in the native browser with light/dark and Full/Minimal, narrow and desktop widths, keyboard rail label discovery, tooltip visibility across scroll boundaries, long-menu header/footer placement, horizontal navigation, custom Link ref forwarding and local demo URL isolation. Existing historical checks above do not establish acceptance for the new API. Forced-colors, reduced motion and screen-reader checks remain pending where unavailable.
+
+## Toolbar replacement, 2026-10-05
+
+Toolbar and ToolbarGroup replace the removed DataToolbar exports. AppShellToolbar is the sixth AppShell family member, placed directly in Workspace alongside Header and Content. The gallery retains 35 canonical pages; the old data-toolbar route and separate app-toolbar/app-shell-toolbar routes return the documentation 404.
+
+The parent checked the final shell preview in eight combinations of 320px/1280px, light/dark and LTR/RTL. Toolbar inner layout and Content have identical x coordinates, widths and inline padding. The explicit shared 800px maximum width and 20px padding work at desktop and compact widths. Controls wrap without toolbar overflow. The context selector and refresh action update the displayed status; native hidden removes the panel. No toolbar role or roving keyboard model is added.
+
+Final automated checks passed 338 component/gallery tests, two release tests, type/lint/format/notices, library and gallery builds, packed consumers on Preact 10.29.8 and 10.27.0, eight artifact tests and one preview test. Parent checks independently passed five toolbar tests and package integrity including absence of removed exports. Screen-reader and active Windows forced-colors acceptance remain pending.
