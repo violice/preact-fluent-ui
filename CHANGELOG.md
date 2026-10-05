@@ -4,7 +4,7 @@
 
 - Make application styles the Sidebar default and add expanded/rail/horizontal layouts, scrollable navigation, SidebarBrand and button/custom rendered SidebarItem roots.
 - Add five composable AppShell parts and public useRender, mergeProps, mergeClasses and resolveClass utilities.
-- Expand the gallery to 40 documentation routes with alphabetical Utils navigation, local utility demonstrations and isolated application shell previews.
+- Organize the gallery into 26 canonical documentation pages with grouped component API references, alphabetical Utils navigation, local utility demonstrations and isolated application shell previews.
 - Document render forwarding, refs, style and handler composition, shell layout variables and local archive installation before release.
 
 ## 0.2.0 (2026-10-05)
