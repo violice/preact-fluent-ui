@@ -4,6 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { Gallery } from './gallery';
 import { galleryHref, normalizeGalleryPath } from './gallery-routing';
 import { defaultSettings } from './gallery-settings';
+import libraryCss from '../../../dist/styles.css?raw';
+import galleryCss from './gallery.module.css?raw';
+import galleryClasses from './gallery.module.css';
 afterEach(() => {
   cleanup();
   history.replaceState(null, '', '/');
@@ -383,4 +386,48 @@ it('uses the public application shell workspace as its sole main landmark', () =
   expect(main.hasAttribute('data-app-shell-workspace')).toBe(true);
   expect(main.parentElement?.getAttribute('data-navigation-layout')).toBe('expanded');
   expect(main.querySelector('[class*="content"]')).toBeTruthy();
+});
+
+it('uses app navigation with a library brand and fixed header and footer around the scrollable nav', async () => {
+  render(<Gallery base="/" />);
+  const aside = document.getElementById('gallery-navigation')!;
+  const nav = screen.getByRole('navigation', { name: 'Documentation' });
+  const brandLink = screen.getByRole('link', { name: 'Preact Fluent UI', exact: true });
+  const brand = brandLink.querySelector('[data-has-logo]');
+  expect(aside.getAttribute('data-appearance')).toBe('app');
+  expect(aside.getAttribute('data-scrollable')).toBe('true');
+  expect(aside.getAttribute('data-layout')).toBe('expanded');
+  expect(brand).toBeTruthy();
+  expect(brand?.querySelector('[aria-hidden="true"] img')?.getAttribute('alt')).toBe('');
+  expect(brand?.textContent).toContain('Documentation ·');
+  expect(brandLink.querySelector('a, button')).toBeNull();
+  expect(nav.parentElement).toBe(aside);
+  expect(aside.firstElementChild?.contains(brandLink)).toBe(true);
+  const footer = aside.lastElementChild!;
+  expect(footer.contains(screen.getByRole('button', { name: 'Appearance settings' }))).toBe(true);
+  expect(footer.contains(screen.getByRole('link', { name: 'Source on GitHub' }))).toBe(true);
+  expect(nav.contains(footer)).toBe(false);
+});
+
+it('scrolls documentation links without scrolling the sidebar brand and actions', () => {
+  const style = document.createElement('style');
+  style.textContent =
+    libraryCss +
+    galleryCss.replace(/\.([a-zA-Z]+)\b/g, (selector, name: string) =>
+      galleryClasses[name] ? `.${galleryClasses[name]}` : selector,
+    );
+  document.head.append(style);
+  try {
+    render(<Gallery base="/" />);
+    const aside = document.getElementById('gallery-navigation')!;
+    const nav = screen.getByRole('navigation', { name: 'Documentation' });
+    expect(getComputedStyle(aside).overflow).toBe('hidden');
+    expect(getComputedStyle(aside).overflowY).not.toBe('auto');
+    expect(getComputedStyle(nav).overflowY).toBe('auto');
+    expect(getComputedStyle(nav).minHeight).toBe('0px');
+    expect(getComputedStyle(aside.firstElementChild!).flexShrink).toBe('0');
+    expect(getComputedStyle(aside.lastElementChild!).flexShrink).toBe('0');
+  } finally {
+    style.remove();
+  }
 });

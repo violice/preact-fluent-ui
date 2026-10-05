@@ -12,6 +12,7 @@ import {
   DialogFooter,
   Sidebar,
   SidebarHeader,
+  SidebarBrand,
   SidebarNav,
   SidebarGroup,
   SidebarItem,
@@ -67,14 +68,22 @@ function Shell({ base, store }: { base: string; store?: GalleryStore }) {
         </Button>
         <Sidebar
           id="gallery-navigation"
+          appearance="app"
+          scrollable
           class={`${styles.navigation} ${expanded ? styles.navigationOpen : ''}`}
         >
           <SidebarHeader>
-            <a class={styles.brand} href={galleryHref('/', settings, base)}>
-              <img src={`${galleryBase(base)}favicon.png`} alt="" width={32} height={32} />
-              <span>Preact Fluent UI</span>
+            <a
+              class={styles.brandLink}
+              aria-label="Preact Fluent UI"
+              href={galleryHref('/', settings, base)}
+            >
+              <SidebarBrand
+                title="Preact Fluent UI"
+                description={`Documentation · ${version}`}
+                logo={<img src={`${galleryBase(base)}favicon.png`} alt="" width={32} height={32} />}
+              />
             </a>
-            <small>Documentation · {version}</small>
           </SidebarHeader>
           <SidebarNav aria-label="Documentation">
             {(['Overview', 'Guides', 'Components', 'Utils'] as const).map((group) => (
@@ -120,22 +129,25 @@ function Shell({ base, store }: { base: string; store?: GalleryStore }) {
               </SidebarGroup>
             ))}
           </SidebarNav>
-          <SidebarFooter class={styles.navigationFooter}>
-            <button
-              type="button"
-              class={styles.settingsAction}
+          <SidebarFooter>
+            <SidebarItem
+              as="button"
+              icon={<Icon name="settings" size={20} />}
               onClick={() => {
                 setExpanded(false);
                 setSettingsOpen(true);
               }}
             >
-              <Icon name="settings" size={20} />
-              <span>Appearance settings</span>
-            </button>
-            <a href="https://github.com/violice/preact-fluent-ui" target="_blank" rel="noreferrer">
-              <Icon name="open" size={20} />
-              <span>Source on GitHub</span>
-            </a>
+              Appearance settings
+            </SidebarItem>
+            <SidebarItem
+              href="https://github.com/violice/preact-fluent-ui"
+              target="_blank"
+              rel="noreferrer"
+              icon={<Icon name="open" size={20} />}
+            >
+              Source on GitHub
+            </SidebarItem>
           </SidebarFooter>
         </Sidebar>
         <AppShellWorkspace id="main-content" tabIndex={-1} ref={main} class={styles.workspace}>
