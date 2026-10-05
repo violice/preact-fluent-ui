@@ -202,7 +202,7 @@ async function inspectLibrary(directory, files) {
         `Library must not embed Preact: ${source}`,
       );
       assert(
-        /^\.\.\/(?:src\/(?:classes\.ts|components\/[^/]+\.(?:tsx|module\.css)|icons\/[^/]+\.(?:ts|tsx|module\.css))|node_modules\/(?:clsx|class-variance-authority)\/dist\/[^/]+\.mjs)$/.test(
+        /^\.\.\/(?:src\/(?:classes\.ts|utils\/(?:merge-props|use-render)\.ts|components\/[^/]+\.(?:tsx|module\.css)|icons\/[^/]+\.(?:ts|tsx|module\.css))|node_modules\/(?:clsx|class-variance-authority)\/dist\/[^/]+\.mjs)$/.test(
           normalized,
         ) && !/\.test\./.test(normalized),
         `Unrelated source content in published map: ${source}`,
@@ -338,8 +338,8 @@ async function inspectConsumer(directory, mode) {
       .flatMap((module) => module.renderedExports);
     assert.deepEqual(
       renderedExports,
-      ['Button'],
-      'Only Button may remain a rendered library export',
+      ['mergeClasses', 'Button'],
+      'Only Button and its shared class helper may remain rendered library exports',
     );
   } else {
     for (const control of ['field', 'input', 'textarea', 'checkbox', 'switch']) {

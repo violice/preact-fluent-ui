@@ -52,3 +52,6 @@ export type {
 } from './components/sidebar';
 export { mergeClasses, resolveClass } from './classes';
 export { mergeProps } from './utils/merge-props';
+
+export { useRender } from './utils/use-render';
+export type { RenderProp, UseRenderOptions } from './utils/use-render';

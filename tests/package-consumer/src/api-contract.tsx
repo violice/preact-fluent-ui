@@ -1,6 +1,8 @@
 import { createRef } from 'preact';
+import { forwardRef } from 'preact/compat';
 import type { JSX, Ref } from 'preact';
 import {
+  useRender,
   Sidebar,
   SidebarHeader,
   SidebarNav,
@@ -531,3 +533,58 @@ export const sidebarNegativeContracts = (
     <SidebarFooter classes={{ root: 'bad' }} />
   </>
 );
+
+// Utilities infer native props, events, state and the selected root's ref.
+export function RenderContract() {
+  return useRender({
+    defaultTagName: 'a',
+    ref: createRef<HTMLAnchorElement>(),
+    state: { active: true },
+    props: {
+      href: '/native',
+      children: 'Native',
+      onClick: (event) => {
+        event.currentTarget.href = '/next';
+      },
+    },
+    render: (props, state) => (
+      <ContractLink {...props} aria-current={state.active ? 'page' : undefined} />
+    ),
+  });
+}
+const ContractLink = forwardRef<HTMLAnchorElement, JSX.IntrinsicElements['a']>((props, ref) => (
+  <a {...props} ref={ref} />
+));
+export function TemplateRenderContract() {
+  return useRender({
+    defaultTagName: 'a',
+    props: { children: 'Template' },
+    render: <ContractLink href="/custom" />,
+  });
+}
+export function SvgRenderContract() {
+  return useRender({
+    defaultTagName: 'svg',
+    ref: createRef<SVGSVGElement>(),
+    props: { viewBox: '0 0 24 24' },
+  });
+}
+export function InvalidRenderContracts() {
+  useRender({
+    defaultTagName: 'button',
+    props: {
+      // @ts-expect-error Native button roots reject href.
+      href: '/',
+    },
+  });
+  useRender({
+    defaultTagName: 'button',
+    // @ts-expect-error Native button roots reject anchor refs.
+    ref: createRef<HTMLAnchorElement>(),
+  });
+  useRender({
+    defaultTagName: 'svg',
+    // @ts-expect-error SVG roots reject HTML refs.
+    ref: createRef<HTMLDivElement>(),
+  });
+}
