@@ -286,7 +286,7 @@ async function inspectConsumer(directory, mode) {
     'Button must have live generated mappings',
   );
   const unusedSources = Object.keys(mapped).filter((source) =>
-    /\/src\/(?:components\/(?:modal|confirm-dialog|dialog-content|card|info-bar|status-badge|select|field|input|textarea|checkbox|switch|page-header|empty-state|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
+    /\/src\/(?:components\/(?:modal|confirm-dialog|dialog-content|card|info-bar|status-badge|counter-badge|text|box|select|field|input|textarea|checkbox|switch|page-header|empty-state|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
       source,
     ),
   );

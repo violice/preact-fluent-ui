@@ -7,6 +7,13 @@ import { test } from 'node:test';
 
 const checker = resolve('scripts/check-gallery.mjs');
 for (const [name, mutate, diagnostic] of [
+  [
+    'missing counter badge page',
+    (dir) => rm(join(dir, 'components/counter-badge/index.html')),
+    'ENOENT',
+  ],
+  ['missing text page', (dir) => rm(join(dir, 'components/text/index.html')), 'ENOENT'],
+  ['missing box page', (dir) => rm(join(dir, 'components/box/index.html')), 'ENOENT'],
   ['missing tooltip page', (dir) => rm(join(dir, 'components/tooltip/index.html')), 'ENOENT'],
   ['missing disclosure page', (dir) => rm(join(dir, 'components/disclosure/index.html')), 'ENOENT'],
   ['missing table family page', (dir) => rm(join(dir, 'components/table/index.html')), 'ENOENT'],

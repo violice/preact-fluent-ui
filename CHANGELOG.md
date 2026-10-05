@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+## 0.5.0 (2026-10-06)
+
+- Align AppShellFooter width with Content and keep AppShellToolbar inline padding aligned with Content on mobile. Existing shell sizing variables apply to all three.
+
+- Add Box with render composition, reactive flex/grid layout props, theme spacing, dimensions and overflow controls. Native display is preserved when no layout is supplied.
+
+- Add Card padding="none" and Table dividers="between" for tables that meet card edges without a trailing row divider. Default padding and dividers remain unchanged.
+
+- Keep the first workspace surface inside AppShell's upper rounded corners, including AppShellToolbar.
+
+- Add Text with ten Fluent 2 typography presets, semantic theme colors and render composition for semantic HTML roots. Color defaults to inherit; default, muted and subtle use theme text tokens.
+- Reset native h1–h6 and p margins and typography through the optional reset.css; visual hierarchy is explicit through Text or application styles.
+
+- Add CounterBadge for numeric counts, with a 24px height, a minimum 24px width, rounded corners and a public gallery example. Longer counts expand only the width.
+
 ## 0.4.0 (2026-10-05)
 
 - Add a Changelog gallery page sourced from this Markdown file, with safe Preact rendering through the gallery-only TanStack Markdown parser.

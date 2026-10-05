@@ -28,6 +28,50 @@ Use Field's controlId for explicit unique ids across independent Preact roots. C
 
 Render only one active Modal. Give Modal `labelledBy` the unique id used by its DialogHeader, plus `initialFocusRef` and `onClose`. Supply a `fallbackFocusRef` when the opener can disappear. ConfirmDialog generates its title id and requires `cancelLabel`, `confirmLabel`, and `pendingLabel`; the caller owns its language, busy state, and operation. Keep ConfirmDialog in one persistent application root. Independent Preact roots can generate colliding ids; use manually named Modal headings if your page needs cross-root id coordination.
 
+## Layout composition
+
+Use `Box` for simple layout containers and compose semantic roots through `render`:
+
+```tsx
+import { Box, Card, Text } from '@violice/preact-fluent-ui';
+
+<Box render={<Card />} display="grid" gap="space-4">
+  <Text preset="subtitle2" render={<h2 />}>Connection details</Text>
+  <Text color="muted">Selected VPN profile</Text>
+</Box>
+```
+
+Box preserves Card's styling and adds no wrapper. Spacing tokens such as
+`space-4` use the current theme's variables. Numeric lengths mean pixels;
+`marginInline="auto"` and CSS grid track definitions also work. Layout props
+accept signals. Logical spacing follows writing direction.
+
+Keep breakpoint rules in application CSS and omit the corresponding Box prop,
+which would otherwise apply an inline value. For example, supply `display="grid"`
+and `gap="space-4"`, while a class controls responsive `grid-template-columns`.
+See the [layout API](api.md#layout) for the supported props and style precedence.
+
+## Typography and native HTML reset
+
+Use `Text` for typography with explicit HTML semantics:
+
+```tsx
+import { Text } from '@violice/preact-fluent-ui';
+
+<Text preset="subtitle2" render={<h2 />}>Saved routes</Text>
+<Text color="muted" render={<p />}>Connection details</Text>
+<Text>Inline text</Text>
+```
+
+The default preset is `body1` and the default element is `span`. Color defaults
+to `inherit`, preserving the surrounding styles. Use `default`, `muted` or
+`subtle` for theme text colors independently of the preset. Both props accept signals.
+Render callbacks
+must forward the supplied props and ref, for example `render={(props) => <p {...props} />}`.
+The optional `reset.css` resets native `h1`–`h6` and `p` margins and font styles
+to inherited values. Add Text presets or application styles wherever visual
+hierarchy is needed. See the [typography API](api.md#typography) for all presets.
+
 ## Sidebar composition
 
 Compose navigation from Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem and SidebarFooter. Each component forwards its native element props and ref. SidebarNav requires `aria-label` or `aria-labelledby`; Plain anchor SidebarItem requires `href`; `as="button"` provides native actions.
@@ -57,9 +101,11 @@ SidebarGroup has `classes` slots `root`, `label` and `content`; SidebarItem has 
 
 `Sidebar` uses application navigation styles and supports `layout="expanded"`, `"rail"` and `"horizontal"`. Use `scrollable` to scroll navigation between its header and footer. `SidebarBrand` accepts a required title, optional description and decorative logo. Rail items keep accessible names and show labels on hover or keyboard focus; complex children require `label`.
 
-Compose `AppShell`, `AppShellWorkspace`, `AppShellHeader`, `AppShellToolbar`, `AppShellContent` and `AppShellFooter`. Match `AppShell navigationLayout` with `Sidebar layout`. Workspace renders the document's main landmark; the other parts render divs. Default widths are 248px expanded and 64px rail, with an 8px workspace margin, 12px radius and 1240px content maximum. Applications own breakpoints and layout state.
+Compose `AppShell`, `AppShellWorkspace`, `AppShellHeader`, `AppShellToolbar`, `AppShellContent` and `AppShellFooter`. Match `AppShell navigationLayout` with `Sidebar layout`. Workspace renders the document's main landmark; the other parts render divs. Default widths are 248px expanded and 64px rail, with an 8px workspace margin, 12px radius and 1240px maximum shared by Content, Footer and the inner Toolbar. Their inline padding stays aligned at 24px, including on mobile. Override `--app-shell-content-max-width` and `--app-shell-content-padding` to change these together. Applications own breakpoints and layout state.
 
 `SidebarItem render` replaces its root with a VNode or callback. `as` still selects native types and defaults. A custom Link must forward composed props, children and ref to its native root. Do not nest an anchor or button inside another interactive root. `useRender` composes refs; `mergeProps` combines props with consumer handlers first and stops earlier handlers after `preventDefault()`. See the [utility API](api.md#utilities).
+
+Version 0.5.0 adds Text, Box and CounterBadge, plus Card padding="none" and Table dividers="between" for edge-to-edge tables. Use Text for explicit typography after importing reset.css and Box for layout without additional wrappers.
 
 Version 0.4.0 includes data components, loading feedback, Tooltip, TextPreview, CodeBlock and AppShellToolbar. Toolbar and ToolbarGroup replace the former DataToolbar names without compatibility aliases. AppShellToolbar belongs directly inside AppShellWorkspace alongside Header and Content.
 

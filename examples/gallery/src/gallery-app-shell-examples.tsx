@@ -8,6 +8,7 @@ import {
   AppShellToolbar,
   ToolbarGroup,
   Button,
+  Text,
   Sidebar,
   SidebarBrand,
   SidebarHeader,
@@ -80,7 +81,9 @@ export function ShellDocument() {
       </Sidebar>
       <AppShellWorkspace>
         <AppShellHeader>
-          <h1>Local workspace</h1>
+          <Text preset="title3" render={<h1 />}>
+            Local workspace
+          </Text>
           <label class={styles.label}>
             Navigation layout
             <Select
@@ -160,9 +163,10 @@ export const appShellDocs = [
     AppShellWorkspace: 'Provide the single main landmark of an application.',
     AppShellHeader: 'Place workspace headings and actions above content.',
     AppShellToolbar:
-      'Place caller-owned controls in workspace chrome. Shares content maximum width and padding with AppShellContent; direct child of AppShellWorkspace. Desktop minimum height 76px, block padding 18px; up to 640px block padding 12px and inline fallback 12px. Explicit content padding wins.',
+      'Place caller-owned controls in workspace chrome. Shares content maximum width and padding with AppShellContent; direct child of AppShellWorkspace. Desktop minimum height 76px, block padding 18px; up to 640px block padding 12px and inline padding remains aligned at 24px. Explicit content padding wins.',
     AppShellContent: 'Center page content within the workspace.',
-    AppShellFooter: 'Place status or secondary actions below content.',
+    AppShellFooter:
+      'Place status or secondary actions below content, sharing its maximum width and padding.',
   }[title]!,
   example: ShellPreview,
   code: shellCode,

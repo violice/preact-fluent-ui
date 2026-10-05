@@ -6,6 +6,7 @@ import styles from './table.module.css';
 
 export type TableProps = JSX.TableHTMLAttributes<HTMLTableElement> & {
   density?: 'regular' | 'compact';
+  dividers?: 'all' | 'between';
 };
 export type TableContainerProps = JSX.HTMLAttributes<HTMLDivElement>;
 export type TableHeaderProps = JSX.HTMLAttributes<HTMLTableSectionElement>;
@@ -21,7 +22,7 @@ export type TableCellProps = Omit<JSX.TdHTMLAttributes<HTMLTableCellElement>, 'a
 export type TableCaptionProps = JSX.HTMLAttributes<HTMLTableCaptionElement>;
 
 export const Table = /* @__PURE__ */ forwardRef<HTMLTableElement, TableProps>(function Table(
-  { density = 'regular', class: classProp, className, ...props },
+  { density = 'regular', dividers = 'all', class: classProp, className, ...props },
   ref,
 ) {
   return (
@@ -31,6 +32,7 @@ export const Table = /* @__PURE__ */ forwardRef<HTMLTableElement, TableProps>(fu
       class={mergeClasses(
         styles.table,
         density === 'compact' ? styles.compact : undefined,
+        dividers === 'between' ? styles.between : undefined,
         resolveClass(classProp, className),
       )}
     />

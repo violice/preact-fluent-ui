@@ -1,0 +1,30 @@
+.badge {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  inline-size: max-content;
+  min-inline-size: 24px;
+  block-size: 24px;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  background: var(--color-surface-pressed);
+  font-family: var(--font-body);
+  font-synthesis: none;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 14px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.badge[hidden] {
+  display: none;
+}
+@media (forced-colors: active) {
+  .badge {
+    border: 1px solid CanvasText;
+    color: CanvasText;
+    background: Canvas;
+  }
+}

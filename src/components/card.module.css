@@ -18,3 +18,14 @@
     padding: var(--space-4);
   }
 }
+.card.unpadded {
+  padding: 0;
+}
+.unpadded > :where(:first-child) {
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+}
+.unpadded > :where(:last-child) {
+  border-end-start-radius: inherit;
+  border-end-end-radius: inherit;
+}

@@ -38,11 +38,29 @@ export type {
 } from './components/table';
 export type { ButtonProps } from './components/button';
 export { Card } from './components/card';
+export { Box } from './components/box';
+export type {
+  BoxProps,
+  BoxLayoutProps,
+  BoxSpacing,
+  BoxRenderProps,
+  BoxRenderState,
+} from './components/box';
 export type { CardProps } from './components/card';
 export { InfoBar } from './components/info-bar';
 export type { InfoBarProps } from './components/info-bar';
 export { StatusBadge } from './components/status-badge';
 export type { StatusBadgeProps } from './components/status-badge';
+export { CounterBadge } from './components/counter-badge';
+export type { CounterBadgeProps } from './components/counter-badge';
+export { Text } from './components/text';
+export type {
+  TextProps,
+  TextPreset,
+  TextColor,
+  TextRenderProps,
+  TextRenderState,
+} from './components/text';
 export { Select } from './components/select';
 export type { SelectProps } from './components/select';
 export { PageHeader } from './components/page-header';

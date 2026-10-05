@@ -39,6 +39,9 @@ import {
   PageHeader,
   Select,
   StatusBadge,
+  CounterBadge,
+  Text,
+  Box,
 } from '@violice/preact-fluent-ui';
 import type {
   AppShellProps,
@@ -82,6 +85,17 @@ import type {
   PageHeaderProps,
   SelectProps,
   StatusBadgeProps,
+  CounterBadgeProps,
+  TextProps,
+  TextPreset,
+  TextColor,
+  TextRenderProps,
+  TextRenderState,
+  BoxProps,
+  BoxLayoutProps,
+  BoxSpacing,
+  BoxRenderProps,
+  BoxRenderState,
 } from '@violice/preact-fluent-ui';
 
 // The export map must reject source imports, even with bundler module resolution.
@@ -294,6 +308,7 @@ export function ApiContract({ callback = false }: { callback?: boolean }) {
   const card: CardProps = {
     ...classes,
     id: 'card',
+    padding: 'none',
     tabIndex: 0,
     onFocus: (event) => {
       event.currentTarget.dataset.focused = 'true';
@@ -307,6 +322,11 @@ export function ApiContract({ callback = false }: { callback?: boolean }) {
     onClick: (event) => {
       event.currentTarget.hidden = false;
     },
+  };
+  const counter: CounterBadgeProps = {
+    ...classes,
+    hidden: false,
+    'aria-label': 'Saved routes',
   };
   const badge: StatusBadgeProps = {
     ...classes,
@@ -482,6 +502,9 @@ export function ApiContract({ callback = false }: { callback?: boolean }) {
       <InfoBar {...info} ref={refFor<HTMLDivElement>(callback)}>
         Notice
       </InfoBar>
+      <CounterBadge {...counter} ref={refFor<HTMLSpanElement>(callback)}>
+        {0}
+      </CounterBadge>
       <StatusBadge {...badge} ref={refFor<HTMLSpanElement>(callback)}>
         Ready
       </StatusBadge>
@@ -780,7 +803,7 @@ import type {
   DataListValueProps,
   SeparatorProps,
 } from '@violice/preact-fluent-ui';
-const tableProps: TableProps = { class: slotSignal, hidden: false };
+const tableProps: TableProps = { class: slotSignal, hidden: false, dividers: 'between' };
 const tableContainerProps: TableContainerProps = { class: slotSignal, hidden: false };
 const tableHeaderProps: TableHeaderProps = { class: slotSignal, hidden: false };
 const tableBodyProps: TableBodyProps = { class: slotSignal, hidden: false };
@@ -983,3 +1006,65 @@ const editablePreview: TextPreviewProps = { text: 'x', value: 'y' };
 // @ts-expect-error Rendering callbacks are not part of the generic token contract.
 const callbackCode: CodeBlockProps = { code: 'x', renderCode: () => 'x' };
 void [badToken, missingCode, editablePreview, callbackCode];
+
+// @ts-expect-error Presets are the named Fluent 2 styles.
+const badTextPreset: TextPreset = 'heading';
+export type TextNegativeContract = typeof badTextPreset;
+// @ts-expect-error Colors are semantic theme roles, not arbitrary CSS values.
+const badTextColor: TextColor = '#525c6c';
+export type TextColorNegativeContract = typeof badTextColor;
+export function TextContract() {
+  const text: TextProps = { preset: 'body1', color: 'muted', 'aria-label': 'Profile details' };
+  const paragraph = (props: TextRenderProps, state: TextRenderState) => (
+    <p {...props} data-preset={state.preset} data-color={state.color} />
+  );
+  return (
+    <>
+      <Text {...text} render={paragraph}>
+        Paragraph
+      </Text>
+      <Text preset="title1" ref={createRef<HTMLHeadingElement>()} render={<h1 />}>
+        Heading
+      </Text>
+      <Text render={<a href="/profile" />}>Profile</Text>
+    </>
+  );
+}
+
+// @ts-expect-error Box has no styling slots on its single root.
+const badBoxSlots: BoxProps = { classes: { root: 'box' } };
+// @ts-expect-error Layout props use CSS names rather than abbreviated aliases.
+const badBoxPadding: BoxProps = { paddingX: 'space-4' };
+// @ts-expect-error Display accepts the documented CSS layout values.
+const badBoxDisplay: BoxProps = { display: 'diagonal' };
+export type BoxNegativeContracts = [typeof badBoxSlots, typeof badBoxPadding, typeof badBoxDisplay];
+export function BoxContract() {
+  const spacing: BoxSpacing = 'space-4';
+  const layout: BoxLayoutProps = {
+    display: 'grid',
+    gap: spacing,
+    minWidth: 0,
+    marginInline: 'auto',
+  };
+  const props: BoxProps = { ...layout, gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' };
+  const root = (native: BoxRenderProps, state: BoxRenderState) => (
+    <section {...native} data-layout={state.layout.display} />
+  );
+  return (
+    <>
+      <Box {...props} render={root}>
+        Grid
+      </Box>
+      <Box render={<Card />} ref={createRef<HTMLElement>()} display="flex" gap="space-2">
+        Card
+      </Box>
+      <Box render={<span />}>Inline</Box>
+    </>
+  );
+}
+
+// @ts-expect-error Cards only support the documented padding variants.
+const badCardPadding: CardProps = { padding: 'compact' };
+// @ts-expect-error Tables only support the documented divider modes.
+const badTableDividers: TableProps = { dividers: 'outer' };
+export type PresentationNegativeContracts = [typeof badCardPadding, typeof badTableDividers];

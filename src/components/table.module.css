@@ -34,6 +34,26 @@
 .compact .cell {
   padding: 8px 12px;
 }
+/* Leading borders separate rows without drawing a trailing table edge.
+   Footer borders work even when tfoot precedes tbody in the native DOM. */
+.between > :where(thead, tbody, tfoot) > :where(tr) > :where(th, td) {
+  border-block-end: 0;
+  border-block-start: 1px solid var(--color-border);
+}
+.between
+  > :where(thead:not([hidden]))
+  > :where(tr:nth-child(1 of tr:not([hidden])))
+  > :where(th, td),
+.between:not(:has(> thead:not([hidden]) > tr:not([hidden])))
+  > :where(tbody:nth-child(1 of tbody:not([hidden]):has(> tr:not([hidden]))))
+  > :where(tr:nth-child(1 of tr:not([hidden])))
+  > :where(th, td),
+.between:not(:has(> :is(thead, tbody):not([hidden]) > tr:not([hidden])))
+  > :where(tfoot:not([hidden]))
+  > :where(tr:nth-child(1 of tr:not([hidden])))
+  > :where(th, td) {
+  border-block-start: 0;
+}
 .body .row:hover {
   background: var(--color-surface-hover);
 }

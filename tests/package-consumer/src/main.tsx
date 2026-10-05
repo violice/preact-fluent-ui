@@ -29,6 +29,9 @@ import {
   PageHeader,
   Select,
   StatusBadge,
+  CounterBadge,
+  Text,
+  Box,
 } from '@violice/preact-fluent-ui';
 import '@violice/preact-fluent-ui/theme.css';
 import '@violice/preact-fluent-ui/styles.css';
@@ -45,11 +48,18 @@ function App() {
       <AppShellWorkspace>
         <AppShellContent>
           <PageHeader title="Installed package" description="Controls and localized dialogs" />
-          <Card>
+          <Box render={<Card padding="none" />} display="grid" gap="space-2">
             <InfoBar title="Ready" tone="success">
               Installed from an npm archive.
             </InfoBar>
             <StatusBadge tone="success">Connected</StatusBadge>
+            <Text preset="subtitle2" render={<h2 />}>
+              Saved routes
+            </Text>
+            <CounterBadge aria-label="Saved routes">0</CounterBadge>
+            <Text color="muted" render={(props) => <p {...props} />}>
+              Profile details
+            </Text>
             <Icon name="network" />
             <Field label="Connection">
               {(control) => (
@@ -89,7 +99,7 @@ function App() {
               )}
             </Tooltip>
             <EmptyState title="No saved profiles">Create a profile to start.</EmptyState>
-          </Card>
+          </Box>
           {dialog === 'modal' && (
             <Modal
               labelledBy="installed-dialog"

@@ -1,7 +1,7 @@
 import { parseMarkdown } from '@tanstack/markdown/parser';
 import type { BlockNode, InlineNode, MarkdownDocument } from '@tanstack/markdown';
 import { Fragment, h, type ComponentChildren } from 'preact';
-import { CodeBlock as PlainCodeBlock } from '../../../dist/index.js';
+import { CodeBlock as PlainCodeBlock, Text } from '../../../dist/index.js';
 import { CodeBlock } from './code-block';
 import changelog from '../../../CHANGELOG.md?raw';
 import styles from './gallery-changelog.module.css';
@@ -44,7 +44,15 @@ function renderInline(node: InlineNode): ComponentChildren {
 function block(node: BlockNode): ComponentChildren {
   switch (node.type) {
     case 'heading':
-      return h(`h${node.depth}`, { id: node.id }, inline(node.children));
+      return (
+        <Text
+          preset={node.depth <= 2 ? 'subtitle1' : 'subtitle2'}
+          render={h(`h${node.depth}`, {})}
+          id={node.id}
+        >
+          {inline(node.children)}
+        </Text>
+      );
     case 'paragraph':
       return <p>{inline(node.children)}</p>;
     case 'list':

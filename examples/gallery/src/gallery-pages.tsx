@@ -16,6 +16,7 @@ import type { ComponentType } from 'preact';
 import { useState } from 'preact/hooks';
 import {
   Table,
+  TableContainer,
   TableHeader,
   TableBody,
   TableRow,
@@ -23,6 +24,7 @@ import {
   TableCell,
   Button,
   Card,
+  Box,
   Checkbox,
   DialogBody,
   DialogFooter,
@@ -35,11 +37,14 @@ import {
   PageHeader,
   Select,
   StatusBadge,
+  CounterBadge,
+  Text,
   Switch,
   Textarea,
   TextPreview,
   CodeBlock as PlainCodeBlock,
 } from '../../../dist/index.js';
+import type { TextColor, TextPreset } from '../../../dist/index.js';
 import { CodeExample } from './code-block';
 import { samples } from './code-samples';
 import { DialogsDemo, IconsDemo } from './gallery-demos';
@@ -141,6 +146,116 @@ function InfoBarExample() {
     </div>
   );
 }
+const textPresets: TextPreset[] = [
+  'caption2',
+  'caption1',
+  'body1',
+  'subtitle2',
+  'subtitle1',
+  'title3',
+  'title2',
+  'title1',
+  'largeTitle',
+  'display',
+];
+function TextExample() {
+  return (
+    <div class={styles.stack}>
+      {textPresets.map((preset) => (
+        <Text key={preset} preset={preset} render={<p />} data-preset={preset}>
+          {preset}
+        </Text>
+      ))}
+      <Text preset="subtitle2" render={<h2 />}>
+        Semantic heading
+      </Text>
+      <Text render={(props, state) => <p {...props} data-current-preset={state.preset} />}>
+        A paragraph composed through a render callback.
+      </Text>
+      <Text>Default inline text</Text>
+      <div style={{ color: 'var(--color-text-muted)' }}>
+        {(['inherit', 'default', 'muted', 'subtle'] satisfies TextColor[]).map((color) => (
+          <Text key={color} color={color} render={<p />} data-color={color}>
+            {color}
+          </Text>
+        ))}
+      </div>
+    </div>
+  );
+}
+function BoxExample() {
+  const [wideGap, setWideGap] = useState(false);
+  return (
+    <Box display="grid" gap="space-4" minWidth={0}>
+      <Checkbox
+        label="Larger gap"
+        checked={wideGap}
+        onChange={(event) => setWideGap(event.currentTarget.checked)}
+      />
+      <Box
+        render={<section aria-label="Flex layout" />}
+        display="flex"
+        flexWrap="wrap"
+        alignItems="center"
+        gap={wideGap ? 'space-6' : 'space-2'}
+        data-box="flex"
+      >
+        <Text>Saved routes</Text>
+        <CounterBadge>12</CounterBadge>
+        <Button>Add route</Button>
+      </Box>
+      <Box
+        render={<Card aria-label="Composed card" />}
+        display="grid"
+        gap="space-3"
+        data-box="card"
+      >
+        <Text preset="subtitle2" render={<h2 />}>
+          Connection details
+        </Text>
+        <Text color="muted" render={<p />}>
+          Card styling with Box layout, without another wrapper.
+        </Text>
+      </Box>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(auto-fit, minmax(min(100%, 140px), 1fr))"
+        gap="space-3"
+        data-box="grid"
+      >
+        <Card>First column</Card>
+        <Card>Second column</Card>
+      </Box>
+      <Box
+        display="flex"
+        paddingInlineStart="space-4"
+        paddingInlineEnd="space-2"
+        paddingBlock="space-2"
+        dir="rtl"
+        data-box="logical"
+      >
+        <Text>Logical spacing follows writing direction.</Text>
+      </Box>
+      <Box render={<p />} margin={0}>
+        <Box render={<span />} data-box="inline">
+          Native inline root
+        </Box>
+      </Box>
+      <Box display="flex" hidden data-box="hidden">
+        Hidden layout
+      </Box>
+    </Box>
+  );
+}
+function CounterExample() {
+  return (
+    <div class={styles.row}>
+      {[0, 1, 12, 123, 123456].map((count) => (
+        <CounterBadge key={count}>{count}</CounterBadge>
+      ))}
+    </div>
+  );
+}
 function BadgeExample() {
   return (
     <div class={styles.row}>
@@ -194,15 +309,48 @@ const docs: ComponentDoc[] = [
   {
     title: 'Card',
     slug: 'card',
-    purpose: 'Group related content in a padded section.',
+    purpose: 'Group related content in a section, with optional padding for edge-to-edge data.',
     example: () => (
-      <Card aria-labelledby="card-example-title">
-        <h2 id="card-example-title">Connection details</h2>
-        <p>Office network configuration.</p>
-      </Card>
+      <div class={styles.stack}>
+        <Card aria-labelledby="card-example-title" data-padding="regular">
+          <Text preset="subtitle2" render={<h2 />} id="card-example-title">
+            Connection details
+          </Text>
+          <p>Office network configuration.</p>
+        </Card>
+        <Card padding="none" aria-label="Saved routes" data-padding="none">
+          <TableContainer>
+            <Table dividers="between" aria-label="Routes without outer padding">
+              <TableHeader>
+                <TableRow>
+                  <TableHeaderCell>Prefix</TableHeaderCell>
+                  <TableHeaderCell>Status</TableHeaderCell>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>203.0.113.10/32</TableCell>
+                  <TableCell>Through VPN</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>192.168.50.0/24</TableCell>
+                  <TableCell>Through VPN</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Card>
+      </div>
     ),
-    code: '<Card aria-labelledby="details"><h2 id="details">Connection details</h2><p>Office network configuration.</p></Card>',
-    props: [],
+    code: '<Card aria-labelledby="details"><Text preset="subtitle2" render={<h2 />} id="details">Connection details</Text><Text render={<p />}>Office network configuration.</Text></Card>\n\n<Card padding="none">\n  <TableContainer>\n    <Table dividers="between">{/* header and rows */}</Table>\n  </TableContainer>\n</Card>',
+    props: [
+      [
+        'padding',
+        'regular | none',
+        'Default regular. none removes outer padding and passes corner radii to the first and last child.',
+      ],
+    ],
+    note: 'Use padding="none" with TableContainer for data that meets the card edge. Cell padding remains inside the table; the scroll container follows the card corners.',
     accessibility:
       'Give meaningful sections a heading and aria-labelledby. Card does not add a heading or interactive behavior.',
   },
@@ -223,6 +371,86 @@ const docs: ComponentDoc[] = [
     ],
     accessibility:
       'Keep messages concise. Error messages use alert announcements; use the native role prop to adjust announcements when appropriate.',
+  },
+  {
+    title: 'Text',
+    slug: 'text',
+    purpose: 'Apply Fluent 2 typography independently of the semantic HTML element.',
+    example: TextExample,
+    code: '<Text preset="subtitle2" render={<h2 />}>Saved routes</Text>\n<Text color="muted" render={<p />}>Profile details</Text>\n<Text>Inline text</Text>',
+    props: [
+      [
+        'preset',
+        textPresets.join(' | '),
+        'Default body1. Accepts a signal; selects size, line height and weight.',
+      ],
+      [
+        'color',
+        'inherit | default | muted | subtle',
+        'Default inherit leaves the surrounding color unchanged. Other values use theme text tokens. Accepts a signal.',
+      ],
+      [
+        'render',
+        'VNode | (props: TextRenderProps, state: TextRenderState) => VNode',
+        'Default span. Composes a native root without a wrapper; callbacks must forward props and ref.',
+      ],
+    ],
+    accessibility:
+      'Choose h1–h6 for headings and p for paragraphs. Visual presets do not imply heading semantics. Text adds no tab stop or live region.',
+    note: 'The optional reset.css clears native h1–h6 and p margins and typography. Text preserves native block or inline display and uses the theme body font.',
+  },
+  {
+    title: 'Box',
+    slug: 'box',
+    purpose: 'Compose a native or component root with flex, grid, spacing and sizing props.',
+    example: BoxExample,
+    code: '<Box render={<section />} display="flex" flexWrap="wrap" alignItems="center" gap="space-4">\n  <Text>Saved routes</Text>\n  <Button>Add route</Button>\n</Box>\n\n<Box render={<Card />} display="grid" gap="space-3">\n  <Text>Connection details</Text>\n</Box>',
+    props: [
+      [
+        'render',
+        'VNode | (props: BoxRenderProps, state: BoxRenderState) => VNode',
+        'Default div. Composes props, styles and refs without a wrapper; callbacks must forward props and ref.',
+      ],
+      [
+        'Flex props',
+        'display, flex, flexDirection, flexWrap, flexGrow, flexShrink, flexBasis, order',
+        'Use CSS values. Signals are resolved during rendering.',
+      ],
+      [
+        'Grid props',
+        'gridTemplateColumns, gridTemplateRows, gridAutoColumns, gridAutoRows, gridAutoFlow, gridColumn, gridRow',
+        'Use native CSS track definitions and placement.',
+      ],
+      [
+        'Alignment',
+        'alignItems, alignContent, alignSelf, justifyContent, justifyItems, justifySelf',
+        'Applies CSS alignment on containers or items.',
+      ],
+      [
+        'Spacing',
+        'gap, rowGap, columnGap; padding/margin with Inline, Block and Start/End variants',
+        'space-1/2/3/4/5/6/8 use theme tokens. Numbers are pixels; strings are CSS values.',
+      ],
+      [
+        'Size and overflow',
+        'width, height, minWidth, maxWidth, minHeight, maxHeight, overflow, overflowX, overflowY',
+        'No size or clipping is imposed by default.',
+      ],
+    ],
+    accessibility:
+      'Choose the root according to its meaning. Box adds no role, focus behavior or typography. Native hidden remains effective with explicit display.',
+    note: 'Layout props become inline styles. Keep responsive properties in application CSS and omit the corresponding Box prop. Native style overrides matching layout props; render templates follow useRender style merging.',
+  },
+  {
+    title: 'CounterBadge',
+    slug: 'counter-badge',
+    purpose: 'Show a numeric count in a compact badge beside a heading or label.',
+    example: CounterExample,
+    code: '<CounterBadge>{count}</CounterBadge>',
+    props: [['children', 'ComponentChildren', 'Count supplied by the caller, including zero.']],
+    accessibility:
+      'Place the count beside its heading or label. CounterBadge adds no live region or focus behavior. Use native ARIA attributes when the surrounding context does not explain the count.',
+    note: 'Height stays at 24px. Width starts at 24px and expands for longer numbers. Counts are not truncated or hidden automatically.',
   },
   {
     title: 'StatusBadge',
@@ -740,7 +968,9 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
       <p>{doc.purpose}</p>
       {doc.title !== 'PageHeader' && (
         <section aria-label={`${doc.title} example`} class={styles.docSection}>
-          <h2>Example</h2>
+          <Text preset="subtitle1" render={<h2 />}>
+            Example
+          </Text>
           {['Button', 'Dialog'].includes(doc.title) ? (
             <Example />
           ) : (
@@ -757,14 +987,22 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
         </section>
       )}
       <section class={styles.docSection}>
-        <h2>Usage</h2>
+        <Text preset="subtitle1" render={<h2 />}>
+          Usage
+        </Text>
         <CodeExample code={doc.code} />
       </section>
       <section class={styles.apiReference}>
-        <h2 id={`${doc.slug}-api-reference`}>API reference</h2>
+        <Text preset="subtitle1" render={<h2 />} id={`${doc.slug}-api-reference`}>
+          API reference
+        </Text>
         {(doc.members ?? [doc]).map((member) => (
           <section key={member.title} id={member.slug} class={styles.docSection}>
-            {doc.members && <h3 id={`${member.slug}-api`}>{member.title}</h3>}
+            {doc.members && (
+              <Text preset="subtitle2" render={<h3 />} id={`${member.slug}-api`}>
+                {member.title}
+              </Text>
+            )}
             <p>Import {member.title}Props for the complete TypeScript contract.</p>
             {doc.members && <p>{member.purpose}</p>}
             <Table
@@ -814,7 +1052,9 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
         ))}
       </section>
       <section class={styles.docSection}>
-        <h2>Accessibility</h2>
+        <Text preset="subtitle1" render={<h2 />}>
+          Accessibility
+        </Text>
         <p>{doc.accessibility}</p>
       </section>
     </div>

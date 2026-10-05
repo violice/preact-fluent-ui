@@ -5,6 +5,7 @@ import {
   AppShellWorkspace,
   AppShellContent,
   Button,
+  Text,
   Icon,
   Modal,
   DialogHeader,
@@ -151,7 +152,11 @@ function Shell({ base, store }: { base: string; store?: GalleryStore }) {
         </Sidebar>
         <AppShellWorkspace id="main-content" tabIndex={-1} ref={main} class={styles.workspace}>
           <AppShellContent class={styles.gallery}>
-            {!page?.demoOwnsHeading && <h1 tabIndex={-1}>{page?.title ?? 'Page not found'}</h1>}
+            {!page?.demoOwnsHeading && (
+              <Text preset="title1" render={<h1 />} tabIndex={-1}>
+                {page?.title ?? 'Page not found'}
+              </Text>
+            )}
             <ErrorBoundary>
               <Router>
                 {galleryPages.map((page) => (

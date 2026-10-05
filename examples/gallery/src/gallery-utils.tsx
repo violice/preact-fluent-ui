@@ -9,6 +9,7 @@ import {
   TableHeaderCell,
   TableCell,
   Button,
+  Text,
   Checkbox,
   InfoBar,
   mergeClasses,
@@ -219,7 +220,9 @@ export const utilityPages = utilityDocs.map((doc) => ({
       <div class={styles.sections}>
         <p>{doc.purpose}</p>
         <section class={styles.docSection}>
-          <h2>Example</h2>
+          <Text preset="subtitle1" render={<h2 />}>
+            Example
+          </Text>
           <div class={styles.preview}>
             <Demo />
           </div>
@@ -227,7 +230,9 @@ export const utilityPages = utilityDocs.map((doc) => ({
           <CodeExample code={doc.code} />
         </section>
         <section class={styles.docSection}>
-          <h2 id={`${doc.slug}-api`}>API reference</h2>
+          <Text preset="subtitle1" render={<h2 />} id={`${doc.slug}-api`}>
+            API reference
+          </Text>
           <pre class={styles.longText}>
             <code>{doc.signature}</code>
           </pre>
@@ -252,7 +257,9 @@ export const utilityPages = utilityDocs.map((doc) => ({
             </TableBody>
           </Table>
           <div class={styles.docSection}>
-            <h3>Return value</h3>
+            <Text preset="subtitle2" render={<h3 />}>
+              Return value
+            </Text>
             <p>
               <code>{utilityReturns[doc.title]![0]}</code>
             </p>
@@ -260,7 +267,9 @@ export const utilityPages = utilityDocs.map((doc) => ({
           </div>
         </section>
         <section class={styles.docSection}>
-          <h2>Limitations</h2>
+          <Text preset="subtitle1" render={<h2 />}>
+            Limitations
+          </Text>
           <p>{doc.limits}</p>
         </section>
       </div>

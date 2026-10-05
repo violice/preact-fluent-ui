@@ -15,6 +15,9 @@ it.each([
   ['toolbar', 'Toolbar'],
   ['data-list', 'DataList'],
   ['separator', 'Separator'],
+  ['counter-badge', 'CounterBadge'],
+  ['text', 'Text'],
+  ['box', 'Box'],
 ])('registers the %s canonical family page', async (slug, title) => {
   const { galleryPages } = await import('./gallery-pages');
   expect(galleryPages.find((page) => page.path === `/components/${slug}`)?.title).toBe(title);

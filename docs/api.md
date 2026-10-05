@@ -11,8 +11,11 @@ Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and 
 | Component / exported type | Native props and ref | Component-specific props and defaults |
 | --- | --- | --- |
 | Button / ButtonProps | button | `variant?: 'default' \| 'primary' \| 'subtle' \| 'danger'` defaults to default; `size?: 'default' \| 'compact' \| 'icon'` defaults to default; native `type` defaults to button |
-| Card / CardProps | section | Native props and children |
+| Card / CardProps | section | `padding?: 'regular' \| 'none'`, default regular; native props and children |
+| Box / BoxProps | div by default, HTMLElement ref | Optional flex/grid, spacing, size and overflow props described below; `render?: VNode \| (props: BoxRenderProps, state: BoxRenderState) => VNode`; native props and additive `class` with `className` fallback |
 | InfoBar / InfoBarProps | div | `tone?: 'info' \| 'success' \| 'warning' \| 'error'` defaults to info; `title?: string`; role defaults to alert for error, status otherwise; explicit role is allowed; `classes?: { root?, title?, content? }` |
+| CounterBadge / CounterBadgeProps | span | Count with a fixed 24px height, minimum 24px width, rounded corners and native HTML props. Longer counts expand only the width. Numeric children, including zero, are displayed as supplied. Uses `class` with `className` fallback. |
+| Text / TextProps | span by default, HTMLElement ref | `preset?: JSX.Signalish<TextPreset>` defaults to body1; `color?: JSX.Signalish<TextColor>` defaults to inherit; `render?: VNode \| (props: TextRenderProps, state: TextRenderState) => VNode`; native attributes and additive `class` with `className` fallback |
 | StatusBadge / StatusBadgeProps | span | `tone?: 'neutral' \| 'success' \| 'warning' \| 'error'` defaults to neutral |
 | Icon / IconProps | svg, excluding children/width/height | required `name: IconName`; `size?: 16 \| 20 \| 24` defaults to 20; `aria-hidden=true` and `focusable=false` are invariants |
 | Field / FieldProps | div, excluding children | required `label: ComponentChildren`, `children: (props: FieldControlProps) => ComponentChildren`; optional `controlId`, `hint`, `validationMessage`, `required`; `validationState?: ValidationState` defaults to none; `classes?: { root?, label?, hint?, validation? }` |
@@ -37,6 +40,96 @@ Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and 
 
 `IconName` contains exactly 22 names: `about`, `adapter`, `add`, `chevron-down`, `connected`, `copy`, `delete`, `diagnostics`, `disconnected`, `edit`, `eye`, `info`, `network`, `open`, `profile`, `refresh`, `restore`, `routes`, `settings`, `shield`, `vpn`, `warning`. Icon supplies no accessible label. Name the parent icon button with visible text or `aria-label`.
 
+## Layout
+
+`Box` adds layout to a native or component root without another wrapper. The
+default root is `div`; without layout props it preserves the root's existing
+display, spacing, typography and appearance. It adds no role or focus behavior.
+
+| Group | Props |
+| --- | --- |
+| Flex | `display`, `flex`, `flexDirection`, `flexWrap`, `flexGrow`, `flexShrink`, `flexBasis`, `order` |
+| Alignment | `alignItems`, `alignContent`, `alignSelf`, `justifyContent`, `justifyItems`, `justifySelf` |
+| Grid | `gridTemplateColumns`, `gridTemplateRows`, `gridAutoColumns`, `gridAutoRows`, `gridAutoFlow`, `gridColumn`, `gridRow` |
+| Gaps | `gap`, `rowGap`, `columnGap` |
+| Padding | `padding`, `paddingInline`, `paddingBlock`, `paddingInlineStart`, `paddingInlineEnd`, `paddingBlockStart`, `paddingBlockEnd` |
+| Margin | `margin`, `marginInline`, `marginBlock`, `marginInlineStart`, `marginInlineEnd`, `marginBlockStart`, `marginBlockEnd` |
+| Size | `width`, `height`, `minWidth`, `maxWidth`, `minHeight`, `maxHeight` |
+| Overflow | `overflow`, `overflowX`, `overflowY` |
+
+All layout props accept signals. Spacing accepts `space-1`, `space-2`, `space-3`,
+`space-4`, `space-5`, `space-6` and `space-8`, resolving to the corresponding theme
+variables. For example, `gap="space-4"` uses `var(--space-4)`. Numbers are pixels
+for lengths; numeric flex factors, order and grid placement remain unitless.
+Other strings are native CSS values, such as `marginInline="auto"`, `width="100%"`
+or `gridTemplateColumns="repeat(2, minmax(0, 1fr))"`. Use `0` for zero spacing.
+
+```tsx
+<Box render={<section />} display="flex" flexWrap="wrap" gap="space-4">
+  <Text>Saved routes</Text>
+  <Button>Add route</Button>
+</Box>
+<Box render={<Card />} display="grid" gap="space-3">
+  <Text>Connection details</Text>
+</Box>
+```
+
+`BoxLayoutProps` exposes just the layout props. `BoxSpacing` documents the spacing
+values. Render callbacks receive `BoxRenderProps` and `BoxRenderState.layout`,
+the resolved layout before native style overrides; callbacks must forward all
+props and the composed callback ref. `BoxProps` accepts an `HTMLElement` ref.
+
+Layout props become inline styles. Object `style` overrides matching layout
+properties; a native string `style` is appended to the generated declarations.
+Render templates use the same [style merging as useRender](#utilities):
+object styles merge, while string styles replace the preceding style value.
+For responsive layout, leave the changing property in an application CSS class
+and omit that Box prop. Native `hidden` remains effective with explicit display;
+`hidden="until-found"` retains the browser's reveal behavior.
+
+## Typography
+
+`Text` separates visual typography from HTML semantics. Its ten presets follow
+[Fluent 2 Text](https://fluent2.microsoft.design/components/web/react/core/text/usage)
+and use the theme's `--font-body` font family.
+
+| Preset | Size | Line height | Weight |
+| --- | --- | --- | --- |
+| caption2 | 10px | 14px | 400 |
+| caption1 | 12px | 16px | 400 |
+| body1 | 14px | 20px | 400 |
+| subtitle2 | 16px | 22px | 600 |
+| subtitle1 | 20px | 28px | 600 |
+| title3 | 24px | 32px | 600 |
+| title2 | 28px | 36px | 600 |
+| title1 | 32px | 40px | 600 |
+| largeTitle | 40px | 52px | 600 |
+| display | 68px | 92px | 600 |
+
+```tsx
+<Text preset="title1" render={<h1 />}>Routes</Text>
+<Text preset="subtitle2" render={<h2 />} id="saved-title">Saved routes</Text>
+<Text color="muted" render={<p />}>Profile details</Text>
+<Text>Inline text</Text>
+```
+
+Presets do not create heading semantics. The root retains its native block or
+inline display; Text resets its margin and wraps long words. Color is independent
+of the preset. `TextColor` supports `inherit`, `default`, `muted` and `subtle`.
+The default `inherit` adds no color declaration, preserving the existing cascade.
+The other values use `--color-text`, `--color-text-muted` and `--color-text-subtle`
+respectively, including locally scoped theme tokens. Arbitrary CSS colors can
+still be supplied through the native `style` prop. No focus behavior
+or live region is added. A render VNode composes native props, classes and refs;
+a callback receives the resolved preset and color in `TextRenderState` and must forward
+all `TextRenderProps`, including the composed callback ref, to its native root.
+`TextProps` accepts a native `HTMLElement` ref.
+
+The optional `reset.css` clears margins and inherits font styles for bare
+`h1`–`h6` and `p` using a low specificity selector. It does not assign presets;
+use Text or explicit application styles for visual hierarchy. Existing
+component typography continues to override the reset.
+
 ## Data presentation
 
 All data components resolve signal-like `class` and `className` using
@@ -46,7 +139,7 @@ are needed because each part is a separate public component.
 
 | Component / Props type | Native element and ref | Additional props |
 | --- | --- | --- |
-| Table / TableProps | table, HTMLTableElement | `density?: 'regular' \| 'compact'`, default regular |
+| Table / TableProps | table, HTMLTableElement | `density?: 'regular' \| 'compact'`, default regular; `dividers?: 'all' \| 'between'`, default all |
 | TableContainer / TableContainerProps | div, HTMLDivElement | Native props; optional horizontal scroll container |
 | TableHeader / TableHeaderProps | thead, HTMLTableSectionElement | Native props |
 | TableBody / TableBodyProps | tbody, HTMLTableSectionElement | Native props |
@@ -64,6 +157,25 @@ are needed because each part is a separate public component.
 | DataListLabel / DataListLabelProps | dt, HTMLElement | Native props |
 | DataListValue / DataListValueProps | dd, HTMLElement | Native props and rich children |
 | Separator / SeparatorProps | div, HTMLDivElement | `orientation?: 'horizontal' \| 'vertical'`, default horizontal; `decorative?: boolean`, default true; excludes role, aria-hidden and aria-orientation overrides |
+
+Card `padding="none"` removes the outer inset at all viewport widths. Its first
+and last direct child inherit the corresponding card corners. Compose a
+TableContainer inside it to preserve horizontal scrolling and rounded table
+surfaces; Card itself does not clip overflow. Cell padding is independent.
+Use Table `dividers="between"` for separators between rows without a line below
+the final row. This includes header/body/footer boundaries and works when
+native tfoot precedes tbody. The default `all` retains the existing bottom
+border on every cell.
+
+```tsx
+<Card padding="none">
+  <TableContainer>
+    <Table dividers="between" aria-label="Saved routes">
+      {/* TableHeader and TableBody */}
+    </Table>
+  </TableContainer>
+</Card>
+```
 
 Table preserves native `scope`, `headers`, `colSpan`, `rowSpan`, and `aria-sort`.
 Use TableCaption or `aria-labelledby` to name it. Table has no wrapper or grid
@@ -203,7 +315,7 @@ See the [composition example](../README.md#sidebar-composition). The library imp
 
 `SidebarBrandProps` extends native div props, replacing native title with required `title: string`. It accepts `description?: string`, `logo?: ComponentChildren` and class slots root/logo/content/title/description. The logo is decorative. Rail layout hides visual text while keeping names; set SidebarItem `label` for complex children. Rail labels appear in a portal on hover or keyboard focus and Escape dismisses them until hover and focus leave.
 
-`AppShellWorkspaceProps` forwards native main props and an HTMLElement ref. Use one Workspace per document. `AppShellHeaderProps`, `AppShellContentProps` and `AppShellFooterProps` forward native div props and HTMLDivElement refs. They add no heading, focus or responsive state. All shell parts preserve hidden and class/className fallback. Horizontal layout stacks navigation above the workspace, removes workspace margin and radius. Applications own breakpoints and keyboard disclosure.
+`AppShellWorkspaceProps` forwards native main props and an HTMLElement ref. Use one Workspace per document. `AppShellHeaderProps`, `AppShellContentProps` and `AppShellFooterProps` forward native div props and HTMLDivElement refs. Content and Footer share full width, a 1240px maximum and logical automatic margins through `--app-shell-content-max-width`; all padded shell parts use `--app-shell-content-padding`, default 24px. Header remains full workspace width. They add no heading, focus or responsive state. All shell parts preserve hidden and class/className fallback. Horizontal layout stacks navigation above the workspace, removes workspace margin and radius. Applications own breakpoints and keyboard disclosure.
 
 ## Utilities
 
@@ -295,11 +407,13 @@ All six new components and their Props types are root exports. Tooltip also
 exports `TooltipTriggerProps`; placement/theme helpers remain internal.
 
 AppShellToolbar supplies application surface and bottom-border chrome around Toolbar.
+The first direct Workspace child inherits its upper corner radii, so a toolbar
+background follows the Workspace outline. Content overflow remains visible.
 The inner layout shares AppShell's `--app-shell-content-max-width` with a 1240px
 default and `--app-shell-content-padding` with a 24px default. It uses border-box
 sizing, full width and logical automatic margins. Desktop minimum height is
 76px with 18px block padding. At widths up to 640px block padding is 12px and
-inline padding defaults to 12px; an explicit AppShell padding variable wins.
+inline padding remains aligned with Content at 24px; an explicit AppShell padding variable wins.
 Content can wrap and increase the height. Native attributes, events, hidden,
 classes and ref apply to the outer div. Children and business state belong to
 the application; no toolbar role or keyboard controller is supplied.

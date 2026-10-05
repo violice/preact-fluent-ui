@@ -1,5 +1,9 @@
 # npm releases
 
+## Release 0.5.0
+
+Version 0.5.0 adds Text, Box and CounterBadge, optional edge-to-edge Card/Table composition, explicit native typography reset and aligned AppShell content, toolbar and footer. The release is published through the existing GitHub Actions npm trusted publisher from tag `v0.5.0`.
+
 ## Published 0.4.0
 
 `@violice/preact-fluent-ui@0.4.0` was published on 2026-10-05 from `8a50de7af34acedc2c51085dd23d5253c0cc83ee`. The npm latest tag points to 0.4.0 and records SLSA provenance. A registry-downloaded archive passed the isolated TypeScript, Full/Minimal build and package checks against Preact 10.29.8.
@@ -91,7 +95,7 @@ Gallery page sources come from `main`; the showcased library comes from npm. Cha
 
 ## Gallery route artifacts and Sidebar release guard
 
-The English gallery prerenders 37 known pages and 404.html. Build locally with `GALLERY_BASE=/preact-fluent-ui/ npm run build:gallery` for repository hosting. The build runs `check:gallery`; rerun it with the same GALLERY_BASE after inspecting or changing the artifact. `test:gallery-artifact` checks rejection of missing pages, relative nested assets, unresolved templates and wrong titles. `test:gallery-preview` checks the real preview server's handling of malformed requests and missing fallback HTML.
+The English gallery prerenders 41 known pages and 404.html. Build locally with `GALLERY_BASE=/preact-fluent-ui/ npm run build:gallery` for repository hosting. The build runs `check:gallery`; rerun it with the same GALLERY_BASE after inspecting or changing the artifact. `test:gallery-artifact` checks rejection of missing pages, relative nested assets, unresolved templates and wrong titles. `test:gallery-preview` checks the real preview server's handling of malformed requests and missing fallback HTML.
 
 The Pages workflow supplies the repository base and clears local dist before copying the exact installed release. It then requires all six Sidebar exports. If the published package lacks them, the workflow fails with a diagnostic requiring publication of a Sidebar-capable release. The published 0.1.0 package predates Sidebar; do not expect the new gallery to deploy against that package. The workflow does not substitute local unpublished Sidebar code. Publish a reviewed new library version before requesting deployment of this gallery.
 

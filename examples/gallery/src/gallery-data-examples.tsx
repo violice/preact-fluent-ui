@@ -37,6 +37,7 @@ function TableExample() {
   const [filter, setFilter] = useState('all');
   const [page, setPage] = useState(1);
   const [compact, setCompact] = useState(false);
+  const [between, setBetween] = useState(false);
   const filtered = profiles.filter(
     (profile) =>
       profile.name.toLowerCase().includes(query.toLowerCase()) &&
@@ -75,10 +76,17 @@ function TableExample() {
           <Button aria-pressed={compact} onClick={() => setCompact(!compact)}>
             Compact rows
           </Button>
+          <Button aria-pressed={between} onClick={() => setBetween(!between)}>
+            Between row dividers
+          </Button>
         </ToolbarGroup>
       </Toolbar>
       <TableContainer tabIndex={0} role="region" aria-label="Scrollable connection profiles">
-        <Table density={compact ? 'compact' : 'regular'} style={{ minWidth: '480px' }}>
+        <Table
+          density={compact ? 'compact' : 'regular'}
+          dividers={between ? 'between' : 'all'}
+          style={{ minWidth: '480px' }}
+        >
           <TableCaption>Connection profiles</TableCaption>
           <TableHeader>
             <TableRow>
@@ -356,7 +364,14 @@ const tableParts = [
     'Table',
     'table',
     'Native table without an implicit wrapper.',
-    [['density', 'regular | compact', 'Cell spacing; regular by default.']],
+    [
+      ['density', 'regular | compact', 'Cell spacing; regular by default.'],
+      [
+        'dividers',
+        'all | between',
+        'Default all. between draws separators between rows and leaves the outer table edges clear.',
+      ],
+    ],
   ],
   [
     'TableContainer',
