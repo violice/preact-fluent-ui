@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../classes';
+import { mergeClasses } from '../utils/merge-classes';
 import { fluentIconPaths } from './fluent-icon-paths';
 import styles from './icon.module.css';
 

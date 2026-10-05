@@ -1,8 +1,8 @@
 import { signal } from '@preact/signals';
 import { describe, expect, it } from 'vitest';
-import { mergeClasses, resolveClass } from './index';
+import { resolveClass } from '../index';
 
-describe('class utilities', () => {
+describe('resolveClass', () => {
   it('preserves an explicitly empty primary class', () => {
     expect(resolveClass('', 'fallback')).toBe('');
   });
@@ -21,12 +21,5 @@ describe('class utilities', () => {
     expect(resolveClass(primary, fallback)).toBe('fallback');
     primary.value = '';
     expect(resolveClass(primary, fallback)).toBe('');
-  });
-
-  it('merges ordered classes and skips empty values', () => {
-    const value = signal('second');
-    expect(mergeClasses('first', undefined, '', value, 'third')).toBe('first second third');
-    value.value = 'updated';
-    expect(mergeClasses('first', value)).toBe('first updated');
   });
 });

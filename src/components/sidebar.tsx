@@ -8,7 +8,8 @@ export { SidebarItem } from './sidebar-item';
 export type { SidebarItemProps } from './sidebar-item';
 export { SidebarBrand } from './sidebar-brand';
 export type { SidebarBrandProps } from './sidebar-brand';
-import { mergeClasses, resolveClass } from '../classes';
+import { mergeClasses } from '../utils/merge-classes';
+import { resolveClass } from '../utils/resolve-class';
 import styles from './sidebar.module.css';
 
 export type SidebarProps = JSX.HTMLAttributes<HTMLElement> & {

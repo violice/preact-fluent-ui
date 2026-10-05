@@ -53,7 +53,8 @@ export type {
   SidebarBrandProps,
   SidebarLayout,
 } from './components/sidebar';
-export { mergeClasses, resolveClass } from './classes';
+export { mergeClasses } from './utils/merge-classes';
+export { resolveClass } from './utils/resolve-class';
 export { mergeProps } from './utils/merge-props';
 
 export { useRender } from './utils/use-render';

@@ -76,7 +76,7 @@ export function About() {
       </DocSection>
       <DocSection title="Start building">
         <p>
-          <a class={styles.documentationLink} href={href('/getting-started')}>
+          <a class={styles.documentationLink} href={href('/')}>
             Install the library and connect its CSS
           </a>
           , then try the local profile form. Continue with the{' '}

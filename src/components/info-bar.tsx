@@ -1,7 +1,8 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { cva } from 'class-variance-authority';
-import { mergeClasses, resolveClass } from '../classes';
+import { mergeClasses } from '../utils/merge-classes';
+import { resolveClass } from '../utils/resolve-class';
 import styles from './info-bar.module.css';
 
 const infoBarClasses = cva(styles.infoBar, {

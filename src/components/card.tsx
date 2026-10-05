@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../classes';
+import { mergeClasses } from '../utils/merge-classes';
 import styles from './card.module.css';
 
 export type CardProps = JSX.HTMLAttributes<HTMLElement>;

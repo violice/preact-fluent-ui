@@ -1,7 +1,8 @@
 import type { ComponentChildren, JSX, RefObject } from 'preact';
 import { createPortal, forwardRef } from 'preact/compat';
 import { useImperativeHandle, useLayoutEffect, useRef } from 'preact/hooks';
-import { mergeClasses, resolveClass } from '../classes';
+import { mergeClasses } from '../utils/merge-classes';
+import { resolveClass } from '../utils/resolve-class';
 import styles from './modal.module.css';
 
 export type ModalProps = Omit<

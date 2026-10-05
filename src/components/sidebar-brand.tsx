@@ -1,6 +1,7 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses, resolveClass } from '../classes';
+import { mergeClasses } from '../utils/merge-classes';
+import { resolveClass } from '../utils/resolve-class';
 import styles from './sidebar.module.css';
 export type SidebarBrandProps = Omit<JSX.HTMLAttributes<HTMLDivElement>, 'title'> & {
   title: string;

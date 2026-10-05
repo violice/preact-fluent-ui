@@ -1,7 +1,8 @@
 import type { ComponentChildren, JSX, Ref, VNode } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useCallback, useContext, useRef, useState } from 'preact/hooks';
-import { mergeClasses, resolveClass } from '../classes';
+import { mergeClasses } from '../utils/merge-classes';
+import { resolveClass } from '../utils/resolve-class';
 import { mergeProps } from '../utils/merge-props';
 import { useRender } from '../utils/use-render';
 import type { RenderProp } from '../utils/use-render';

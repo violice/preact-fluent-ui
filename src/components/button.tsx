@@ -1,7 +1,7 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { cva } from 'class-variance-authority';
-import { mergeClasses } from '../classes';
+import { mergeClasses } from '../utils/merge-classes';
 import styles from './button.module.css';
 
 const buttonClasses = cva(styles.button, {

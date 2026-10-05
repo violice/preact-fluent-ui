@@ -88,7 +88,9 @@ it('synchronizes route and appearance through real Back and Forward', async () =
   expect((screen.getByLabelText('Appearance') as HTMLSelectElement).value).toBe('light');
   await user.click(screen.getByRole('button', { name: 'Close settings' }));
   history.back();
-  await waitFor(() => expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('About'));
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Getting Started'),
+  );
   await user.click(screen.getByRole('button', { name: 'Appearance settings' }));
   await screen.findByLabelText('Appearance');
   expect((screen.getByLabelText('Appearance') as HTMLSelectElement).value).toBe('dark');
@@ -353,4 +355,32 @@ it('passes appearance and base to an isolated shell document with one gallery ma
   const preview = screen.getByTitle('Application shell preview');
   expect(preview.tagName).toBe('IFRAME');
   expect(preview.getAttribute('src')).toBe('/repo/shell-preview.html?preset=minimal&theme=dark');
+});
+
+it.each(['/', '/getting-started', '/repo/', '/repo/getting-started'])(
+  'uses the Getting Started homepage and canonical navigation for %s',
+  (path) => {
+    history.replaceState(null, '', path + '?theme=dark&preset=minimal');
+    const base = path.startsWith('/repo') ? '/repo/' : '/';
+    render(<Gallery base={base} />);
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Getting Started');
+    const nav = screen.getByRole('navigation', { name: 'Documentation' });
+    const start = within(nav).getByRole('link', { name: 'Getting Started', exact: true });
+    expect(start.getAttribute('href')).toBe(base + '?preset=minimal&theme=dark');
+    expect(start.getAttribute('aria-current')).toBe('page');
+    expect(within(nav).getAllByRole('link', { name: 'Getting Started', exact: true })).toHaveLength(
+      1,
+    );
+    expect(within(nav).getByRole('link', { name: 'About', exact: true }).getAttribute('href')).toBe(
+      base + 'about?preset=minimal&theme=dark',
+    );
+  },
+);
+
+it('uses the public application shell workspace as its sole main landmark', () => {
+  render(<Gallery base="/" />);
+  const main = screen.getByRole('main');
+  expect(main.hasAttribute('data-app-shell-workspace')).toBe(true);
+  expect(main.parentElement?.getAttribute('data-navigation-layout')).toBe('expanded');
+  expect(main.querySelector('[class*="content"]')).toBeTruthy();
 });

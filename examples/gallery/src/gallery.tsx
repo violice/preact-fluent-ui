@@ -1,6 +1,9 @@
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { ErrorBoundary, LocationProvider, Route, Router, useLocation } from 'preact-iso';
 import {
+  AppShell,
+  AppShellWorkspace,
+  AppShellContent,
   Button,
   Icon,
   Modal,
@@ -27,6 +30,7 @@ function Shell({ base, store }: { base: string; store?: GalleryStore }) {
   const { settings, update } = useGallerySettings(store);
   const location = useLocation();
   const path = normalizeGalleryPath(location.path, base);
+  const navigationPath = path === '/getting-started' ? '/' : path;
   const page = galleryPages.find((page) => page.path === path);
   const [expanded, setExpanded] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -51,7 +55,7 @@ function Shell({ base, store }: { base: string; store?: GalleryStore }) {
       <a class={styles.skipLink} href="#main-content" onClick={() => main.current?.focus()}>
         Skip to content
       </a>
-      <div class={styles.shell}>
+      <AppShell class={styles.shell}>
         <Button
           ref={navigationToggle}
           class={styles.navigationToggle}
@@ -76,7 +80,7 @@ function Shell({ base, store }: { base: string; store?: GalleryStore }) {
             {(['Overview', 'Guides', 'Components', 'Utils'] as const).map((group) => (
               <SidebarGroup key={group} label={group}>
                 {galleryPages
-                  .filter((page) => page.group === group)
+                  .filter((page) => page.group === group && !page.navigationHidden)
                   .sort((first, second) =>
                     group === 'Components' || group === 'Utils'
                       ? first.title.localeCompare(second.title, 'en')
@@ -86,7 +90,7 @@ function Shell({ base, store }: { base: string; store?: GalleryStore }) {
                     <SidebarItem
                       key={page.path}
                       href={galleryHref(page.path, settings, base)}
-                      active={page.path === path}
+                      active={page.path === navigationPath}
                       onClick={(event) => {
                         if (
                           event.button === 0 &&
@@ -97,7 +101,7 @@ function Shell({ base, store }: { base: string; store?: GalleryStore }) {
                         ) {
                           const closesCurrentMobilePage =
                             expanded &&
-                            page.path === path &&
+                            page.path === navigationPath &&
                             navigationToggle.current &&
                             getComputedStyle(navigationToggle.current).display !== 'none';
                           setExpanded(false);
@@ -134,8 +138,8 @@ function Shell({ base, store }: { base: string; store?: GalleryStore }) {
             </a>
           </SidebarFooter>
         </Sidebar>
-        <div class={styles.workspace}>
-          <main id="main-content" tabIndex={-1} ref={main} class={styles.gallery}>
+        <AppShellWorkspace id="main-content" tabIndex={-1} ref={main} class={styles.workspace}>
+          <AppShellContent class={styles.gallery}>
             {!page?.demoOwnsHeading && <h1 tabIndex={-1}>{page?.title ?? 'Page not found'}</h1>}
             <ErrorBoundary>
               <Router>
@@ -149,9 +153,9 @@ function Shell({ base, store }: { base: string; store?: GalleryStore }) {
                 <Route default component={NotFound} />
               </Router>
             </ErrorBoundary>
-          </main>
-        </div>
-      </div>
+          </AppShellContent>
+        </AppShellWorkspace>
+      </AppShell>
       {settingsOpen && (
         <Modal
           labelledBy="appearance-settings-title"

@@ -660,7 +660,7 @@ export function NotFound() {
     <>
       <p>The requested documentation page does not exist.</p>
       <a class={styles.documentationLink} href={href('/')}>
-        Return to About
+        Return to Getting Started
       </a>
     </>
   );
@@ -671,16 +671,24 @@ export type GalleryPage = {
   group: 'Overview' | 'Components' | 'Guides' | 'Utils';
   component: ComponentType;
   demoOwnsHeading?: boolean;
+  navigationHidden?: boolean;
 };
 export const galleryPages: GalleryPage[] = [
   ...utilityPages,
+  {
+    path: '/',
+    title: 'Getting Started',
+    group: 'Overview',
+    component: GettingStarted,
+  },
+  { path: '/about', title: 'About', group: 'Overview', component: About },
   {
     path: '/getting-started',
     title: 'Getting Started',
     group: 'Overview',
     component: GettingStarted,
+    navigationHidden: true,
   },
-  { path: '/', title: 'About', group: 'Overview', component: About },
   ...docs.map((doc) => ({
     path: `/components/${doc.slug}`,
     title: doc.title,

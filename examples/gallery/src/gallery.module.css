@@ -1,7 +1,6 @@
 .gallery {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 24px;
+  --app-shell-content-max-width: 1120px;
+  overflow-wrap: anywhere;
 }
 .sections > * {
   min-width: 0;
@@ -107,9 +106,7 @@
   justify-content: space-between;
 }
 .shell {
-  display: grid;
-  grid-template-columns: 250px minmax(0, 1fr);
-  min-height: 100vh;
+  --app-shell-navigation-width: 250px;
 }
 .navigation {
   position: sticky;
@@ -204,7 +201,7 @@
     display: inline-flex;
     margin: 12px;
   }
-  .navigation {
+  .shell > .navigation {
     display: none;
     position: static;
     height: auto;
@@ -212,7 +209,7 @@
     border-inline-end: 0;
     border-bottom: 1px solid var(--color-control-border);
   }
-  .navigationOpen {
+  .shell > .navigationOpen {
     display: flex;
   }
 }

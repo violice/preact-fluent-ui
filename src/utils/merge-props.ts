@@ -1,5 +1,6 @@
 import type { JSX } from 'preact';
-import { mergeClasses, resolveClass } from '../classes';
+import { mergeClasses } from './merge-classes';
+import { resolveClass } from './resolve-class';
 
 type Handler = (...args: unknown[]) => unknown;
 
