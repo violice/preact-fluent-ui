@@ -70,3 +70,7 @@ Separator использует orientation для направления лин�
 - [Design tokens](https://fluent2.microsoft.design/design-tokens)
 - [Typography](https://fluent2.microsoft.design/typography)
 - [Motion](https://fluent2.microsoft.design/motion)
+
+## Disclosure, loading и Tooltip, 2026-10-05
+
+Реализованы нативные Disclosure/DisclosureSummary/DisclosureContent, Spinner, LoadingState, Button loading и Tooltip. Галерея содержит примеры ошибок, файлов, загрузки, действий и подсказок в таблице и Modal. ProgressBar, Popover и действия InfoBar остаются отдельными будущими задачами. Миграция приложений и публикация пакета не входят в эту работу. Браузерная приёмка новых компонентов выполняется отдельно; ручные forced colors и screen reader остаются в критериях проверки.

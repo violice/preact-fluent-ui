@@ -1,3 +1,4 @@
+import { feedbackDocs, BusyButtonsExample } from './gallery-feedback-examples';
 import { utilityPages } from './gallery-utils';
 import { dataDocs } from './gallery-data-examples';
 import { appShellDocs } from './gallery-app-shell-examples';
@@ -38,7 +39,7 @@ import {
 } from '../../../dist/index.js';
 import { CodeExample } from './code-block';
 import { samples } from './code-samples';
-import { ButtonsDemo, DialogsDemo, IconsDemo } from './gallery-demos';
+import { DialogsDemo, IconsDemo } from './gallery-demos';
 import { useGalleryHref } from './gallery-context';
 import styles from './gallery.module.css';
 
@@ -165,19 +166,27 @@ function EmptyExample() {
 }
 const docs: ComponentDoc[] = [
   ...dataDocs,
+  ...feedbackDocs,
   ...appShellDocs,
   {
     title: 'Button',
     slug: 'button',
     purpose: 'Run an action with a native button, sized for text or icons.',
-    example: ButtonsDemo,
-    code: samples.buttons,
+    example: BusyButtonsExample,
+    code:
+      samples.buttons +
+      `\n\n<Button loading={refreshing} loadingLabel="Refreshing profiles" onClick={refresh}>Refresh profiles</Button>\n{refreshing && <LoadingState appearance="inline" label="Reading profiles" />}`,
     props: [
       ['variant', 'default | primary | subtle | danger', 'Visual emphasis; default is default.'],
       ['size', 'default | compact | icon', 'Control size; default is default.'],
+      [
+        'loading / loadingLabel',
+        'boolean / string',
+        'Suppress activation and retain focus. Optional localized replacement label. Explicit disabled still uses native disabled.',
+      ],
     ],
     accessibility:
-      'Use clear action text. Icon-only buttons need aria-label. Set type="submit" explicitly inside forms; the default is button.',
+      'Use clear action text. Icon-only buttons need aria-label. Set type="submit" explicitly inside forms; the default is button. Loading sets aria-busy and aria-disabled without native disabled. Announce an operation with one application status or LoadingState rather than a live region per button.',
   },
   {
     title: 'Card',
@@ -588,7 +597,7 @@ const docs: ComponentDoc[] = [
   })),
 ];
 const families = [
-  ...['Table', 'DataList', 'DataToolbar'].map((title) => ({
+  ...['Table', 'DataList', 'DataToolbar', 'Disclosure'].map((title) => ({
     title,
     slug: title.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
     members: docs.filter((doc) => doc.title.startsWith(title)),
@@ -681,13 +690,19 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
               <TableBody>
                 {[
                   ...member.props,
-                  member.title === 'ConfirmDialog'
+                  member.title === 'Tooltip'
                     ? ([
                         'class / className',
                         'Signalish<string | undefined>',
-                        'Add a root class. className is the fallback. Other native HTML props are not accepted.',
+                        'Add a portal root class. Caller native trigger props and refs belong in triggerProps.',
                       ] as Prop)
-                    : native,
+                    : member.title === 'ConfirmDialog'
+                      ? ([
+                          'class / className',
+                          'Signalish<string | undefined>',
+                          'Add a root class. className is the fallback. Other native HTML props are not accepted.',
+                        ] as Prop)
+                      : native,
                 ].map(([name, type, description]) => (
                   <TableRow key={name}>
                     <TableHeaderCell scope="row">{name}</TableHeaderCell>

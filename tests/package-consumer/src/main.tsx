@@ -5,6 +5,12 @@ import {
   AppShellWorkspace,
   AppShellContent,
   Sidebar,
+  Disclosure,
+  DisclosureSummary,
+  DisclosureContent,
+  Spinner,
+  LoadingState,
+  Tooltip,
   Button,
   Card,
   Checkbox,
@@ -66,6 +72,22 @@ function App() {
               Open modal
             </Button>
             <Button onClick={() => setDialog('confirm')}>Confirm action</Button>
+            <Button loading loadingLabel="Refreshing">
+              Refresh profiles
+            </Button>
+            <Spinner label="Checking connection" />
+            <LoadingState label="Loading profiles" />
+            <Disclosure open>
+              <DisclosureSummary>Profile details</DisclosureSummary>
+              <DisclosureContent>Installed disclosure</DisclosureContent>
+            </Disclosure>
+            <Tooltip content="Refresh connection">
+              {(props) => (
+                <Button {...props} size="icon" aria-label="Refresh connection">
+                  <Icon name="refresh" size={16} />
+                </Button>
+              )}
+            </Tooltip>
             <EmptyState title="No saved profiles">Create a profile to start.</EmptyState>
           </Card>
           {dialog === 'modal' && (

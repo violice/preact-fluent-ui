@@ -15,6 +15,12 @@ import {
   SidebarItem,
   SidebarFooter,
   SidebarBrand,
+  Disclosure,
+  DisclosureSummary,
+  DisclosureContent,
+  Spinner,
+  LoadingState,
+  Tooltip,
   Button,
   Card,
   Checkbox,
@@ -48,6 +54,13 @@ import type {
   SidebarFooterProps,
   SidebarBrandProps,
   SidebarLayout,
+  DisclosureProps,
+  DisclosureSummaryProps,
+  DisclosureContentProps,
+  SpinnerProps,
+  LoadingStateProps,
+  TooltipProps,
+  TooltipTriggerProps,
   ButtonProps,
   CardProps,
   CheckboxProps,
@@ -834,3 +847,66 @@ export const dataNegativeContracts = (
     />
   </>
 );
+
+const feedbackContracts: [
+  DisclosureProps,
+  DisclosureSummaryProps,
+  DisclosureContentProps,
+  SpinnerProps,
+  LoadingStateProps,
+  TooltipProps,
+] = [
+  {
+    open: true,
+    name: 'files',
+    onToggle: (event) => {
+      const open: boolean = event.currentTarget.open;
+      void open;
+    },
+  },
+  { title: 'File preview' },
+  { dir: 'rtl' },
+  { size: 'large', label: 'Reading' },
+  { label: 'Loading', appearance: 'inline' },
+  {
+    content: 'Refresh',
+    placement: 'left',
+    triggerProps: {
+      ref: createRef<HTMLButtonElement>(),
+      onClick: () => {},
+      'aria-describedby': 'hint',
+    },
+    children: (props: TooltipTriggerProps) => <Button {...props} aria-label="Refresh" />,
+  },
+];
+void feedbackContracts;
+export const feedbackElements = (
+  <>
+    <Disclosure ref={createRef<HTMLDetailsElement>()} open name="files">
+      <DisclosureSummary ref={createRef<HTMLElement>()}>File</DisclosureSummary>
+      <DisclosureContent ref={createRef<HTMLDivElement>()}>Preview</DisclosureContent>
+    </Disclosure>
+    <Spinner ref={createRef<HTMLSpanElement>()} size="small" />
+    <LoadingState ref={createRef<HTMLDivElement>()} label="Loading profiles" />
+    <Button loading loadingLabel="Saving" type="submit" ref={createRef<HTMLButtonElement>()}>
+      Save
+    </Button>
+    <Tooltip content="Refresh">{(props) => <Button {...props} aria-label="Refresh" />}</Tooltip>
+    {/* @ts-expect-error Spinner sizes are named. */}
+    <Spinner size={16} />
+    {/* @ts-expect-error Unknown loading appearance. */}
+    <LoadingState label="Loading" appearance="card" />
+    {/* @ts-expect-error Localized loading label is required. */}
+    <LoadingState />
+    {/* @ts-expect-error Unknown tooltip placement. */}
+    <Tooltip content="Refresh" placement="auto">
+      {(props) => <Button {...props} />}
+    </Tooltip>
+    {/* @ts-expect-error Disclosure ref is a details element. */}
+    <Disclosure ref={createRef<HTMLDivElement>()} />
+  </>
+);
+
+// @ts-expect-error Tooltip requires a render-function child.
+const invalidTooltipChild: TooltipProps = { content: 'Refresh', children: <Button /> };
+void invalidTooltipChild;

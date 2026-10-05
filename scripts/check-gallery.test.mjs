@@ -7,6 +7,8 @@ import { test } from 'node:test';
 
 const checker = resolve('scripts/check-gallery.mjs');
 for (const [name, mutate, diagnostic] of [
+  ['missing tooltip page', (dir) => rm(join(dir, 'components/tooltip/index.html')), 'ENOENT'],
+  ['missing disclosure page', (dir) => rm(join(dir, 'components/disclosure/index.html')), 'ENOENT'],
   ['missing table family page', (dir) => rm(join(dir, 'components/table/index.html')), 'ENOENT'],
   ['missing shell preview', (dir) => rm(join(dir, 'shell-preview.html')), 'ENOENT'],
   ['missing nested page', (dir) => rm(join(dir, 'components/button/index.html')), 'ENOENT'],

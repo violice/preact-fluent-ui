@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add native Disclosure parts for error details and file previews.
+- Add labeled/decorative Spinner and single-status LoadingState with inline presentation.
+- Add Button loading with focus retention, guarded activation and localized replacement labels.
+- Add composed render-function Tooltip triggers with viewport positioning, scrolling/Modal portals and inherited local themes.
+- Add four canonical gallery pages, interactive loading examples and packed public API contracts.
+
 - Add native Table parts and an optional TableContainer, with regular and compact density.
 - Add controlled one-based Pagination with localized labels and empty-result handling.
 - Add DataToolbar and DataToolbarGroup for controls, counters and pagination above or below data views.

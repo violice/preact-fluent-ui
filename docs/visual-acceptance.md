@@ -1,5 +1,20 @@
 # Visual acceptance
 
+## Disclosure, loading and Tooltip integration, 2026-10-05
+
+The gallery now includes Disclosure error/file previews, labeled Spinner sizes,
+initial/inline LoadingState, a focus-retaining interactive Button refresh, busy
+variants and named icon actions. Tooltip examples cover scrolling
+TableContainer, a local dark token scope and Modal. Global Appearance settings
+continue to control RTL and theme presets. API references use the Table family
+and existing documentation spacing.
+
+Automated integration verification and packed-consumer checks are recorded in
+the Task 5 report. Native keyboard disclosure behavior, tooltip clipping and
+positioning, Modal Escape/focus, themes, narrow layouts and RTL require the
+Task 6 browser pass. No new browser acceptance is claimed here. Windows forced
+colors and real screen-reader announcements remain manual checks.
+
 ## Data components and gallery spacing, 2026-10-05
 
 Checked the current gallery in T3 native Chromium after migrating component

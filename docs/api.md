@@ -226,3 +226,69 @@ mergeClasses reads string or Signalish values and joins nonempty classes. resolv
 The new shell and utility API is unreleased. Build and pack the checkout for consumers and install that local archive until release. Keep tracked manifests free of absolute local paths.
 
 The gallery groups [AppShell](https://violice.github.io/preact-fluent-ui/components/app-shell), [Sidebar](https://violice.github.io/preact-fluent-ui/components/sidebar) and [Dialog](https://violice.github.io/preact-fluent-ui/components/dialog) into canonical family pages with an API reference table for each export. Dialog is a documentation family for Modal, DialogHeader, DialogBody, DialogFooter and ConfirmDialog; it is not an exported component. Modal controls focus and dismissal, while ConfirmDialog supplies Cancel-first action confirmation. Constituent page URLs and the old getting-started path are removed; Getting Started is at the gallery root.
+
+## Disclosure and operation feedback
+
+`Disclosure`, `DisclosureSummary` and `DisclosureContent` forward native details,
+summary and div props and refs. Put Summary first. Root `appearance` is `default`
+or `card`; native `open`, `name` and `onToggle` remain available. Read
+`event.currentTarget.open` in `onToggle` when synchronizing application state.
+The browser owns keyboard toggling and named groups. Content has no imposed
+file typography, height or scrolling.
+
+```tsx
+<Disclosure appearance="card" open onToggle={event => setOpen(event.currentTarget.open)}>
+  <DisclosureSummary>Proposed hosts file</DisclosureSummary>
+  <DisclosureContent><pre>{proposedFile}</pre></DisclosureContent>
+</Disclosure>
+```
+
+`Spinner` is a native span with `size="small" | "medium" | "large"` for
+16/24/32px. Its optional localized `label` makes it a status; without a label it
+is decorative. Slots are `root`, `indicator`, `label`. Reduced motion displays a
+static incomplete ring. `LoadingState` is a div with required localized `label`,
+optional descriptive children and `appearance="default" | "inline"`. Its slots
+are `root`, `spinner`, `label`, `content`. One status container announces the
+operation; its internal Spinner stays decorative. Applications decide when to
+mount loading feedback and whether to retain existing results during refresh.
+
+`Button` accepts `loading` and an optional localized `loadingLabel`. Loading
+retains the existing label by default, shows a decorative small Spinner, sets
+`aria-busy` and `aria-disabled`, and suppresses activation and form submission
+while keeping focus. Explicit `disabled` still sets native disabled and takes
+precedence. Icon actions replace the visible icon and retain their aria-label.
+Use one application status or LoadingState to announce a shared operation.
+Buttons do not create individual live regions.
+
+## Tooltip
+
+`Tooltip` requires localized string `content` and a render-function child.
+`placement` is `top` by default, with `bottom`, `left` and `right` options.
+Spread every supplied `TooltipTriggerProps` prop onto one trigger. Put caller
+handlers, refs and existing description IDs in `triggerProps` so Tooltip can
+compose them. Props written after the spread can overwrite composed behavior.
+The trigger's accessible name remains its own aria-label or visible text.
+
+```tsx
+<Tooltip content="Refresh connection" triggerProps={{
+  ref: buttonRef, onClick: refresh, 'aria-describedby': 'existing-hint',
+}}>
+  {props => <Button {...props} size="icon" aria-label="Refresh connection">
+    <Icon name="refresh" size={16} />
+  </Button>}
+</Tooltip>
+```
+
+Hover opens after 500ms and keyboard focus opens immediately. Pointer/focus
+exit hides the description; hovering the tooltip keeps it visible. Escape
+dismisses it until the next interaction. Content must not contain interactive
+controls. The portal flips and shifts inside the viewport, follows scrolling
+and resizing, and copies effective theme tokens and direction from the trigger.
+It remains visible inside scrolling TableContainer and Modal. Slots are `root`
+and `content`; `class` takes precedence over `className`. Tooltip does not
+forward arbitrary native root props or a root ref. Native disabled controls
+cannot receive keyboard focus; no focusable wrapper is added. Place essential
+instructions in visible text rather than relying on a disabled trigger hint.
+
+All six new components and their Props types are root exports. Tooltip also
+exports `TooltipTriggerProps`; placement/theme helpers remain internal.

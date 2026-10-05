@@ -202,7 +202,7 @@ async function inspectLibrary(directory, files) {
         `Library must not embed Preact: ${source}`,
       );
       assert(
-        /^\.\.\/(?:src\/(?:utils\/(?:merge-classes|resolve-class|merge-props|use-render)\.ts|components\/[^/]+\.(?:tsx|module\.css)|icons\/[^/]+\.(?:ts|tsx|module\.css))|node_modules\/(?:clsx|class-variance-authority)\/dist\/[^/]+\.mjs)$/.test(
+        /^\.\.\/(?:src\/(?:utils\/(?:merge-classes|resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|module\.css)|tooltip-(?:position|theme)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css))|node_modules\/(?:clsx|class-variance-authority)\/dist\/[^/]+\.mjs)$/.test(
           normalized,
         ) && !/\.test\./.test(normalized),
         `Unrelated source content in published map: ${source}`,
@@ -286,7 +286,7 @@ async function inspectConsumer(directory, mode) {
     'Button must have live generated mappings',
   );
   const unusedSources = Object.keys(mapped).filter((source) =>
-    /\/src\/(?:components\/(?:modal|confirm-dialog|dialog-content|card|info-bar|status-badge|select|field|input|textarea|checkbox|switch|page-header|empty-state)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
+    /\/src\/(?:components\/(?:modal|confirm-dialog|dialog-content|card|info-bar|status-badge|select|field|input|textarea|checkbox|switch|page-header|empty-state|disclosure|loading-state|tooltip)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
       source,
     ),
   );
@@ -321,7 +321,7 @@ async function inspectConsumer(directory, mode) {
   );
   if (mode === 'minimal') {
     const forbiddenSources = unusedSources.filter((source) =>
-      /\/(?:components\/(?:modal|confirm-dialog|field|input|textarea|checkbox|switch)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
+      /\/(?:components\/(?:modal|confirm-dialog|field|input|textarea|checkbox|switch|disclosure|loading-state|tooltip)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
         source,
       ),
     );
@@ -338,8 +338,8 @@ async function inspectConsumer(directory, mode) {
       .flatMap((module) => module.renderedExports);
     assert.deepEqual(
       renderedExports.toSorted(),
-      ['Button', 'mergeClasses'],
-      'Only Button and its shared class helper may remain rendered library exports',
+      ['Button', 'Spinner', 'mergeClasses', 'resolveClass'],
+      'Only Button, its loading Spinner and shared class helpers may remain rendered library exports',
     );
   } else {
     for (const control of ['field', 'input', 'textarea', 'checkbox', 'switch']) {

@@ -450,6 +450,7 @@ it('documents composite families on one canonical page with an API table for eac
       ],
     ],
     ['data-list', 'DataList', ['DataList', 'DataListItem', 'DataListLabel', 'DataListValue']],
+    ['disclosure', 'Disclosure', ['Disclosure', 'DisclosureSummary', 'DisclosureContent']],
     ['data-toolbar', 'DataToolbar', ['DataToolbar', 'DataToolbarGroup']],
     [
       'app-shell',
@@ -521,3 +522,31 @@ it.each(['use-render', 'merge-props', 'merge-classes', 'resolve-class'])(
     expect(screen.queryByRole('heading', { name: 'Signature', level: 2 })).toBeNull();
   },
 );
+
+it.each([
+  ['spinner', 'Spinner'],
+  ['loading-state', 'LoadingState'],
+  ['tooltip', 'Tooltip'],
+])('navigates to %s with base and appearance preserved', async (slug, title) => {
+  history.replaceState(null, '', '/repo/?theme=dark');
+  render(<Gallery base="/repo/" />);
+  const link = screen.getByRole('link', { name: title, exact: true });
+  expect(link.getAttribute('href')).toBe(`/repo/components/${slug}?theme=dark`);
+  await userEvent.setup().click(link);
+  expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(title);
+  expect(screen.getByRole('table', { name: 'API reference' })).toBeTruthy();
+});
+it('keeps the loading button focused and completes the example operation', async () => {
+  history.replaceState(null, '', '/components/button');
+  render(<Gallery base="/" />);
+  const user = userEvent.setup();
+  const button = screen.getByRole('button', { name: 'Refresh profiles' });
+  await user.click(button);
+  expect(button.getAttribute('aria-busy')).toBe('true');
+  expect((button as HTMLButtonElement).disabled).toBe(false);
+  expect(document.activeElement).toBe(button);
+  await user.click(button);
+  await user.click(screen.getByRole('button', { name: 'Complete refresh' }));
+  expect(button.getAttribute('aria-busy')).toBeNull();
+  expect(screen.getByText('Profiles refreshed.')).toBeTruthy();
+});
