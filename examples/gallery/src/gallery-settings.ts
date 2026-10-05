@@ -2,6 +2,7 @@ import themeCss from '../../../dist/theme.css?inline';
 import greenCss from './green-theme.css?inline';
 
 export type GallerySettings = {
+  direction: 'ltr' | 'rtl';
   preset: 'full' | 'minimal';
   theme: 'system' | 'light' | 'dark';
   palette: 'standard' | 'green' | 'custom';
@@ -9,6 +10,7 @@ export type GallerySettings = {
   primary: string;
 };
 export const defaultSettings: GallerySettings = {
+  direction: 'ltr',
   preset: 'full',
   theme: 'system',
   palette: 'standard',
@@ -27,6 +29,7 @@ export function readSettings(url: URL): GallerySettings {
     return value && /^#[\da-f]{6}$/i.test(value) ? value.toLowerCase() : defaultSettings[name];
   };
   return {
+    direction: oneOf('direction', ['ltr', 'rtl'], 'ltr'),
     preset: oneOf('preset', ['full', 'minimal'], 'full'),
     theme: oneOf('theme', ['system', 'light', 'dark'], 'system'),
     palette: oneOf('palette', ['standard', 'green', 'custom'], 'standard'),

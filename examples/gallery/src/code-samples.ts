@@ -36,9 +36,6 @@ export function FormStates() {
       <Switch label="Enabled switch" defaultChecked />
       <Switch label="Off switch" />
       <Switch label="Disabled switch" disabled defaultChecked />
-      <div dir="rtl">
-        <Switch label="Automatic connection in RTL" defaultChecked />
-      </div>
       <Switch label="A long switch label wraps across several lines so its full description remains readable in a narrow window." />
       <Field label="Hidden field" hidden>
         {(control) => <Input {...control} />}

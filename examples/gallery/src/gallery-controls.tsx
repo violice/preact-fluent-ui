@@ -22,7 +22,7 @@ export function GalleryControls({
   settings: GallerySettings;
   onChange: (settings: GallerySettings) => void;
 }) {
-  const select = <K extends 'preset' | 'theme' | 'palette'>(
+  const select = <K extends 'preset' | 'theme' | 'palette' | 'direction'>(
     key: K,
     label: string,
     options: [GallerySettings[K], string][],
@@ -59,6 +59,10 @@ export function GalleryControls({
         ['standard', 'Standard'],
         ['green', 'Green'],
         ['custom', 'Custom'],
+      ])}
+      {select('direction', 'Text direction', [
+        ['ltr', 'Left to right (LTR)'],
+        ['rtl', 'Right to left (RTL)'],
       ])}
       {settings.palette === 'custom' && (
         <div class={styles.settingsColors}>

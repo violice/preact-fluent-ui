@@ -209,10 +209,10 @@ function DataToolbarExample() {
           />
         </DataToolbarGroup>
       </DataToolbar>
-      <div dir="rtl">
+      <div>
         <DataToolbar>
           <DataToolbarGroup>
-            <span>RTL reading order</span>
+            <span>Reading order</span>
           </DataToolbarGroup>
           <DataToolbarGroup align="end">
             <Button>Action</Button>
@@ -225,7 +225,6 @@ function DataToolbarExample() {
 
 function DataListExample() {
   const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
-  const [rtl, setRtl] = useState(false);
   return (
     <div class={styles.sections} style={{ width: '100%' }}>
       <DataToolbar>
@@ -240,12 +239,9 @@ function DataListExample() {
               <option value="vertical">Vertical</option>
             </Select>
           </label>
-          <Button aria-pressed={rtl} onClick={() => setRtl(!rtl)}>
-            RTL text direction
-          </Button>
         </DataToolbarGroup>
       </DataToolbar>
-      <DataList direction={direction} dir={rtl ? 'rtl' : 'ltr'} aria-label="Connection details">
+      <DataList direction={direction} aria-label="Connection details">
         <DataListItem>
           <DataListLabel>Profile</DataListLabel>
           <DataListValue>Office connection</DataListValue>
@@ -289,10 +285,10 @@ function SeparatorExample() {
           <Button>Second action</Button>
         </DataToolbarGroup>
       </DataToolbar>
-      <div dir="rtl">
+      <div>
         <DataToolbar>
           <DataToolbarGroup>
-            <span>RTL section</span>
+            <span>Section</span>
             <Separator
               orientation="vertical"
               decorative={false}

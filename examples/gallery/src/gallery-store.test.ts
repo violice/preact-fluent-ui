@@ -148,3 +148,23 @@ it('follows real Back and Forward entries and preserves route changes', async ()
   expect(store.settings.value.theme).toBe('light');
   expect(optional()).toHaveLength(0);
 });
+
+it('applies direction to the whole document, follows history and resets, then restores its owner', () => {
+  document.documentElement.setAttribute('dir', 'auto');
+  history.replaceState(null, '', '/gallery/?direction=rtl');
+  const store = createGalleryStore();
+  const disconnect = store.connectBrowser();
+  try {
+    expect(document.documentElement.dir).toBe('rtl');
+    store.update({ ...defaultSettings });
+    expect(document.documentElement.dir).toBe('ltr');
+    expect(new URL(location.href).searchParams.has('direction')).toBe(false);
+    history.replaceState(null, '', '/gallery/?direction=rtl');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    expect(document.documentElement.dir).toBe('rtl');
+  } finally {
+    disconnect();
+  }
+  expect(document.documentElement.dir).toBe('auto');
+  document.documentElement.removeAttribute('dir');
+});

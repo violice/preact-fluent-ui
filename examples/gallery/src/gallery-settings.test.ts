@@ -5,10 +5,11 @@ describe('gallery settings', () => {
   it('restores a shared custom theme and CSS preset without losing unrelated URL parts', () => {
     const settings = readSettings(
       new URL(
-        'https://example.org/gallery/?preset=minimal&theme=dark&palette=custom&accent=%23008080&primary=%23663399&other=keep#forms',
+        'https://example.org/gallery/?direction=rtl&preset=minimal&theme=dark&palette=custom&accent=%23008080&primary=%23663399&other=keep#forms',
       ),
     );
     expect(settings).toEqual({
+      direction: 'rtl',
       preset: 'minimal',
       theme: 'dark',
       palette: 'custom',
@@ -23,10 +24,11 @@ describe('gallery settings', () => {
   it('rejects unknown presets and colors rather than interpolating URL input into CSS', () => {
     const settings = readSettings(
       new URL(
-        'https://example.org/?preset=other&theme=other&palette=other&accent=red;}body{display:none}&primary=bad',
+        'https://example.org/?direction=other&preset=other&theme=other&palette=other&accent=red;}body{display:none}&primary=bad',
       ),
     );
     expect(settings).toEqual({
+      direction: 'ltr',
       preset: 'full',
       theme: 'system',
       palette: 'standard',

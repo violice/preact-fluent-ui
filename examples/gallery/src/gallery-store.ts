@@ -42,6 +42,11 @@ export function createGalleryStore(initial: GallerySettings = defaultSettings) {
     const style = target.document.createElement('style');
     style.dataset.galleryTheme = '';
     target.document.head.append(style);
+    const root = target.document.documentElement;
+    const previousDirection = root.getAttribute('dir');
+    const disposeDirection = effect(() => {
+      root.dir = settings.value.direction;
+    });
     let links: HTMLLinkElement[] = [];
     const disposeTheme = effect(() => {
       style.textContent = themeOverrides(settings.value, systemDark.value);
@@ -65,6 +70,9 @@ export function createGalleryStore(initial: GallerySettings = defaultSettings) {
     disconnect = () => {
       target.removeEventListener('popstate', navigate);
       media?.removeEventListener('change', change);
+      disposeDirection();
+      if (previousDirection === null) root.removeAttribute('dir');
+      else root.setAttribute('dir', previousDirection);
       disposeTheme();
       disposePreset();
       style.remove();

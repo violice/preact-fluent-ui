@@ -122,9 +122,6 @@ function SwitchExample() {
       <Switch label="Automatic connection" />
       <Switch label="Enabled connection" defaultChecked />
       <Switch label="Unavailable connection" disabled />
-      <div dir="rtl">
-        <Switch label="Automatic connection in RTL" />
-      </div>
     </div>
   );
 }
