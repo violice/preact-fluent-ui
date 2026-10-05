@@ -13,6 +13,10 @@ export function copyTooltipTheme(trigger: HTMLElement, target: HTMLElement): voi
       if (libraryProperty.test(property)) properties.add(property);
     }
   }
+  for (const property of Array.from(target.style)) {
+    if (libraryProperty.test(property) && !properties.has(property))
+      target.style.removeProperty(property);
+  }
   for (const property of properties) {
     let value = computed.getPropertyValue(property);
     for (

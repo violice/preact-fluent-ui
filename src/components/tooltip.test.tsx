@@ -239,3 +239,113 @@ it('allows a new trigger interaction after Escape ends tooltip-only hover', () =
   advance(500);
   expect(screen.getByRole('tooltip')).toBeTruthy();
 });
+
+it('updates ancestor tokens, scheme and direction while visible without geometry events', async () => {
+  const { container, unmount } = render(
+    <div dir="ltr" style={{ '--color-surface-raised': 'white', colorScheme: 'light' }}>
+      <Tooltip content="Description">{(props) => <button {...props}>Action</button>}</Tooltip>
+    </div>,
+  );
+  const ancestor = container.firstElementChild as HTMLElement;
+  const button = screen.getByRole('button');
+  button.getBoundingClientRect = () => new DOMRect(100, 100, 40, 20);
+  act(() => button.focus());
+  const tooltip = screen.getByRole('tooltip');
+  expect(tooltip.style.getPropertyValue('--color-surface-raised')).toBe('white');
+  await act(async () => {
+    ancestor.style.setProperty('--color-surface-raised', 'purple');
+    ancestor.style.colorScheme = 'dark';
+    ancestor.dir = 'rtl';
+    await Promise.resolve();
+  });
+  expect(tooltip.style.getPropertyValue('--color-surface-raised')).toBe('purple');
+  expect(tooltip.style.colorScheme).toBe('dark');
+  expect(tooltip.dir).toBe('rtl');
+  expect(tooltip.style.top).toBe('92px');
+  unmount();
+  await act(async () => {
+    ancestor.style.setProperty('--color-surface-raised', 'orange');
+    await Promise.resolve();
+  });
+  expect(tooltip.style.getPropertyValue('--color-surface-raised')).toBe('purple');
+});
+
+it('updates class-based stylesheet themes when head CSS changes without geometry events', async () => {
+  const sheet = document.createElement('style');
+  sheet.textContent =
+    '.tooltip-test-theme { --color-text: green; } .tooltip-test-alternate { --color-text: purple; }';
+  document.head.append(sheet);
+  try {
+    render(
+      <div class="tooltip-test-theme">
+        <Tooltip content="Description">{(props) => <button {...props}>Action</button>}</Tooltip>
+      </div>,
+    );
+    act(() => screen.getByRole('button').focus());
+    const tooltip = screen.getByRole('tooltip');
+    expect(tooltip.style.getPropertyValue('--color-text')).toBe('green');
+    await act(async () => {
+      screen.getByRole('button').parentElement!.className = 'tooltip-test-alternate';
+      await Promise.resolve();
+    });
+    expect(tooltip.style.getPropertyValue('--color-text')).toBe('purple');
+    await act(async () => {
+      sheet.textContent = '.tooltip-test-alternate { --color-text: blue; }';
+      await Promise.resolve();
+    });
+    expect(tooltip.style.getPropertyValue('--color-text')).toBe('blue');
+  } finally {
+    sheet.remove();
+  }
+});
+
+it('refreshes system theme changes and releases media subscriptions on dismissal', () => {
+  const queries = new Map<string, EventTarget>();
+  vi.stubGlobal('matchMedia', (query: string) => {
+    const events = new EventTarget();
+    queries.set(query, events);
+    return events;
+  });
+  try {
+    setup();
+    const button = screen.getByRole('button');
+    button.style.setProperty('--color-text', 'green');
+    act(() => button.focus());
+    const tooltip = screen.getByRole('tooltip');
+    button.style.setProperty('--color-text', 'purple');
+    act(() => {
+      queries.get('(prefers-color-scheme: dark)')?.dispatchEvent(new Event('change'));
+    });
+    expect(tooltip.style.getPropertyValue('--color-text')).toBe('purple');
+    button.style.setProperty('--color-text', 'blue');
+    act(() => {
+      queries.get('(forced-colors: active)')?.dispatchEvent(new Event('change'));
+    });
+    expect(tooltip.style.getPropertyValue('--color-text')).toBe('blue');
+    fireEvent.keyDown(button, { key: 'Escape' });
+    button.style.setProperty('--color-text', 'orange');
+    act(() => {
+      for (const events of queries.values()) events.dispatchEvent(new Event('change'));
+    });
+    expect(tooltip.style.getPropertyValue('--color-text')).toBe('blue');
+  } finally {
+    vi.unstubAllGlobals();
+  }
+});
+
+it('clears copied tokens when their source declaration is removed', async () => {
+  const { container } = render(
+    <div style={{ '--color-text': 'purple' }}>
+      <Tooltip content="Description">{(props) => <button {...props}>Action</button>}</Tooltip>
+    </div>,
+  );
+  const ancestor = container.firstElementChild as HTMLElement;
+  act(() => screen.getByRole('button').focus());
+  const tooltip = screen.getByRole('tooltip');
+  expect(tooltip.style.getPropertyValue('--color-text')).toBe('purple');
+  await act(async () => {
+    ancestor.style.removeProperty('--color-text');
+    await Promise.resolve();
+  });
+  expect(tooltip.style.getPropertyValue('--color-text')).toBe('');
+});

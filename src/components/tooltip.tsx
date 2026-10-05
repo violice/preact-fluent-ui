@@ -124,10 +124,33 @@ export function Tooltip({
     const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(update);
     observer?.observe(trigger);
     observer?.observe(target);
+    // Watch the trigger's ancestry without a subtree subscription, so writing
+    // copied tokens to the portal cannot retrigger this observer.
+    const themeObserver = new MutationObserver(update);
+    for (let element: HTMLElement | null = trigger; element; element = element.parentElement) {
+      themeObserver.observe(element, { attributes: true });
+    }
+    themeObserver.observe(document.head, {
+      subtree: true,
+      attributes: true,
+      childList: true,
+      characterData: true,
+    });
+    document.head.addEventListener('load', update, true);
+    const media =
+      typeof window.matchMedia === 'function'
+        ? ['(prefers-color-scheme: dark)', '(forced-colors: active)'].map((query) =>
+            window.matchMedia(query),
+          )
+        : [];
+    for (const query of media) query.addEventListener('change', update);
     return () => {
       window.removeEventListener('resize', update);
       document.removeEventListener('scroll', update, true);
       observer?.disconnect();
+      themeObserver.disconnect();
+      document.head.removeEventListener('load', update, true);
+      for (const query of media) query.removeEventListener('change', update);
     };
   }, [visible, content, placement]);
 
