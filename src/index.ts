@@ -1,4 +1,6 @@
 export { Button } from './components/button';
+export { Separator } from './components/separator';
+export type { SeparatorProps } from './components/separator';
 export { DataList, DataListItem, DataListLabel, DataListValue } from './components/data-list';
 export type {
   DataListProps,
