@@ -1,4 +1,11 @@
 export { Button } from './components/button';
+export { DataList, DataListItem, DataListLabel, DataListValue } from './components/data-list';
+export type {
+  DataListProps,
+  DataListItemProps,
+  DataListLabelProps,
+  DataListValueProps,
+} from './components/data-list';
 export { Pagination } from './components/pagination';
 export type { PaginationProps } from './components/pagination';
 export {
