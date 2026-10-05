@@ -121,18 +121,12 @@ const utilityParameters: Record<string, ApiRow[]> = {
       'S',
       'Optional state passed to the render callback; defaults to an empty object.',
     ],
-    ['Return value', 'VNode', 'The native or custom root element without an extra wrapper.'],
   ],
   mergeProps: [
     [
       '...sources',
       '(Partial<P> | null | undefined)[]',
       'Prop objects in precedence order. Nullish sources are ignored. Classes accumulate, styles merge and handlers compose right to left.',
-    ],
-    [
-      'Return value',
-      'P',
-      'New merged prop object. Inputs are unchanged; refs use right precedence.',
     ],
   ],
   mergeClasses: [
@@ -141,7 +135,6 @@ const utilityParameters: Record<string, ApiRow[]> = {
       'JSX.Signalish<string | undefined>[]',
       'Strings or Signalish values read at call time. Empty values are skipped.',
     ],
-    ['Return value', 'string', 'Joined class names, or an empty string when none remain.'],
   ],
   resolveClass: [
     [
@@ -154,8 +147,13 @@ const utilityParameters: Record<string, ApiRow[]> = {
       'JSX.Signalish<string | undefined>',
       'Fallback used only when the primary value is nullish.',
     ],
-    ['Return value', 'string | undefined', 'Resolved primary or fallback class value.'],
   ],
+};
+const utilityReturns: Record<string, [type: string, description: string]> = {
+  useRender: ['VNode', 'The native or custom root element without an extra wrapper.'],
+  mergeProps: ['P', 'A new merged prop object. Inputs are unchanged; refs use right precedence.'],
+  mergeClasses: ['string', 'Joined class names, or an empty string when none remain.'],
+  resolveClass: ['string | undefined', 'The resolved primary or fallback class value.'],
 };
 const utilityDocs = [
   {
@@ -247,6 +245,13 @@ export const utilityPages = utilityDocs.map((doc) => ({
               ))}
             </tbody>
           </table>
+          <div class={styles.docSection}>
+            <h3>Return value</h3>
+            <p>
+              <code>{utilityReturns[doc.title]![0]}</code>
+            </p>
+            <p>{utilityReturns[doc.title]![1]}</p>
+          </div>
         </section>
         <section>
           <h2>Limitations</h2>

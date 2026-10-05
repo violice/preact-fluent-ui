@@ -494,7 +494,10 @@ it.each(['use-render', 'merge-props', 'merge-classes', 'resolve-class'])(
     expect(api.getByRole('columnheader', { name: 'Parameter' })).toBeTruthy();
     expect(api.getByRole('columnheader', { name: 'Type' })).toBeTruthy();
     expect(api.getByRole('columnheader', { name: 'Description' })).toBeTruthy();
-    expect(api.getByRole('rowheader', { name: 'Return value' })).toBeTruthy();
+    expect(api.queryByRole('rowheader', { name: 'Return value' })).toBeNull();
+    const returns = api.getByRole('heading', { name: 'Return value', level: 3 });
+    expect(returns.parentElement!.querySelector('code')?.textContent).toBeTruthy();
+    expect(returns.closest('table')).toBeNull();
     expect(api.getByRole('table', { name: 'API reference' }).querySelector('caption')).toBeNull();
     expect(heading.parentElement!.querySelector('pre code')?.textContent).toContain('(');
     expect(screen.queryByRole('heading', { name: 'Signature', level: 2 })).toBeNull();
