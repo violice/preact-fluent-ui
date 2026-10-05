@@ -1,4 +1,6 @@
 export { Button } from './components/button';
+export { DataToolbar, DataToolbarGroup } from './components/data-toolbar';
+export type { DataToolbarProps, DataToolbarGroupProps } from './components/data-toolbar';
 export { Separator } from './components/separator';
 export type { SeparatorProps } from './components/separator';
 export { DataList, DataListItem, DataListLabel, DataListValue } from './components/data-list';

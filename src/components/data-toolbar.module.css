@@ -1,0 +1,27 @@
+.toolbar,
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  gap: var(--space-3);
+  overflow-wrap: anywhere;
+}
+.toolbar {
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  line-height: 20px;
+  color: var(--color-text);
+}
+.group > * {
+  min-width: 0;
+  max-width: 100%;
+}
+.end {
+  margin-inline-start: auto;
+}
+.toolbar[hidden],
+.group[hidden] {
+  display: none;
+}
