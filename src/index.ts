@@ -1,4 +1,6 @@
 export { Button } from './components/button';
+export { Pagination } from './components/pagination';
+export type { PaginationProps } from './components/pagination';
 export {
   Table,
   TableContainer,
