@@ -26,3 +26,17 @@ Observed three expected initial Sidebar failures for missing native button, layo
 Intermediate issues were fixed: component context helper must use .tsx for the existing sourcemap whitelist; real HTMLElement.focus()/blur() in act exercises compat keyboard focus reliably, unlike the synthetic focus tests. A packed guard compared rendered export order, which changed despite identical membership. Parent approved comparing sorted exact membership ['Button', 'mergeClasses']; all absence guards remain.
 
 Browser acceptance remains scheduled in Task7; this task used DOM/CSS and packed validation. No publish, push, branch switch or worktree creation.
+
+## Review fix: Escape dismissal persists
+
+Added a dismissal latch for the current hover/focus interaction. Escape keeps the portal closed until both pointer hover and native focus have ended. Focus-visible is tracked separately from native focus so a pointer-focused trigger does not prematurely clear the latch. A new interaction can open the hint normally.
+
+TDD regression cases both failed before the fix: Escape then mouseleave while focused, and Escape then blur while hovered. Both now pass, including re-entry while the other interaction remains and reopening after both have ended. The test supplies the browser's focus-visible match because jsdom does not consistently retain keyboard modality; actual focus/blur events and portal behavior remain real.
+
+Covering validation:
+- `npm test -- src/components/sidebar.test.tsx src/utils`: 26/26 in three files, including 12 Sidebar tests.
+- `npm test`: 234/234 in 20 files.
+- `npm run typecheck`, `npm run lint`, `npm run format:check`: passed.
+- `git diff --check`: passed.
+
+Only item implementation, Sidebar tests and this report changed for the fix. Public types and CSS unchanged.

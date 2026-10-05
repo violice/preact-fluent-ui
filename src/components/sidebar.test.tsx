@@ -3,7 +3,7 @@ import sidebarCss from './sidebar.module.css?raw';
 import sidebarClasses from './sidebar.module.css';
 import type { JSX } from 'preact';
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/preact';
-import { afterEach, expect, it } from 'vitest';
+import { afterEach, expect, it, vi } from 'vitest';
 import {
   Sidebar,
   SidebarHeader,
@@ -252,6 +252,7 @@ it('provides app layouts, descriptions, brand slots and unclipped rail hints', a
   expect(container.contains(hint)).toBe(false);
   fireEvent.keyDown(link, { key: 'Escape' });
   expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+  fireEvent.mouseLeave(link);
   act(() => (screen.getByRole('link', { name: 'Routes' }) as HTMLElement).focus());
   await waitFor(() => expect(document.body.querySelector('[data-sidebar-hint]')).not.toBeNull());
   fireEvent.mouseLeave(link);
@@ -383,3 +384,45 @@ it('keeps portal hints inside a narrow viewport', async () => {
     Object.defineProperty(window, 'innerWidth', { configurable: true, value: previousWidth });
   }
 });
+
+it.each(['mouseleave', 'blur'] as const)(
+  'keeps an escaped rail hint dismissed after %s until hover and focus both end',
+  (firstExit) => {
+    render(
+      <Sidebar layout="rail">
+        <SidebarItem href="/">Home</SidebarItem>
+      </Sidebar>,
+    );
+    const link = screen.getByRole('link', { name: 'Home' }) as HTMLElement;
+    // jsdom does not consistently track the browser's keyboard focus modality.
+    const matches = link.matches.bind(link);
+    vi.spyOn(link, 'matches').mockImplementation(
+      (selector) => selector === ':focus-visible' || matches(selector),
+    );
+    act(() => link.focus());
+    fireEvent.mouseEnter(link);
+    expect(document.body.querySelector('[data-sidebar-hint]')).not.toBeNull();
+    fireEvent.keyDown(link, { key: 'Escape' });
+    expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+    if (firstExit === 'mouseleave') {
+      fireEvent.mouseLeave(link);
+      expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+      fireEvent.mouseEnter(link);
+      expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+      fireEvent.mouseLeave(link);
+      act(() => link.blur());
+      expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+      act(() => link.focus());
+    } else {
+      act(() => link.blur());
+      expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+      act(() => link.focus());
+      expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+      act(() => link.blur());
+      fireEvent.mouseLeave(link);
+      expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+      fireEvent.mouseEnter(link);
+    }
+    expect(document.body.querySelector('[data-sidebar-hint]')).not.toBeNull();
+  },
+);

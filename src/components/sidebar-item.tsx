@@ -75,6 +75,8 @@ export const SidebarItem = /* @__PURE__ */ forwardRef<HTMLElement, SidebarItemPr
     const [hint, setHint] = useState(false);
     const hovered = useRef(false);
     const focused = useRef(false);
+    const focusVisible = useRef(false);
+    const dismissed = useRef(false);
     const hasIcon = icon !== undefined && icon !== null && icon !== false;
     const isActive = as === 'a' && !!sidebarValue(active ?? false);
     const text = label ?? (typeof children === 'string' ? children : undefined);
@@ -87,22 +89,29 @@ export const SidebarItem = /* @__PURE__ */ forwardRef<HTMLElement, SidebarItemPr
         {
           onMouseEnter: () => {
             hovered.current = true;
-            setHint(true);
+            setHint(!dismissed.current);
           },
           onMouseLeave: () => {
             hovered.current = false;
-            setHint(focused.current);
+            if (!focused.current) dismissed.current = false;
+            setHint(!dismissed.current && focusVisible.current);
           },
           onFocus: (event) => {
-            focused.current = event.currentTarget.matches(':focus-visible');
-            setHint(focused.current || hovered.current);
+            focused.current = true;
+            focusVisible.current = event.currentTarget.matches(':focus-visible');
+            setHint(!dismissed.current && (focusVisible.current || hovered.current));
           },
           onBlur: () => {
             focused.current = false;
-            setHint(hovered.current);
+            focusVisible.current = false;
+            if (!hovered.current) dismissed.current = false;
+            setHint(!dismissed.current && hovered.current);
           },
           onKeyDown: (event) => {
-            if (event.key === 'Escape') setHint(false);
+            if (event.key === 'Escape') {
+              dismissed.current = true;
+              setHint(false);
+            }
           },
         },
         props as JSX.IntrinsicElements['a'],
