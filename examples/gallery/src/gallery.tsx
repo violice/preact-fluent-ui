@@ -73,12 +73,14 @@ function Shell({ base, store }: { base: string; store?: GalleryStore }) {
             <small>Documentation · {version}</small>
           </SidebarHeader>
           <SidebarNav aria-label="Documentation">
-            {(['Overview', 'Guides', 'Components'] as const).map((group) => (
+            {(['Overview', 'Guides', 'Components', 'Utils'] as const).map((group) => (
               <SidebarGroup key={group} label={group}>
                 {galleryPages
                   .filter((page) => page.group === group)
                   .sort((first, second) =>
-                    group === 'Components' ? first.title.localeCompare(second.title, 'en') : 0,
+                    group === 'Components' || group === 'Utils'
+                      ? first.title.localeCompare(second.title, 'en')
+                      : 0,
                   )
                   .map((page) => (
                     <SidebarItem

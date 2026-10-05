@@ -296,3 +296,35 @@
 .docSection > div {
   margin-top: 0;
 }
+
+.shellPreview {
+  width: 100%;
+  min-width: 0;
+  height: 560px;
+  border: 1px solid var(--color-control-border);
+  border-radius: var(--radius-sm);
+}
+
+pre.longText {
+  white-space: pre-wrap;
+  max-width: 100%;
+}
+
+:global(#shell-preview) h1 {
+  font-size: 24px;
+  overflow-wrap: anywhere;
+}
+:global(#shell-preview) label {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+:global(#shell-preview) select {
+  min-width: 0;
+  max-width: 100%;
+}
+@media (max-width: 640px) {
+  :global(#shell-preview) {
+    --app-shell-content-padding: 12px;
+  }
+}

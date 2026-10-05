@@ -115,7 +115,7 @@ it.each(['sidebar', 'sidebar-nav', 'sidebar-group', 'sidebar-item'])(
   (slug) => {
     history.replaceState(null, '', `/components/${slug}`);
     render(<Gallery base="/" />);
-    const note = screen.getByText('Demo selection is local.').closest('[role="status"]')!;
+    const note = screen.getByText(/^Demo selection is local\./).closest('[role="status"]')!;
     expect(note).toBeTruthy();
     expect(note.previousElementSibling!.className).toContain('preview');
     expect(note.closest('[class*="preview"]')).toBeNull();

@@ -57,6 +57,12 @@ export default defineConfig({
   server: { host: '0.0.0.0', port: 5173, strictPort: true },
   build: {
     outDir: '../../.gallery-dist',
+    rollupOptions: {
+      input: {
+        gallery: fileURLToPath(new URL('index.html', import.meta.url)),
+        shell: fileURLToPath(new URL('shell-preview.html', import.meta.url)),
+      },
+    },
     emptyOutDir: true,
   },
 });

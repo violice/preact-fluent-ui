@@ -226,7 +226,7 @@ it('groups setup before guides and keeps styling separate from theming', async (
     Array.from(nav.children)
       .map((group) => group.getAttribute('aria-labelledby'))
       .map((id) => document.getElementById(id!)?.textContent),
-  ).toEqual(['Overview', 'Guides', 'Components']);
+  ).toEqual(['Overview', 'Guides', 'Components', 'Utils']);
   await userEvent.setup().click(screen.getByRole('link', { name: 'Styling', exact: true }));
   expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Styling');
 });
@@ -286,38 +286,71 @@ for (const [path, title] of [
   });
 }
 
-it('lists every component once in alphabetical order in the sidebar', () => {
+it('lists every component once in alphabetical order in the sidebar', async () => {
   render(<Gallery base="/" />);
   const navigation = screen.getByRole('navigation', { name: 'Documentation' });
-  const components = navigation.lastElementChild as HTMLElement;
+  const components = navigation.children[2] as HTMLElement;
+  const { galleryPages } = await import('./gallery-pages');
   expect(
     within(components)
       .getAllByRole('link')
       .map((link) => link.textContent),
-  ).toEqual([
-    'Button',
-    'Card',
-    'Checkbox',
-    'ConfirmDialog',
-    'DialogBody',
-    'DialogFooter',
-    'DialogHeader',
-    'EmptyState',
-    'Field',
-    'Icon',
-    'InfoBar',
-    'Input',
-    'Modal',
-    'PageHeader',
-    'Select',
-    'Sidebar',
-    'SidebarFooter',
-    'SidebarGroup',
-    'SidebarHeader',
-    'SidebarItem',
-    'SidebarNav',
-    'StatusBadge',
-    'Switch',
-    'Textarea',
-  ]);
+  ).toEqual(
+    galleryPages
+      .filter((page) => page.group === 'Components')
+      .map((page) => page.title)
+      .sort((a, b) => a.localeCompare(b, 'en')),
+  );
+});
+
+it('exposes all new utility and shell pages in base-aware navigation', async () => {
+  history.replaceState(null, '', '/repo/?theme=dark');
+  render(<Gallery base="/repo/" />);
+  const nav = screen.getByRole('navigation', { name: 'Documentation' });
+  expect(
+    within(nav.lastElementChild as HTMLElement)
+      .getAllByRole('link')
+      .map((link) => link.textContent),
+  ).toEqual(['mergeClasses', 'mergeProps', 'resolveClass', 'useRender']);
+  for (const [slug, title] of [
+    ['app-shell', 'AppShell'],
+    ['app-shell-workspace', 'AppShellWorkspace'],
+    ['app-shell-header', 'AppShellHeader'],
+    ['app-shell-content', 'AppShellContent'],
+    ['app-shell-footer', 'AppShellFooter'],
+    ['sidebar-brand', 'SidebarBrand'],
+  ]) {
+    expect(screen.getByRole('link', { name: title, exact: true }).getAttribute('href')).toBe(
+      `/repo/components/${slug}?theme=dark`,
+    );
+  }
+  await userEvent.setup().click(screen.getByRole('link', { name: 'useRender', exact: true }));
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('useRender'),
+  );
+});
+
+it('keeps rendered roots local and cancels earlier composed handlers', async () => {
+  history.replaceState(null, '', '/utils/use-render?theme=dark');
+  const view = render(<Gallery base="/" />);
+  const user = userEvent.setup();
+  await user.click(screen.getByRole('link', { name: 'Custom Link root' }));
+  expect(location.pathname + location.search + location.hash).toBe('/utils/use-render?theme=dark');
+  view.unmount();
+  history.replaceState(null, '', '/utils/merge-props');
+  render(<Gallery base="/" />);
+  await user.click(screen.getByRole('button', { name: 'Run composed handlers' }));
+  expect(screen.getByText('consumer → internal')).toBeTruthy();
+  await user.click(screen.getByLabelText('Cancel the internal handler'));
+  await user.click(screen.getByRole('button', { name: 'Run composed handlers' }));
+  expect(screen.getByText('consumer (cancelled)')).toBeTruthy();
+});
+
+it('passes appearance and base to an isolated shell document with one gallery main', () => {
+  history.replaceState(null, '', '/repo/components/app-shell?theme=dark&preset=minimal');
+  render(<Gallery base="/repo/" />);
+  expect(screen.getAllByRole('main')).toHaveLength(1);
+  const preview = screen.getByTitle('Application shell preview');
+  expect(preview.tagName).toBe('IFRAME');
+  expect(preview.getAttribute('src')).toBe('/repo/shell-preview.html?preset=minimal&theme=dark');
 });

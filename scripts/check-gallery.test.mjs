@@ -7,6 +7,7 @@ import { test } from 'node:test';
 
 const checker = resolve('scripts/check-gallery.mjs');
 for (const [name, mutate, diagnostic] of [
+  ['missing shell preview', (dir) => rm(join(dir, 'shell-preview.html')), 'ENOENT'],
   ['missing nested page', (dir) => rm(join(dir, 'components/button/index.html')), 'ENOENT'],
   [
     'relative nested asset',

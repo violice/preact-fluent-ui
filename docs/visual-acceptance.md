@@ -140,3 +140,10 @@ Desktop and mobile settings dialogs focus the CSS preset SELECT initially. Escap
 Current navigation has Overview with Getting Started and About, Guides with Theming, Styling, Forms and Signals, and all 24 component pages. The root URL is About, the existing setup/guide/component URLs remain, and Styling adds the 30th route. Code examples remain visible. Appearance settings use the library Modal and a persistent shell store.
 
 A further PageHeader ordering correction moves its sole demonstration h1 before the purpose paragraph and documentation sections. Its ordering regression passed and the repository artifact rebuilt. Parent browser confirmation at desktop and narrow widths passed: exactly one h1, its title leads the document, and no horizontal overflow.
+
+
+## Application sidebar acceptance pending
+
+The unreleased gallery has 40 documentation routes: the previous 30, SidebarBrand, five AppShell parts and four Utils pages. Navigation order is Overview, Guides, Components, Utils; the last two groups are alphabetical. Shell examples load a separate preview document so Workspace never nests a main inside the gallery main. Preview URLs carry the selected base, theme, palette and CSS preset.
+
+Task 7 must verify the new pages in the native browser with light/dark and Full/Minimal, narrow and desktop widths, keyboard rail label discovery, tooltip visibility across scroll boundaries, long-menu header/footer placement, horizontal navigation, custom Link ref forwarding and local demo URL isolation. Existing historical checks above do not establish acceptance for the new API. Forced-colors, reduced motion and screen-reader checks remain pending where unavailable.

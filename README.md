@@ -53,7 +53,7 @@ Render only one active Modal. Give Modal `labelledBy` the unique id used by its 
 
 ## Sidebar composition
 
-Compose navigation from Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem and SidebarFooter. Each component forwards its native element props and ref. SidebarNav requires `aria-label` or `aria-labelledby`; SidebarItem requires `href`.
+Compose navigation from Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem and SidebarFooter. Each component forwards its native element props and ref. SidebarNav requires `aria-label` or `aria-labelledby`; Plain anchor SidebarItem requires `href`; `as="button"` provides native actions.
 
 ```tsx
 import { Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem,
@@ -74,7 +74,17 @@ import { Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem,
 
 The caller supplies `path` and `signOut`. Sidebar has no router dependency; links retain native Tab, Enter, modifier-click and new-tab behavior. The caller decides URLs, active state, width, height, positioning and mobile disclosure. Active links receive `aria-current="page"`. Footer uses `margin-top: auto`.
 
-SidebarGroup has `classes` slots `root`, `label` and `content`; SidebarItem has `root`, `icon` and `content`. Structural parts have no `classes` prop. All parts use `class` with `className` fallback; slots are additive and accept `JSX.Signalish` values. See the [Sidebar API](docs/api.md#sidebar) for semantics and accessibility.
+SidebarGroup has `classes` slots `root`, `label` and `content`; SidebarItem has `root`, `icon`, `content` and `description`. Structural parts have no `classes` prop. All parts use `class` with `className` fallback; slots are additive and accept `JSX.Signalish` values. See the [Sidebar API](docs/api.md#sidebar) for semantics and accessibility.
+
+## Application shell and composition
+
+`Sidebar appearance="app"` supports `layout="expanded"`, `"rail"` and `"horizontal"`. Use `scrollable` to scroll navigation between its header and footer. `SidebarBrand` accepts a required title, optional description and decorative logo. Rail items keep accessible names and show labels on hover or keyboard focus; complex children require `label`.
+
+Compose `AppShell`, `AppShellWorkspace`, `AppShellHeader`, `AppShellContent` and `AppShellFooter`. Match `AppShell navigationLayout` with `Sidebar layout`. Workspace renders the document's main landmark; the other parts render divs. Default widths are 248px expanded and 64px rail, with an 8px workspace margin, 12px radius and 1240px content maximum. Applications own breakpoints and layout state.
+
+`SidebarItem render` replaces its root with a VNode or callback. `as` still selects native types and defaults. A custom Link must forward composed props, children and ref to its native root. Do not nest an anchor or button inside another interactive root. `useRender` composes refs; `mergeProps` combines props with consumer handlers first and stops earlier handlers after `preventDefault()`. See the [utility API](docs/api.md#utilities).
+
+These additions are unreleased. Consumers of the new API must build and pack this checkout, then install the local archive until a release includes them. Do not commit absolute local archive dependencies.
 
 ## Limitations
 
@@ -88,7 +98,7 @@ The [live gallery](https://violice.github.io/preact-fluent-ui/) uses the latest 
 
 ## Development
 
-Use Node 24 and `npm ci`. `npm run dev` builds the library and starts the gallery at `http://localhost:5173`. The English gallery has separate component pages, Overview pages for Getting Started and About, Guides for Theming, Styling, Forms and Signals, and a 404 page. preact-iso provides gallery routing/prerendering; @preact/signals owns gallery settings and live examples. Both are devDependencies and are absent from the library runtime and peer contract. The sidebar Appearance settings button opens a Modal with Full/Minimal CSS presets, system/light/dark appearance, and standard/green/custom palettes. Settings are saved in the URL. Code examples are visible without opening a disclosure, use TanStack Highlight and can be copied. Components links are alphabetical. Getting Started includes a local profile form, and live Sidebar demos change their own selection without navigating the gallery. Rebuild or restart after editing library sources; the gallery imports built library artifacts.
+Use Node 24 and `npm ci`. `npm run dev` builds the library and starts the gallery at `http://localhost:5173`. The English gallery has separate component pages, Overview pages for Getting Started and About, Guides for Theming, Styling, Forms and Signals, and a 404 page. preact-iso provides gallery routing/prerendering; @preact/signals owns gallery settings and live examples. Both are devDependencies and are absent from the library runtime and peer contract. The sidebar Appearance settings button opens a Modal with Full/Minimal CSS presets, system/light/dark appearance, and standard/green/custom palettes. Settings are saved in the URL. Code examples are visible without opening a disclosure, use TanStack Highlight and can be copied. Components and Utils links are alphabetical. Utils documents useRender, mergeProps, mergeClasses and resolveClass; the gallery has 40 documentation routes. Getting Started includes a local profile form, and live Sidebar demos change their own selection without navigating the gallery. Rebuild or restart after editing library sources; the gallery imports built library artifacts.
 
 Run the checks on a clean checkout:
 

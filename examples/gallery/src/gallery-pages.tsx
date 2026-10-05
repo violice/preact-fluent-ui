@@ -1,3 +1,5 @@
+import { utilityPages } from './gallery-utils';
+import { appShellDocs } from './gallery-app-shell-examples';
 import { sidebarExamples, sidebarCodes } from './gallery-sidebar-examples';
 import {
   About,
@@ -42,6 +44,7 @@ type ComponentDoc = {
   code: string;
   props: Prop[];
   accessibility: string;
+  note?: string;
 };
 const native: Prop = [
   'Native HTML props and ref',
@@ -156,6 +159,7 @@ function EmptyExample() {
   );
 }
 const docs: ComponentDoc[] = [
+  ...appShellDocs,
   {
     title: 'Button',
     slug: 'button',
@@ -486,43 +490,85 @@ const docs: ComponentDoc[] = [
       'SidebarGroup',
       'SidebarItem',
       'SidebarFooter',
+      'SidebarBrand',
     ] as const
   ).map((title) => ({
     title,
     slug: title.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
     purpose: {
-      Sidebar: 'Compose a vertical navigation area with header, links and footer.',
+      Sidebar: 'Compose expanded, rail or horizontal navigation with header, links and footer.',
       SidebarHeader: 'Place a brand or custom content at the top of navigation.',
       SidebarNav: 'Group navigation links in a named native nav landmark.',
       SidebarGroup: 'Group related navigation links with an optional visible label.',
-      SidebarItem: 'Navigate with a native anchor and an optional active indicator.',
+      SidebarItem: 'Navigate with an anchor, run a button action or forward a custom root.',
+      SidebarBrand: 'Display a decorative logo, title and optional description.',
       SidebarFooter: 'Place secondary content at the bottom of a Sidebar.',
     }[title],
     example: sidebarExamples[title],
     code: sidebarCodes[title],
     props:
-      title === 'SidebarNav'
+      title === 'SidebarBrand'
         ? ([
-            ['aria-label or aria-labelledby', 'string, required', 'Accessible navigation name.'],
+            ['title', 'string, required', 'Visible brand title.'],
+            [
+              'logo / description',
+              'ComponentChildren / string',
+              'Decorative logo and optional supporting text.',
+            ],
+            ['classes', 'root, logo, content, title, description', 'Add classes to brand parts.'],
           ] as Prop[])
-        : title === 'SidebarGroup'
+        : title === 'Sidebar'
           ? ([
+              ['appearance', 'default | app', 'Default appearance remains compatible.'],
+              ['layout', 'Signalish<SidebarLayout>', 'expanded, rail or horizontal.'],
               [
-                'label',
-                'ComponentChildren',
-                'Optional group label linked through aria-labelledby.',
+                'scrollable',
+                'Signalish<boolean>',
+                'Make the nav scroll while header and footer remain visible.',
               ],
-              ['classes', 'root, label, content', 'Add classes to group parts.'],
             ] as Prop[])
-          : title === 'SidebarItem'
+          : title === 'SidebarNav'
             ? ([
-                ['href', 'string, required', 'Native destination URL.'],
-                ['active', 'Signalish<boolean>', 'Sets aria-current page.'],
-                ['icon', 'ComponentChildren', 'Optional decorative icon.'],
-                ['classes', 'root, icon, content', 'Add classes to item parts.'],
+                [
+                  'aria-label or aria-labelledby',
+                  'string, required',
+                  'Accessible navigation name.',
+                ],
               ] as Prop[])
-            : [],
+            : title === 'SidebarGroup'
+              ? ([
+                  [
+                    'label',
+                    'ComponentChildren',
+                    'Optional group label linked through aria-labelledby.',
+                  ],
+                  ['classes', 'root, label, content', 'Add classes to group parts.'],
+                ] as Prop[])
+              : title === 'SidebarItem'
+                ? ([
+                    [
+                      'href / as',
+                      'anchor href / a | button',
+                      'Plain anchors require href. Buttons accept disabled and reject href and active.',
+                    ],
+                    [
+                      'render',
+                      'VNode | callback',
+                      'Replace the root; forward all composed props, children and ref. as still determines types and defaults.',
+                    ],
+                    [
+                      'label / description',
+                      'string',
+                      'Explicit accessible name for complex rail content and supporting text.',
+                    ],
+                    ['active', 'Signalish<boolean>', 'Sets aria-current page.'],
+                    ['icon', 'ComponentChildren', 'Optional decorative icon.'],
+                    ['classes', 'root, icon, content, description', 'Add classes to item parts.'],
+                  ] as Prop[])
+                : [],
     accessibility: {
+      SidebarBrand:
+        'The logo is decorative. The title remains the visible brand text. No interactive wrapper is added.',
       Sidebar:
         'Size and responsive visibility belong to the application shell. Use SidebarNav for the navigation landmark.',
       SidebarHeader: 'Use visible branding and meaningful link text if the brand navigates.',
@@ -548,7 +594,7 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
       <p>{doc.purpose}</p>
       {doc.title !== 'PageHeader' && (
         <section aria-label={`${doc.title} example`} class={styles.docSection}>
-          <h2>Live example</h2>
+          <h2>Example</h2>
           {['Button', 'Modal', 'ConfirmDialog'].includes(doc.title) ? (
             <Example />
           ) : (
@@ -556,9 +602,12 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
               <Example />
             </div>
           )}
-          {['Sidebar', 'SidebarNav', 'SidebarGroup', 'SidebarItem'].includes(doc.title) && (
-            <InfoBar>Demo selection is local.</InfoBar>
-          )}
+          <InfoBar>
+            {doc.note ??
+              (doc.title.startsWith('Sidebar')
+                ? 'Demo selection is local. Rail links retain accessible names; focus or hover reveals their labels. Layout and breakpoints belong to the application.'
+                : 'This example runs inside the gallery.')}
+          </InfoBar>
         </section>
       )}
       <section>
@@ -619,11 +668,12 @@ export function NotFound() {
 export type GalleryPage = {
   path: string;
   title: string;
-  group: 'Overview' | 'Components' | 'Guides';
+  group: 'Overview' | 'Components' | 'Guides' | 'Utils';
   component: ComponentType;
   demoOwnsHeading?: boolean;
 };
 export const galleryPages: GalleryPage[] = [
+  ...utilityPages,
   {
     path: '/getting-started',
     title: 'Getting Started',

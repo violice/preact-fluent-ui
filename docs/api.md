@@ -28,11 +28,11 @@ Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and 
 | DialogFooter / DialogFooterProps | footer | Native props and children |
 | Modal / ModalProps | dialog div, excluding children/onClose/role/aria-modal/aria-labelledby | required `labelledBy: string`, `initialFocusRef: RefObject<HTMLElement>`, `onClose(): void`, `children: ComponentChildren`; optional `fallbackFocusRef: RefObject<HTMLElement>`; `classes?: { root?, backdrop? }` |
 | ConfirmDialog / ConfirmDialogProps | composed, no root ref | required `title: string`, `children: ComponentChildren`, `cancelLabel: string`, `confirmLabel: string`, `pendingLabel: string`, `onClose(): void`, `onConfirm(): void`; optional `busy`, `confirmDisabled`, `danger` default false; optional `fallbackFocusRef: RefObject<HTMLElement>`; `classes?: { root?, backdrop?, header?, title?, body?, footer?, cancelButton?, confirmButton? }`; `class?`, `className?` |
-| Sidebar / SidebarProps | aside, HTMLElement | Native props and children; no classes prop |
+| Sidebar / SidebarProps | aside, HTMLElement | Native props plus appearance, layout and scrollable; no classes prop |
 | SidebarHeader / SidebarHeaderProps | div | Native props and children; no classes prop |
 | SidebarNav / SidebarNavProps | nav, HTMLElement | Required `aria-label` or `aria-labelledby`; no classes prop |
 | SidebarGroup / SidebarGroupProps | div | Optional `label: ComponentChildren`; `classes?: { root?, label?, content? }` |
-| SidebarItem / SidebarItemProps | a | Required native `href`; optional `icon: ComponentChildren`, `active: JSX.Signalish<boolean>`; `classes?: { root?, icon?, content? }` |
+| SidebarItem / SidebarItemProps | a or button | Anchor href or render; button as="button"; optional icon, description, label and active for anchors; slots root/icon/content/description |
 | SidebarFooter / SidebarFooterProps | div | Native props and children; no classes prop |
 
 `IconName` contains exactly 22 names: `about`, `adapter`, `add`, `chevron-down`, `connected`, `copy`, `delete`, `diagnostics`, `disconnected`, `edit`, `eye`, `info`, `network`, `open`, `profile`, `refresh`, `restore`, `routes`, `settings`, `shield`, `vpn`, `warning`. Icon supplies no accessible label. Name the parent icon button with visible text or `aria-label`.
@@ -130,8 +130,38 @@ Sidebar is an aside with a vertical flex layout. SidebarHeader and SidebarFooter
 
 SidebarGroup wraps its children in a content div. A nonempty label renders a label div with a generated id, sets aria-labelledby to that id, and defaults role to group. Without a label, caller-provided aria-labelledby and role remain usable. An explicit role overrides the default. IDs use Preact useId; coordinate independent roots when combining them on one page.
 
-SidebarItem is always an anchor. It requires href, forwards its HTMLAnchorElement ref and native anchor attributes/events, and does not intercept clicks or implement routing. The application chooses the active item; active defaults to false and accepts JSX.Signalish<boolean>. Only an active item receives aria-current="page"; a caller aria-current does not replace this behavior. The optional icon is inside an aria-hidden span, so visible text or an explicit accessible name must name the link. Children render in the content span. Use Button for actions in the header, group or footer.
+SidebarItem defaults to an anchor. The anchor branch requires href unless render supplies the root. The as="button" branch uses type="button" by default, accepts disabled, and rejects href, target, download, active and aria-current. It requires href, forwards its HTMLAnchorElement ref and native anchor attributes/events, and does not intercept clicks or implement routing. The application chooses the active item; active defaults to false and accepts JSX.Signalish<boolean>. Only an active item receives aria-current="page"; a caller aria-current does not replace this behavior. The optional icon is inside an aria-hidden span, so visible text or an explicit accessible name must name the link. Children render in the content span. Use as="button" for SidebarItem actions.
 
-SidebarGroup slots are root/label/content, and SidebarItem slots are root/icon/content. Slots accept JSX.Signalish<string | undefined> and append to internal classes. class takes priority over className, including an explicit empty class; classes.root remains additive. Structural parts have no classes prop. Navigation uses native Tab and Enter, without menu roles or arrow-key handling. Styles support wrapping, focus-visible, logical RTL positioning and forced colors; active Windows contrast-theme acceptance remains a manual check.
+SidebarGroup slots are root/label/content, and SidebarItem slots are root/icon/content/description. Slots accept JSX.Signalish<string | undefined> and append to internal classes. class takes priority over className, including an explicit empty class; classes.root remains additive. Structural parts have no classes prop. Navigation uses native Tab and Enter, without menu roles or arrow-key handling. Styles support wrapping, focus-visible, logical RTL positioning and forced colors; active Windows contrast-theme acceptance remains a manual check.
 
 See the [composition example](../README.md#sidebar-composition). The library imports neither preact-iso nor @preact/signals. Their use in the documentation gallery does not require consumers to install them.
+
+
+## Application shell
+
+`AppShellProps` extends div native props with `navigationLayout?: JSX.Signalish<SidebarLayout>`, default `expanded`. Match it to Sidebar's `layout?: JSX.Signalish<SidebarLayout>`. Sidebar also accepts `appearance?: 'default' | 'app'`, default `default`, and `scrollable?: JSX.Signalish<boolean>`, default false. Default Sidebar remains a vertical flex aside; the app appearance applies application navigation styling. Scrollable navigation keeps header and footer visible.
+
+`SidebarBrandProps` extends native div props, replacing native title with required `title: string`. It accepts `description?: string`, `logo?: ComponentChildren` and class slots root/logo/content/title/description. The logo is decorative. Rail layout hides visual text while keeping names; set SidebarItem `label` for complex children. Rail labels appear in a portal on hover or keyboard focus and Escape dismisses them until hover and focus leave.
+
+`AppShellWorkspaceProps` forwards native main props and an HTMLElement ref. Use one Workspace per document. `AppShellHeaderProps`, `AppShellContentProps` and `AppShellFooterProps` forward native div props and HTMLDivElement refs. They add no heading, focus or responsive state. All shell parts preserve hidden and class/className fallback. Horizontal layout stacks navigation above the workspace, removes workspace margin and radius. Applications own breakpoints and keyboard disclosure.
+
+## Utilities
+
+All utilities import from the main package entry. Production code has no Signals, React, Base UI or router dependency.
+
+```ts
+mergeClasses(...classes: JSX.Signalish<string | undefined>[]): string
+resolveClass(classProp: JSX.Signalish<string | undefined>, className: JSX.Signalish<string | undefined>): string | undefined
+mergeProps<P extends object>(...sources: (Partial<P> | null | undefined)[]): P
+useRender<Tag extends keyof JSX.IntrinsicElements, S extends object = Record<string, never>>(options: UseRenderOptions<Tag, S>): VNode
+```
+
+`UseRenderOptions<Tag, S>` has required `defaultTagName: Tag`, optional `props: JSX.IntrinsicElements[Tag]`, `render: RenderProp<JSX.IntrinsicElements[Tag], S>`, `state: S` and a selected native root `ref` or readonly array of those refs. `RenderProp<P, S>` is a VNode or `(props: P, state: S) => VNode`. Call useRender inside a component. Callback render receives composed props and state, and must forward props, children and ref. `as` on SidebarItem still determines types and native defaults; render does not infer DOM semantics. Custom Link roots must forward to one native interactive element.
+
+VNode templates merge after component props. Explicit template children replace component children; absent template children preserve component children. useRender composes native props refs, external refs and template refs, deduplicates identical refs and runs cleanup on detach. It does not mutate the template or prop inputs.
+
+mergeProps merges ordinary props left to right. Each source selects class before className, then the selected classes accumulate. Object styles merge by key; string styles replace previous styles and an object following a string starts a new style object. Event handlers run right to left, stopping earlier handlers when the event is defaultPrevented. Ref uses ordinary right precedence in mergeProps; useRender handles composition separately. Null and undefined sources are skipped.
+
+mergeClasses reads string or Signalish values and joins nonempty classes. resolveClass reads both values and selects class unless it is null or undefined. An empty string suppresses className fallback. Neither helper resolves CSS conflicts or creates a computed signal; call them during a tracked render or computed calculation for signal updates.
+
+The new shell and utility API is unreleased. Build and pack the checkout for consumers and install that local archive until release. Keep tracked manifests free of absolute local paths.
