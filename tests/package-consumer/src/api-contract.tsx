@@ -9,6 +9,7 @@ import {
   SidebarGroup,
   SidebarItem,
   SidebarFooter,
+  SidebarBrand,
   Button,
   Card,
   Checkbox,
@@ -35,6 +36,8 @@ import type {
   SidebarGroupProps,
   SidebarItemProps,
   SidebarFooterProps,
+  SidebarBrandProps,
+  SidebarLayout,
   ButtonProps,
   CardProps,
   CheckboxProps,
@@ -588,3 +591,81 @@ export function InvalidRenderContracts() {
     ref: createRef<HTMLDivElement>(),
   });
 }
+
+export const sidebarActionContracts = (
+  <>
+    <SidebarItem
+      as="button"
+      ref={createRef<HTMLButtonElement>()}
+      disabled
+      onClick={(event) => {
+        event.currentTarget.disabled = true;
+      }}
+    >
+      Settings
+    </SidebarItem>
+    <SidebarItem
+      href="/"
+      ref={createRef<HTMLAnchorElement>()}
+      onClick={(event) => {
+        event.currentTarget.href = '/next';
+      }}
+    >
+      Home
+    </SidebarItem>
+    <SidebarItem render={<ContractLink href="/custom" />} ref={createRef<HTMLAnchorElement>()}>
+      Custom
+    </SidebarItem>
+    {/* @ts-expect-error Buttons do not accept href. */}
+    <SidebarItem as="button" href="/" />
+    {/* @ts-expect-error Buttons cannot be the current page. */}
+    <SidebarItem as="button" active />
+    {/* @ts-expect-error Anchors do not accept disabled. */}
+    <SidebarItem href="/" disabled />
+    {/* @ts-expect-error An anchor ref cannot refer to a button. */}
+    <SidebarItem as="button" ref={createRef<HTMLAnchorElement>()} />
+    {/* @ts-expect-error A button ref cannot refer to an anchor. */}
+    <SidebarItem href="/" ref={createRef<HTMLButtonElement>()} />
+    {/* @ts-expect-error Buttons do not accept target. */}
+    <SidebarItem as="button" target="_blank" />
+    {/* @ts-expect-error Buttons do not accept download. */}
+    <SidebarItem as="button" download />
+  </>
+);
+
+const appLayout: JSX.SignalLike<SidebarLayout> = {
+  value: 'rail',
+  peek: () => 'rail',
+  subscribe: () => () => {},
+};
+const brandContract: SidebarBrandProps = {
+  title: 'App',
+  description: 'Desktop',
+  logo: <Icon name="network" />,
+  classes: {
+    root: slotSignal,
+    logo: slotSignal,
+    content: slotSignal,
+    title: slotSignal,
+    description: slotSignal,
+  },
+};
+export const appSidebarContracts = (
+  <Sidebar layout={appLayout} appearance="app" scrollable>
+    <SidebarBrand {...brandContract} ref={createRef<HTMLDivElement>()} hidden />
+    <SidebarItem href="/" render={(props, state) => <a {...props} data-layout={state.layout} />} />
+    <SidebarItem
+      as="button"
+      render={(props) => (
+        <button
+          {...props}
+          onClick={(event) => {
+            event.currentTarget.disabled = true;
+          }}
+        />
+      )}
+    />
+    {/* @ts-expect-error Buttons cannot declare current page. */}
+    <SidebarItem as="button" aria-current="page" />
+  </Sidebar>
+);

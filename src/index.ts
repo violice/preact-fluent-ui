@@ -41,6 +41,7 @@ export {
   SidebarGroup,
   SidebarItem,
   SidebarFooter,
+  SidebarBrand,
 } from './components/sidebar';
 export type {
   SidebarProps,
@@ -49,6 +50,8 @@ export type {
   SidebarGroupProps,
   SidebarItemProps,
   SidebarFooterProps,
+  SidebarBrandProps,
+  SidebarLayout,
 } from './components/sidebar';
 export { mergeClasses, resolveClass } from './classes';
 export { mergeProps } from './utils/merge-props';

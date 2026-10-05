@@ -2,7 +2,7 @@ import { createRef } from 'preact';
 import sidebarCss from './sidebar.module.css?raw';
 import sidebarClasses from './sidebar.module.css';
 import type { JSX } from 'preact';
-import { cleanup, fireEvent, render, screen } from '@testing-library/preact';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/preact';
 import { afterEach, expect, it } from 'vitest';
 import {
   Sidebar,
@@ -11,6 +11,7 @@ import {
   SidebarGroup,
   SidebarItem,
   SidebarFooter,
+  SidebarBrand,
 } from './sidebar';
 
 afterEach(cleanup);
@@ -192,5 +193,193 @@ it('preserves native hidden without the optional document reset on every sidebar
     );
   } finally {
     style.remove();
+  }
+});
+
+it('renders a native action with button defaults, disabled state and button ref', () => {
+  const ref = createRef<HTMLButtonElement>();
+  let count = 0;
+  const { rerender } = render(
+    <SidebarItem as="button" ref={ref} onClick={() => count++}>
+      Settings
+    </SidebarItem>,
+  );
+  const button = screen.getByRole('button', { name: 'Settings' });
+  expect(ref.current).toBe(button);
+  expect(button.getAttribute('type')).toBe('button');
+  expect(button.hasAttribute('aria-current')).toBe(false);
+  fireEvent.click(button);
+  expect(count).toBe(1);
+  rerender(
+    <SidebarItem as="button" disabled type="submit">
+      Settings
+    </SidebarItem>,
+  );
+  expect((button as HTMLButtonElement).disabled).toBe(true);
+  expect(button.getAttribute('type')).toBe('submit');
+});
+
+it('provides app layouts, descriptions, brand slots and unclipped rail hints', async () => {
+  const layout = signal<'expanded' | 'rail' | 'horizontal'>('rail');
+  const scrollable = signal(true);
+  const view = () => (
+    <Sidebar appearance="app" layout={layout} scrollable={scrollable}>
+      <SidebarBrand
+        title="VPN"
+        description="Private routes"
+        classes={{ root: 'brand', title: 'brand-title' }}
+      />
+      <SidebarNav aria-label="App">
+        <SidebarGroup label="Pages">
+          <SidebarItem href="/" icon={<span>icon</span>} description="Current routes">
+            Routes
+          </SidebarItem>
+        </SidebarGroup>
+      </SidebarNav>
+    </Sidebar>
+  );
+  const { container, rerender } = render(view());
+  const root = screen.getByRole('complementary');
+  expect(root.getAttribute('data-layout')).toBe('rail');
+  expect(root.getAttribute('data-scrollable')).toBe('true');
+  expect(screen.getByText('VPN').classList.contains('brand-title')).toBe(true);
+  const link = screen.getByRole('link', { name: 'Routes' });
+  expect(screen.getByText('Current routes').getAttribute('aria-hidden')).toBe('true');
+  fireEvent.mouseEnter(link);
+  const hint = document.body.querySelector('[data-sidebar-hint]');
+  expect(hint?.textContent).toBe('Routes');
+  expect(hint?.getAttribute('aria-hidden')).toBe('true');
+  expect(container.contains(hint)).toBe(false);
+  fireEvent.keyDown(link, { key: 'Escape' });
+  expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+  act(() => (screen.getByRole('link', { name: 'Routes' }) as HTMLElement).focus());
+  await waitFor(() => expect(document.body.querySelector('[data-sidebar-hint]')).not.toBeNull());
+  fireEvent.mouseLeave(link);
+  act(() => (screen.getByRole('link', { name: 'Routes' }) as HTMLElement).blur());
+  expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+  layout.value = 'horizontal';
+  scrollable.value = false;
+  rerender(view());
+  expect(root.getAttribute('data-layout')).toBe('horizontal');
+  expect(root.getAttribute('data-scrollable')).toBe('false');
+  expect(screen.getByText('Current routes').hasAttribute('aria-hidden')).toBe(false);
+});
+
+it('composes a custom link root and children without nested interactive elements', () => {
+  const ref = createRef<HTMLAnchorElement>();
+  render(
+    <SidebarItem
+      render={<a href="/custom" data-custom="yes" />}
+      ref={ref}
+      label="Custom"
+      description="Details"
+      classes={{ description: 'details' }}
+    >
+      Content
+    </SidebarItem>,
+  );
+  const link = screen.getByRole('link', { name: 'Custom' });
+  expect(ref.current).toBe(link);
+  expect(link.getAttribute('href')).toBe('/custom');
+  expect(link.querySelector('a,button')).toBeNull();
+  expect(screen.getByText('Details').classList.contains('details')).toBe(true);
+});
+
+it('updates a rail hint on scrolling and removes it and its listeners on unmount', async () => {
+  const { unmount } = render(
+    <Sidebar layout="rail">
+      <SidebarItem href="/">Home</SidebarItem>
+    </Sidebar>,
+  );
+  const link = screen.getByRole('link', { name: 'Home' });
+  let top = 40;
+  link.getBoundingClientRect = () => ({
+    x: 0,
+    y: top,
+    top,
+    bottom: top + 44,
+    left: 0,
+    right: 64,
+    width: 64,
+    height: 44,
+    toJSON: () => ({}),
+  });
+  fireEvent.mouseEnter(link);
+  await waitFor(() =>
+    expect((document.body.querySelector('[data-sidebar-hint]') as HTMLElement).style.top).toBe(
+      '62px',
+    ),
+  );
+  top = 80;
+  fireEvent.scroll(window);
+  expect((document.body.querySelector('[data-sidebar-hint]') as HTMLElement).style.top).toBe(
+    '102px',
+  );
+  unmount();
+  expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+  fireEvent.scroll(window);
+  fireEvent.resize(window);
+  expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+});
+
+it('keeps rail fallback labels and brand roots visible or natively hidden', () => {
+  const ref = createRef<HTMLDivElement>();
+  const { rerender } = render(
+    <Sidebar layout="rail">
+      <SidebarBrand ref={ref} title="VPN" hidden />
+      <SidebarItem href="/">Home</SidebarItem>
+    </Sidebar>,
+  );
+  expect(ref.current?.hidden).toBe(true);
+  expect(sidebarCss).toMatch(/\.brand\[hidden\]/);
+  expect(screen.getByRole('link', { name: 'Home' }).getAttribute('data-has-icon')).toBe('false');
+  rerender(
+    <SidebarBrand
+      title="VPN"
+      logo={<span>Logo</span>}
+      description="Routes"
+      class=""
+      className="ignored"
+      classes={{ logo: 'logo-slot', content: 'brand-content', description: 'brand-description' }}
+    />,
+  );
+  expect(screen.getByText('Logo').parentElement?.getAttribute('aria-hidden')).toBe('true');
+  expect(screen.getByText('Logo').parentElement?.classList.contains('logo-slot')).toBe(true);
+  expect(screen.getByText('Routes').classList.contains('brand-description')).toBe(true);
+  expect(screen.getByText('VPN').parentElement?.classList.contains('brand-content')).toBe(true);
+  expect(screen.getByText('VPN').closest('[data-has-logo]')?.classList.contains('ignored')).toBe(
+    false,
+  );
+});
+
+it('keeps portal hints inside a narrow viewport', async () => {
+  const previousWidth = window.innerWidth;
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 200 });
+  try {
+    render(
+      <Sidebar layout="rail">
+        <SidebarItem href="/">Home</SidebarItem>
+      </Sidebar>,
+    );
+    const link = screen.getByRole('link', { name: 'Home' });
+    link.getBoundingClientRect = () => ({
+      x: 0,
+      y: 40,
+      top: 40,
+      bottom: 84,
+      left: 0,
+      right: 64,
+      width: 64,
+      height: 44,
+      toJSON: () => ({}),
+    });
+    fireEvent.mouseEnter(link);
+    await waitFor(() =>
+      expect((document.body.querySelector('[data-sidebar-hint]') as HTMLElement).style.left).toBe(
+        '8px',
+      ),
+    );
+  } finally {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: previousWidth });
   }
 });

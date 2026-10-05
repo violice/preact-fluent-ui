@@ -337,8 +337,8 @@ async function inspectConsumer(directory, mode) {
       )
       .flatMap((module) => module.renderedExports);
     assert.deepEqual(
-      renderedExports,
-      ['mergeClasses', 'Button'],
+      renderedExports.toSorted(),
+      ['Button', 'mergeClasses'],
       'Only Button and its shared class helper may remain rendered library exports',
     );
   } else {

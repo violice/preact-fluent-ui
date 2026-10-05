@@ -1,10 +1,21 @@
 import type { ComponentChildren, FunctionComponent, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useId } from 'preact/hooks';
+import { SidebarContext, sidebarValue } from './sidebar-context';
+import type { SidebarLayout } from './sidebar-context';
+export type { SidebarLayout } from './sidebar-context';
+export { SidebarItem } from './sidebar-item';
+export type { SidebarItemProps } from './sidebar-item';
+export { SidebarBrand } from './sidebar-brand';
+export type { SidebarBrandProps } from './sidebar-brand';
 import { mergeClasses, resolveClass } from '../classes';
 import styles from './sidebar.module.css';
 
-export type SidebarProps = JSX.HTMLAttributes<HTMLElement>;
+export type SidebarProps = JSX.HTMLAttributes<HTMLElement> & {
+  appearance?: 'default' | 'app';
+  layout?: JSX.Signalish<SidebarLayout>;
+  scrollable?: JSX.Signalish<boolean>;
+};
 export type SidebarHeaderProps = JSX.HTMLAttributes<HTMLDivElement>;
 export type SidebarFooterProps = JSX.HTMLAttributes<HTMLDivElement>;
 export type SidebarNavProps = JSX.HTMLAttributes<HTMLElement> &
@@ -16,23 +27,28 @@ export type SidebarGroupProps = JSX.HTMLAttributes<HTMLDivElement> & {
   label?: ComponentChildren;
   classes?: Partial<Record<'root' | 'label' | 'content', JSX.Signalish<string | undefined>>>;
 };
-export type SidebarItemProps = Omit<JSX.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
-  href: NonNullable<JSX.AnchorHTMLAttributes<HTMLAnchorElement>['href']>;
-  icon?: ComponentChildren;
-  active?: JSX.Signalish<boolean>;
-  classes?: Partial<Record<'root' | 'icon' | 'content', JSX.Signalish<string | undefined>>>;
-};
-
 export const Sidebar = /* @__PURE__ */ forwardRef<HTMLElement, SidebarProps>(function Sidebar(
-  { class: classProp, className, ...props },
+  {
+    class: classProp,
+    className,
+    appearance = 'default',
+    layout = 'expanded',
+    scrollable = false,
+    ...props
+  },
   ref,
 ) {
   return (
-    <aside
-      {...props}
-      ref={ref}
-      class={mergeClasses(styles.sidebar, resolveClass(classProp, className))}
-    />
+    <SidebarContext.Provider value={sidebarValue(layout)}>
+      <aside
+        data-appearance={appearance}
+        data-layout={sidebarValue(layout)}
+        data-scrollable={sidebarValue(scrollable)}
+        {...props}
+        ref={ref}
+        class={mergeClasses(styles.sidebar, resolveClass(classProp, className))}
+      />
+    </SidebarContext.Provider>
   );
 });
 export const SidebarHeader = /* @__PURE__ */ forwardRef<HTMLDivElement, SidebarHeaderProps>(
@@ -88,29 +104,6 @@ export const SidebarGroup = /* @__PURE__ */ forwardRef<HTMLDivElement, SidebarGr
         )}
         <div class={mergeClasses(styles.content, classes?.content)}>{children}</div>
       </div>
-    );
-  },
-);
-export const SidebarItem = /* @__PURE__ */ forwardRef<HTMLAnchorElement, SidebarItemProps>(
-  function SidebarItem(
-    { icon, active, classes, children, class: classProp, className, ...props },
-    ref,
-  ) {
-    const isActive = active !== null && typeof active === 'object' ? active.value : active;
-    return (
-      <a
-        {...props}
-        ref={ref}
-        aria-current={isActive ? 'page' : undefined}
-        class={mergeClasses(styles.item, resolveClass(classProp, className), classes?.root)}
-      >
-        {icon !== undefined && icon !== null && icon !== false && (
-          <span aria-hidden="true" class={mergeClasses(styles.icon, classes?.icon)}>
-            {icon}
-          </span>
-        )}
-        <span class={mergeClasses(styles.itemContent, classes?.content)}>{children}</span>
-      </a>
     );
   },
 );
