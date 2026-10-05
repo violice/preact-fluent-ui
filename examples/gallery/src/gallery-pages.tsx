@@ -1,3 +1,4 @@
+import { Changelog } from './gallery-changelog';
 import { feedbackDocs, BusyButtonsExample } from './gallery-feedback-examples';
 import { utilityPages } from './gallery-utils';
 import { dataDocs } from './gallery-data-examples';
@@ -845,6 +846,7 @@ export const galleryPages: GalleryPage[] = [
     group: 'Overview',
     component: GettingStarted,
   },
+  { path: '/changelog', title: 'Changelog', group: 'Overview', component: Changelog },
   { path: '/about', title: 'About', group: 'Overview', component: About },
   ...componentDocs.map((doc) => ({
     path: `/components/${doc.slug}`,

@@ -54,6 +54,7 @@
     "@preact/preset-vite": "^2.10.2",
     "@preact/signals": "^2.11.3",
     "@tanstack/highlight": "1.0.0",
+    "@tanstack/markdown": "1.0.0",
     "@testing-library/preact": "^3.2.4",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.5.2",
