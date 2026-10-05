@@ -35,7 +35,7 @@ function App() {
   const fallbackFocus = useRef<HTMLButtonElement>(null);
   return (
     <AppShell>
-      <Sidebar appearance="app" aria-label="Installed app" />
+      <Sidebar aria-label="Installed app" />
       <AppShellWorkspace>
         <AppShellContent>
           <PageHeader title="Installed package" description="Controls and localized dialogs" />

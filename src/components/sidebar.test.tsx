@@ -224,7 +224,7 @@ it('provides app layouts, descriptions, brand slots and unclipped rail hints', a
   const layout = signal<'expanded' | 'rail' | 'horizontal'>('rail');
   const scrollable = signal(true);
   const view = () => (
-    <Sidebar appearance="app" layout={layout} scrollable={scrollable}>
+    <Sidebar layout={layout} scrollable={scrollable}>
       <SidebarBrand
         title="VPN"
         description="Private routes"
@@ -535,3 +535,48 @@ it('respects application cancellation of Escape while a hovered hint is open', (
   fireEvent.keyDown(button, { key: 'Escape' });
   expect(document.body.querySelector('[data-sidebar-hint]')).not.toBeNull();
 });
+
+it('uses application styling without an appearance attribute and preserves native aside props', () => {
+  const ref = createRef<HTMLElement>();
+  render(<Sidebar ref={ref} aria-label="Workspace" title="Navigation" tabIndex={-1} />);
+  const aside = screen.getByRole('complementary', { name: 'Workspace' });
+  expect(ref.current).toBe(aside);
+  expect(aside.getAttribute('title')).toBe('Navigation');
+  expect(aside.getAttribute('tabindex')).toBe('-1');
+  expect(aside.hasAttribute('data-appearance')).toBe(false);
+});
+
+it('fills vertical item rows including footer buttons and keeps horizontal items intrinsic', () => {
+  const style = document.createElement('style');
+  style.textContent = sidebarCss.replace(/\.([a-zA-Z]+)\b/g, (selector, name: string) =>
+    sidebarClasses[name] ? `.${sidebarClasses[name]}` : selector,
+  );
+  document.head.append(style);
+  try {
+    const view = (layout: 'expanded' | 'rail' | 'horizontal') => (
+      <Sidebar layout={layout}>
+        <SidebarNav aria-label="Workspace">
+          <SidebarItem href="/">Routes</SidebarItem>
+        </SidebarNav>
+        <SidebarFooter>
+          <SidebarItem as="button">Settings</SidebarItem>
+        </SidebarFooter>
+      </Sidebar>
+    );
+    const { rerender } = render(view('expanded'));
+    for (const layout of ['expanded', 'rail', 'horizontal'] as const) {
+      rerender(view(layout));
+      for (const item of [screen.getByRole('link'), screen.getByRole('button')]) {
+        const css = getComputedStyle(item);
+        expect(css.width).toBe(layout === 'horizontal' ? 'auto' : '100%');
+        expect(css.boxSizing).toBe('border-box');
+        expect(css.minHeight).toBe('44px');
+      }
+    }
+  } finally {
+    style.remove();
+  }
+});
+
+// @ts-expect-error Sidebar has no appearance variant
+<Sidebar appearance="app" />;

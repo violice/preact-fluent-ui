@@ -27,7 +27,7 @@ export function ShellDocument() {
   const selected = useSignal(0);
   return (
     <AppShell navigationLayout={layout} style={{ minHeight: '520px' }}>
-      <Sidebar appearance="app" layout={layout} scrollable>
+      <Sidebar layout={layout} scrollable>
         <SidebarHeader hidden={layout.value === 'horizontal'}>
           <SidebarBrand
             logo={<Icon name="network" />}
@@ -69,7 +69,7 @@ export function ShellDocument() {
       <AppShellWorkspace>
         <AppShellHeader>
           <h1>Local workspace</h1>
-          <label>
+          <label class={styles.label}>
             Navigation layout
             <Select
               value={layout}
@@ -104,7 +104,7 @@ function ShellPreview() {
     />
   );
 }
-const shellCode = `<AppShell navigationLayout={layout}>\n  <Sidebar appearance="app" layout={layout} scrollable>\n    <SidebarHeader><SidebarBrand title="Connection manager" logo={<Icon name="network" />} /></SidebarHeader>\n    <SidebarNav aria-label="Workspace"><SidebarItem href="/connections">Connections</SidebarItem></SidebarNav>\n    <SidebarFooter><SidebarItem as="button" onClick={openSettings}>Settings</SidebarItem></SidebarFooter>\n  </Sidebar>\n  <AppShellWorkspace>\n    <AppShellHeader>Workspace heading and actions</AppShellHeader>\n    <AppShellContent>Page content</AppShellContent>\n    <AppShellFooter>Workspace status</AppShellFooter>\n  </AppShellWorkspace>\n</AppShell>`;
+const shellCode = `<AppShell navigationLayout={layout}>\n  <Sidebar layout={layout} scrollable>\n    <SidebarHeader><SidebarBrand title="Connection manager" logo={<Icon name="network" />} /></SidebarHeader>\n    <SidebarNav aria-label="Workspace"><SidebarItem href="/connections">Connections</SidebarItem></SidebarNav>\n    <SidebarFooter><SidebarItem as="button" onClick={openSettings}>Settings</SidebarItem></SidebarFooter>\n  </Sidebar>\n  <AppShellWorkspace>\n    <AppShellHeader>Workspace heading and actions</AppShellHeader>\n    <AppShellContent>Page content</AppShellContent>\n    <AppShellFooter>Workspace status</AppShellFooter>\n  </AppShellWorkspace>\n</AppShell>`;
 export const appShellDocs = [
   'AppShell',
   'AppShellWorkspace',

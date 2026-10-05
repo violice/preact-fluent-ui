@@ -221,12 +221,12 @@ const docs: ComponentDoc[] = [
     slug: 'select',
     purpose: 'Choose an option using the native select control.',
     example: SelectExample,
-    code: `<label>Connection mode
+    code: `<Field label="Connection mode">
   <Select value={mode} onChange={event => setMode(event.currentTarget.value)}>
     <option value="automatic">Automatic</option>
     <option value="manual">Manual configuration</option>
   </Select>
-</label>`,
+</Field>`,
     props: [
       ['classes', 'root, wrapper, icon', 'Style the select, outer span and decorative chevron.'],
     ],
@@ -519,7 +519,6 @@ const docs: ComponentDoc[] = [
           ] as Prop[])
         : title === 'Sidebar'
           ? ([
-              ['appearance', 'default | app', 'Default appearance remains compatible.'],
               ['layout', 'Signalish<SidebarLayout>', 'expanded, rail or horizontal.'],
               [
                 'scrollable',

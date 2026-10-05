@@ -28,7 +28,7 @@ Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and 
 | DialogFooter / DialogFooterProps | footer | Native props and children |
 | Modal / ModalProps | dialog div, excluding children/onClose/role/aria-modal/aria-labelledby | required `labelledBy: string`, `initialFocusRef: RefObject<HTMLElement>`, `onClose(): void`, `children: ComponentChildren`; optional `fallbackFocusRef: RefObject<HTMLElement>`; `classes?: { root?, backdrop? }` |
 | ConfirmDialog / ConfirmDialogProps | composed, no root ref | required `title: string`, `children: ComponentChildren`, `cancelLabel: string`, `confirmLabel: string`, `pendingLabel: string`, `onClose(): void`, `onConfirm(): void`; optional `busy`, `confirmDisabled`, `danger` default false; optional `fallbackFocusRef: RefObject<HTMLElement>`; `classes?: { root?, backdrop?, header?, title?, body?, footer?, cancelButton?, confirmButton? }`; `class?`, `className?` |
-| Sidebar / SidebarProps | aside, HTMLElement | Native props plus appearance, layout and scrollable; no classes prop |
+| Sidebar / SidebarProps | aside, HTMLElement | Native props plus layout and scrollable; no classes prop |
 | SidebarHeader / SidebarHeaderProps | div | Native props and children; no classes prop |
 | SidebarNav / SidebarNavProps | nav, HTMLElement | Required `aria-label` or `aria-labelledby`; no classes prop |
 | SidebarGroup / SidebarGroupProps | div | Optional `label: ComponentChildren`; `classes?: { root?, label?, content? }` |
@@ -139,7 +139,7 @@ See the [composition example](../README.md#sidebar-composition). The library imp
 
 ## Application shell
 
-`AppShellProps` extends div native props with `navigationLayout?: JSX.Signalish<SidebarLayout>`, default `expanded`. Match it to Sidebar's `layout?: JSX.Signalish<SidebarLayout>`. Sidebar also accepts `appearance?: 'default' | 'app'`, default `default`, and `scrollable?: JSX.Signalish<boolean>`, default false. Default Sidebar remains a vertical flex aside; the app appearance applies application navigation styling. Scrollable navigation keeps header and footer visible.
+`AppShellProps` extends div native props with `navigationLayout?: JSX.Signalish<SidebarLayout>`, default `expanded`. Match it to Sidebar's `layout?: JSX.Signalish<SidebarLayout>`. Sidebar also accepts `scrollable?: JSX.Signalish<boolean>`, default false. Sidebar uses application navigation styling. Vertical items fill their row, including buttons in the footer; horizontal items retain intrinsic width. Scrollable navigation keeps header and footer visible.
 
 `SidebarBrandProps` extends native div props, replacing native title with required `title: string`. It accepts `description?: string`, `logo?: ComponentChildren` and class slots root/logo/content/title/description. The logo is decorative. Rail layout hides visual text while keeping names; set SidebarItem `label` for complex children. Rail labels appear in a portal on hover or keyboard focus and Escape dismisses them until hover and focus leave.
 

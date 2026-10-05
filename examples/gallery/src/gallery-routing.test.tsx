@@ -394,7 +394,7 @@ it('uses app navigation with a library brand and fixed header and footer around 
   const nav = screen.getByRole('navigation', { name: 'Documentation' });
   const brandLink = screen.getByRole('link', { name: 'Preact Fluent UI', exact: true });
   const brand = brandLink.querySelector('[data-has-logo]');
-  expect(aside.getAttribute('data-appearance')).toBe('app');
+  expect(aside.hasAttribute('data-appearance')).toBe(false);
   expect(aside.getAttribute('data-scrollable')).toBe('true');
   expect(aside.getAttribute('data-layout')).toBe('expanded');
   expect(brand).toBeTruthy();

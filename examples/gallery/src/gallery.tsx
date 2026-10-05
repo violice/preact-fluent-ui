@@ -68,7 +68,6 @@ function Shell({ base, store }: { base: string; store?: GalleryStore }) {
         </Button>
         <Sidebar
           id="gallery-navigation"
-          appearance="app"
           scrollable
           class={`${styles.navigation} ${expanded ? styles.navigationOpen : ''}`}
         >

@@ -82,7 +82,7 @@ function SidebarExample() {
   const layout = useSignal<SidebarLayout>('expanded');
   return (
     <div class={styles.stack}>
-      <label>
+      <label class={styles.label}>
         Sidebar layout
         <Select
           value={layout}
@@ -95,13 +95,7 @@ function SidebarExample() {
           <option value="horizontal">Horizontal</option>
         </Select>
       </label>
-      <Sidebar
-        appearance="app"
-        layout={layout}
-        scrollable
-        class={styles.sidebarExample}
-        style={{ height: '320px' }}
-      >
+      <Sidebar layout={layout} scrollable class={styles.sidebarExample} style={{ height: '320px' }}>
         <SidebarHeader>
           <SidebarBrand
             title="Connection manager"
@@ -132,7 +126,7 @@ function SidebarExample() {
 }
 const sidebarCode = `import { Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem, SidebarFooter } from '@violice/preact-fluent-ui';
 
-<Sidebar appearance="app" layout={layout} scrollable>
+<Sidebar layout={layout} scrollable>
   <SidebarHeader>Connection manager</SidebarHeader>
   <SidebarNav aria-label="Workspace">
     <SidebarGroup label="Connections">

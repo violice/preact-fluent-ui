@@ -10,7 +10,7 @@
   font-size: var(--type-body);
   line-height: 20px;
   color: var(--color-text);
-  background: var(--color-card);
+  background: var(--sidebar-background, var(--color-card));
   overflow-wrap: anywhere;
 }
 .header,
@@ -41,6 +41,9 @@
 }
 .item {
   position: relative;
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -52,10 +55,11 @@
   overflow-wrap: anywhere;
 }
 .item:hover {
-  background: var(--color-surface-hover);
+  background: var(--sidebar-hover-background, var(--color-surface-hover));
 }
 .item[aria-current='page'] {
-  background: var(--color-surface-hover);
+  background: var(--sidebar-active-background, var(--color-surface-hover));
+  color: var(--sidebar-active-color, var(--color-accent));
   font-weight: 600;
 }
 .item[aria-current='page']::before {
@@ -101,21 +105,6 @@
   display: none;
 }
 
-/* App styling is opt-in; expanded default navigation retains its original rules. */
-.sidebar[data-appearance='app'] {
-  background: var(--sidebar-background, var(--color-card));
-}
-.sidebar[data-appearance='app'] .item {
-  min-height: 44px;
-  box-sizing: border-box;
-}
-.sidebar[data-appearance='app'] .item:hover {
-  background: var(--sidebar-hover-background, var(--color-surface-hover));
-}
-.sidebar[data-appearance='app'] .item[aria-current='page'] {
-  background: var(--sidebar-active-background, var(--color-surface-hover));
-  color: var(--sidebar-active-color, var(--color-accent));
-}
 button.item {
   border: 0;
   background: transparent;
@@ -198,6 +187,7 @@ button.item:disabled {
   overflow-y: hidden;
 }
 .sidebar[data-layout='horizontal'] .item {
+  width: auto;
   flex-shrink: 0;
 }
 .sidebar[data-layout='horizontal'] .item[aria-current='page']::before {

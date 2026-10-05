@@ -106,7 +106,7 @@ export function ConnectionForm() {
 </InfoBar>
 <StatusBadge tone="success">Connected</StatusBadge>`,
   forms: `import { useState } from 'preact/hooks';
-import { Button, Select } from '@violice/preact-fluent-ui';
+import { Button, Field, Select } from '@violice/preact-fluent-ui';
 
 export function ConnectionForm() {
   const [mode, setMode] = useState('automatic');
@@ -115,14 +115,13 @@ export function ConnectionForm() {
       event.preventDefault();
       console.log(mode);
     }}>
-      <label>
-        Connection mode
+      <Field label="Connection mode">
         <Select value={mode}
           onChange={(event) => setMode(event.currentTarget.value)}>
           <option value="automatic">Automatic</option>
           <option value="manual">Manual</option>
         </Select>
-      </label>
+      </Field>
       <Button type="submit" variant="primary">Save</Button>
     </form>
   );

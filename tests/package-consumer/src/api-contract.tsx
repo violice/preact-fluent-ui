@@ -661,7 +661,7 @@ const brandContract: SidebarBrandProps = {
   },
 };
 export const appSidebarContracts = (
-  <Sidebar layout={appLayout} appearance="app" scrollable>
+  <Sidebar layout={appLayout} scrollable>
     <SidebarBrand {...brandContract} ref={createRef<HTMLDivElement>()} hidden />
     <SidebarItem href="/" render={(props, state) => <a {...props} data-layout={state.layout} />} />
     <SidebarItem
@@ -697,7 +697,7 @@ const shellFooterProps: AppShellFooterProps = { hidden: true };
 export function AppShellContract({ callback = false }: { callback?: boolean }) {
   return (
     <AppShell {...shellProps} ref={refFor<HTMLDivElement>(callback)}>
-      <Sidebar appearance="app" layout={appLayout} />
+      <Sidebar layout={appLayout} />
       <AppShellWorkspace {...workspaceProps} ref={refFor<HTMLElement>(callback)}>
         <AppShellHeader {...shellHeaderProps} ref={refFor<HTMLDivElement>(callback)} />
         <AppShellContent {...shellContentProps} ref={refFor<HTMLDivElement>(callback)}>
@@ -724,3 +724,7 @@ export const appShellNegativeContracts = (
     <AppShellHeader ref={createRef<HTMLAnchorElement>()} />
   </>
 );
+
+// Sidebar has one application style and no appearance variant.
+// @ts-expect-error Sidebar appearance was removed
+<Sidebar appearance="app" />;

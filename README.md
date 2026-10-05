@@ -78,7 +78,7 @@ SidebarGroup has `classes` slots `root`, `label` and `content`; SidebarItem has 
 
 ## Application shell and composition
 
-`Sidebar appearance="app"` supports `layout="expanded"`, `"rail"` and `"horizontal"`. Use `scrollable` to scroll navigation between its header and footer. `SidebarBrand` accepts a required title, optional description and decorative logo. Rail items keep accessible names and show labels on hover or keyboard focus; complex children require `label`.
+`Sidebar` uses application navigation styles and supports `layout="expanded"`, `"rail"` and `"horizontal"`. Use `scrollable` to scroll navigation between its header and footer. `SidebarBrand` accepts a required title, optional description and decorative logo. Rail items keep accessible names and show labels on hover or keyboard focus; complex children require `label`.
 
 Compose `AppShell`, `AppShellWorkspace`, `AppShellHeader`, `AppShellContent` and `AppShellFooter`. Match `AppShell navigationLayout` with `Sidebar layout`. Workspace renders the document's main landmark; the other parts render divs. Default widths are 248px expanded and 64px rail, with an 8px workspace margin, 12px radius and 1240px content maximum. Applications own breakpoints and layout state.
 

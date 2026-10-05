@@ -13,7 +13,6 @@ import { resolveClass } from '../utils/resolve-class';
 import styles from './sidebar.module.css';
 
 export type SidebarProps = JSX.HTMLAttributes<HTMLElement> & {
-  appearance?: 'default' | 'app';
   layout?: JSX.Signalish<SidebarLayout>;
   scrollable?: JSX.Signalish<boolean>;
 };
@@ -29,21 +28,13 @@ export type SidebarGroupProps = JSX.HTMLAttributes<HTMLDivElement> & {
   classes?: Partial<Record<'root' | 'label' | 'content', JSX.Signalish<string | undefined>>>;
 };
 export const Sidebar = /* @__PURE__ */ forwardRef<HTMLElement, SidebarProps>(function Sidebar(
-  {
-    class: classProp,
-    className,
-    appearance = 'default',
-    layout = 'expanded',
-    scrollable = false,
-    ...props
-  },
+  { class: classProp, className, layout = 'expanded', scrollable = false, ...props },
   ref,
 ) {
   return (
     <SidebarContext.Provider value={sidebarValue(layout)}>
       <aside
         data-sidebar=""
-        data-appearance={appearance}
         data-layout={sidebarValue(layout)}
         data-scrollable={sidebarValue(scrollable)}
         {...props}
