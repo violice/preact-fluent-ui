@@ -97,7 +97,7 @@ Import overrides after theme/styles and any optional global styles. Primary and 
 }
 ```
 
-The complete [green theme](../examples/gallery/src/green-theme.css) preserves the Xbox DNS canvas, card, notice, accent and dark primary colors. Override at root so portaled dialogs receive the same values. Do not rely on a nested container theme in version 0.1.0.
+The complete [green theme](../examples/gallery/src/green-theme.css) preserves the Xbox DNS canvas, card, notice, accent and dark primary colors. Override at root so portaled dialogs receive the same values. Modal portals use the root theme; Tooltip inherits its trigger theme.
 
 
 ## Application shell layout variables
@@ -109,6 +109,12 @@ These optional CSS variables apply to AppShell and have fallback values in compo
 | `--app-shell-navigation-width` | `248px` | Expanded navigation width |
 | `--app-shell-rail-width` | `64px` | Rail navigation width |
 | `--app-shell-content-max-width` | `1240px` | Centered content maximum |
-| `--app-shell-content-padding` | `24px` | Header, content and footer padding |
+| `--app-shell-content-padding` | `24px` | Header, content and footer padding; toolbar inline padding |
 
 Desktop workspace margin is 8px and radius is 12px. Horizontal navigation removes the margin and radius. Applications choose their breakpoints and set Sidebar layout to match AppShell navigationLayout.
+
+## Code syntax colors
+
+CodeBlock owns the `--code-color-<kind>` palette in light and dark themes. Kinds are keyword, string, comment, function, type, property, number, literal, tag, attribute, operator, punctuation and command. Override these variables in your theme; tokenization remains external. Forced colors render tokens with CanvasText.
+
+AppShellToolbar shares the content maximum width and inline padding variable. Its default inline padding is 24px on desktop and 12px up to 640px; an explicit shared padding variable overrides both defaults.

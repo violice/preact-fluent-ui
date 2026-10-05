@@ -224,7 +224,7 @@ mergeProps merges ordinary props left to right. Each source selects class before
 
 mergeClasses reads string or Signalish values and joins nonempty classes. resolveClass reads both values and selects class unless it is null or undefined. An empty string suppresses className fallback. Neither helper resolves CSS conflicts or creates a computed signal; call them during a tracked render or computed calculation for signal updates.
 
-The new shell and utility API is unreleased. Build and pack the checkout for consumers and install that local archive until release. Keep tracked manifests free of absolute local paths.
+The existing shell and utility API is published. The prepared 0.4.0 release adds AppShellToolbar as a direct Workspace child and replaces DataToolbar/DataToolbarGroup with Toolbar/ToolbarGroup. Until 0.4.0 is published, build and pack this checkout to use these additions.
 
 The gallery groups [AppShell](https://violice.github.io/preact-fluent-ui/components/app-shell), [Sidebar](https://violice.github.io/preact-fluent-ui/components/sidebar) and [Dialog](https://violice.github.io/preact-fluent-ui/components/dialog) into canonical family pages with an API reference table for each export. Dialog is a documentation family for Modal, DialogHeader, DialogBody, DialogFooter and ConfirmDialog; it is not an exported component. Modal controls focus and dismissal, while ConfirmDialog supplies Cancel-first action confirmation. Constituent page URLs and the old getting-started path are removed; Getting Started is at the gallery root.
 

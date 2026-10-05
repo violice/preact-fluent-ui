@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 (2026-10-05)
+
+- Add TextPreview for literal text, wrapping and bounded scrolling.
+- Add CodeBlock with generic syntax tokens, themed colors and optional exact-source copying. Use it throughout the gallery with external TanStack tokenization.
+- Add AppShellToolbar as the sixth AppShell part, sharing content width and padding variables.
+- Expand the gallery to 37 canonical documentation pages.
 
 - Add native Disclosure parts for error details and file previews.
 - Add labeled/decorative Spinner and single-status LoadingState with inline presentation.
