@@ -1,11 +1,16 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 (2026-10-05)
 
 - Make application styles the Sidebar default and add expanded/rail/horizontal layouts, scrollable navigation, SidebarBrand and button/custom rendered SidebarItem roots.
 - Add five composable AppShell parts and public useRender, mergeProps, mergeClasses and resolveClass utilities.
 - Organize the gallery into 26 canonical documentation pages with grouped component API references, alphabetical Utils navigation, local utility demonstrations and isolated application shell previews.
-- Document render forwarding, refs, style and handler composition, shell layout variables and local archive installation before release.
+- Document render forwarding, refs, style and handler composition, shell layout variables and local archive installation.
+- Fix SidebarItem title and description alignment beside centered icons.
+
+### Migration from 0.2.0
+
+- Remove Sidebar `appearance`; application styling is now the default. Use `layout` for expanded, rail and horizontal navigation.
 
 ## 0.2.0 (2026-10-05)
 
