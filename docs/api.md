@@ -1,6 +1,6 @@
 # Public API
 
-Import components and their exported props types from `@violice/preact-fluent-ui`. Internal source subpaths are not exports. JavaScript does not import CSS; explicitly load `theme.css` and `styles.css`. [README](../README.md) explains optional global styles and override order.
+Import components and their exported props types from `@violice/preact-fluent-ui`. Internal source subpaths are not exports. JavaScript does not import CSS; explicitly load `theme.css` and `styles.css`. [README](../README.md#installation) explains optional global styles. The [usage guide](usage.md#theming) explains override order.
 
 ## Shared native props
 
