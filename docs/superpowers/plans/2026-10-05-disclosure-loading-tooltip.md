@@ -104,5 +104,5 @@
 - [x] Verify Tooltip delayed hover, immediate keyboard focus, Escape, hover over tooltip, nested table scroll, every viewport edge and local-themed Modal. Assert no clipping and no focus changes; verify trigger descriptions stay associated.
 - [x] Verify reduced-motion and forced-colors behavior where supported. Explicitly record unsupported platform checks instead of claiming them passed.
 - [x] Fix confirmed defects, rerun the checks affected by those changes, and update acceptance evidence.
-- [ ] Request independent review under the selected execution workflow; address findings before completion. Use only provider/model/effort settings permitted by the parent limits.
-- [ ] Run final `git diff --check` and inspect repository status. Store significant completion and any resolved errors in ICM before reporting results. Do not publish or merge.
+- [x] Request independent review under the selected execution workflow; address findings before completion. Use only provider/model/effort settings permitted by the parent limits.
+- [x] Run final `git diff --check` and inspect repository status. Store significant completion and any resolved errors in ICM before reporting results. Do not publish or merge.

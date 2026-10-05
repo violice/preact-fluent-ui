@@ -41,10 +41,13 @@ Escape were exercised through browser actions. Windows forced colors, active
 reduced motion and real screen-reader announcements remain manual checks;
 their active media modes are unavailable in this preview.
 
-Automated verification passes 329 tests, release/type/lint/format/notices,
+Automated verification passes 333 tests, release/type/lint/format/notices,
 library and 35-page gallery builds, eight artifact tests and preview checks.
 The final archive passes packed consumers on Preact 10.29.8 and 10.27.0.
-Detailed evidence is in this plan's local `.superpowers/sdd/` reports.
+Final independent review found and verified a cross-instance Escape fix: all
+active or pending Tooltip instances now dismiss together while preserving
+Modal dismissal order. Four regressions and a two-tooltip browser event probe
+confirm the behavior. Final review has no remaining findings.
 
 ## Data components and gallery spacing, 2026-10-05
 
