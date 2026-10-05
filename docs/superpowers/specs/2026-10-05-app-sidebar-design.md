@@ -1,7 +1,7 @@
 # Sidebar и AppShell для приложений
 
-Статус: предложение первого этапа одобрено пользователем 2026-10-05;
-этот документ подготовлен для проверки перед планированием реализации.
+Статус: согласовано пользователем 2026-10-05 после уточнений про Route VPN,
+единый SidebarItem, useRender и секцию Utils.
 
 ## Цель
 
@@ -37,15 +37,23 @@ AppShell. Это сохраняет произвольные блоки и не�
   как string и необязательный description как string. Корень div, стандартные
   HTML props и ref, slots root/logo/content/title/description. Логотип
   декоративный; содержимое logo не должно включать интерактивные элементы.
-- SidebarItem остаётся ссылкой с обязательным href. Добавляется description
-  как string и slot description; существующие children остаются подписью.
-  Добавляется необязательный label как string для краткого доступного имени
-  и подсказки в rail, когда children содержит сложную разметку. Если label
-  отсутствует, доступное имя берётся из children.
-- SidebarAction является отдельным button с icon, children, description,
-  label и slots root/icon/content/description. Стандартные button props,
-  ref, type="button" по умолчанию, нативный disabled. Не получает active
-  или aria-current. Оформление соответствует SidebarItem.
+- SidebarItem поддерживает два варианта через discriminated union.
+  Без as либо с as="a" создаёт ссылку с обязательным href, нативными
+  anchor props и ref HTMLAnchorElement. С as="button" создаёт button
+  с нативными button props и ref HTMLButtonElement, type="button"
+  по умолчанию. href/target/download запрещены в варианте button;
+  disabled запрещён в варианте ссылки. Обработчики событий типизированы
+  под выбранный DOM-элемент. Существующие ссылки не требуют изменений.
+- Оба варианта имеют icon, children, description как string, label как
+  string и slots root/icon/content/description. label задаёт краткое
+  доступное имя и подпись подсказки в rail для сложного children.
+  Без label доступное имя берётся из children.
+- active и aria-current="page" относятся только к варианту ссылки.
+  Кнопка имеет нативный disabled и не изображает текущую страницу.
+  Действие открытия параметров Windows использует as="button".
+  Отдельный SidebarAction не создаётся. Типы и overloads публичного
+  компонента сохраняют связь as с props, событиями и ref; широкий union
+  ref обоих элементов не допускается.
 
 В rail текст пунктов визуально скрывается с сохранением доступного имени,
 description скрывается и исключается из имени; иконки центрируются.
@@ -67,6 +75,59 @@ appearance="app" задаёт минимальную высоту пункта 4
 Цвета настраиваются локальными переменными --sidebar-background,
 --sidebar-hover-background, --sidebar-active-background,
 --sidebar-active-color; значения по умолчанию используют текущие токены темы.
+
+## Utils и композиция
+
+По предложению пользователя добавить публичные useRender, mergeProps,
+mergeClasses и resolveClass и отдельную группу Utils в gallery.
+Экспорты доступны из основного entry point без зависимости от React/Base UI.
+Текущие внутренние функции классов остаются совместимыми.
+
+- useRender реализует Preact-композицию корневого элемента: defaultTagName,
+  render как VNode либо callback, props, ref и state. Callback получает
+  итоговые props и state; обязан передать props и ref своему корню.
+  В варианте VNode объединяются props, классы, styles, handlers и refs
+  шаблона с данными компонента. Если шаблон не задаёт children,
+  сохраняется содержимое компонента. Нельзя создавать вложенный
+  интерактивный элемент вместо замены корня.
+- SidebarItem первым использует useRender. as продолжает определять
+  нативные defaults и типы, render обеспечивает пользовательский Link
+  или настройку корня. Для render ссылка с пользовательским компонентом
+  может передавать адрес через props самого render-элемента; обязательный
+  href относится к обычному варианту без render. Пользовательский
+  компонент обязан передавать ref и остальные props нативному корню.
+  Наличие render не означает автоматического определения DOM-семантики.
+- mergeProps объединяет наборы слева направо. Обычные атрибуты справа
+  имеют приоритет, class/className каждого набора сначала проходят
+  resolveClass, затем выбранные классы объединяются через mergeClasses.
+  Объектные style объединяются по свойствам, строковый style заменяет
+  предыдущее значение; последующий объект после строки заменяет строку.
+  Обработчики вызываются справа налево; preventDefault останавливает
+  вызов более ранних обработчиков. ref не теряется: useRender объединяет
+  внешний ref, ref шаблона и собственные refs отдельно от mergeProps.
+  Утилиты не мутируют входные props или VNode.
+- mergeClasses объединяет строки и Signalish string с пропуском пустых
+  значений. resolveClass выбирает class, а при null/undefined использует
+  className. Пустой class является осознанным значением и не включает
+  fallback. Эти функции не разрешают конфликты CSS и не являются
+  заменой tailwind-merge.
+
+Gallery получает маршруты /utils/use-render, /utils/merge-props,
+/utils/merge-classes и /utils/resolve-class. Порядок групп Overview,
+Guides, Components, Utils; пункты Utils сортируются по английскому названию.
+Каждая страница содержит назначение, сигнатуру, копируемый пример и
+ограничения. useRender показывает замену корня и пользовательский Link;
+mergeProps демонстрирует порядок обработчиков и preventDefault;
+страницы классов показывают Signals и приоритет class/className.
+Живые демонстрации локальны и сохраняют стандартный порядок Example,
+InfoBar с результатом, код.
+
+Перед реализацией план должен определить точные публичные generic-типы
+useRender и mergeProps. Проверки покрывают композицию refs при mount и
+unmount, отсутствие дублирования событий, отмену обработчиков, props
+шаблона, children, Signals, стиль строкой/объектом и compile-time варианты
+SidebarItem. Общая миграция остальных компонентов на render не входит
+в этап: новый механизм сначала проверяется на SidebarItem.
 
 ## AppShell
 
