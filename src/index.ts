@@ -50,3 +50,5 @@ export type {
   SidebarItemProps,
   SidebarFooterProps,
 } from './components/sidebar';
+export { mergeClasses, resolveClass } from './classes';
+export { mergeProps } from './utils/merge-props';
