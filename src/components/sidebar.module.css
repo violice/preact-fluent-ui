@@ -80,6 +80,11 @@
   flex: 0 0 auto;
   align-items: center;
 }
+.itemText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
 .itemContent {
   min-width: 0;
 }
@@ -129,12 +134,6 @@ button.item:disabled {
   color: var(--color-text-muted);
   font-size: var(--type-caption);
 }
-.item:has(> .description) {
-  flex-wrap: wrap;
-}
-.item > .description {
-  flex-basis: 100%;
-}
 .brand {
   display: flex;
   align-items: center;
@@ -157,7 +156,7 @@ button.item:disabled {
   justify-content: center;
 }
 .sidebar[data-layout='rail'] .label,
-.sidebar[data-layout='rail'] .item[data-has-icon='true'] .itemContent,
+.sidebar[data-layout='rail'] .item[data-has-icon='true'] .itemText,
 .sidebar[data-layout='rail'] .brand[data-has-logo='true'] .brandContent {
   position: absolute;
   width: 1px;

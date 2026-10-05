@@ -133,15 +133,17 @@ export const SidebarItem = /* @__PURE__ */ forwardRef<HTMLElement, SidebarItemPr
                   {icon}
                 </span>
               )}
-              <span class={mergeClasses(styles.itemContent, classes?.content)}>{children}</span>
-              {description && (
-                <span
-                  aria-hidden={layout === 'rail' || undefined}
-                  class={mergeClasses(styles.description, classes?.description)}
-                >
-                  {description}
-                </span>
-              )}
+              <span class={styles.itemText}>
+                <span class={mergeClasses(styles.itemContent, classes?.content)}>{children}</span>
+                {description && (
+                  <span
+                    aria-hidden={layout === 'rail' || undefined}
+                    class={mergeClasses(styles.description, classes?.description)}
+                  >
+                    {description}
+                  </span>
+                )}
+              </span>
             </>
           ),
         },

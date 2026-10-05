@@ -580,3 +580,88 @@ it('fills vertical item rows including footer buttons and keeps horizontal items
 
 // @ts-expect-error Sidebar has no appearance variant
 <Sidebar appearance="app" />;
+
+it.each(['expanded', 'rail', 'horizontal'] as const)(
+  'groups title and description beside the icon in %s layout without changing slots',
+  (layout) => {
+    const ref = createRef<HTMLButtonElement>();
+    const clicked = vi.fn();
+    render(
+      <Sidebar layout={layout}>
+        <SidebarItem
+          as="button"
+          ref={ref}
+          onClick={clicked}
+          label="Settings"
+          icon={<span>Settings icon</span>}
+          description="Open VPN settings"
+          classes={{ content: 'settings-title', description: 'settings-description' }}
+          render={<button data-custom="yes" />}
+        >
+          Settings
+        </SidebarItem>
+        <SidebarItem href="/help" description="More information">
+          Help
+        </SidebarItem>
+      </Sidebar>,
+    );
+    const root = screen.getByRole('button', { name: 'Settings' });
+    const title = screen.getByText('Settings');
+    const description = screen.getByText('Open VPN settings');
+    const column = title.parentElement!;
+    expect(description.parentElement).toBe(column);
+    expect(column.parentElement).toBe(root);
+    expect(screen.getByText('Settings icon').parentElement?.parentElement).toBe(root);
+    expect(column.contains(screen.getByText('Settings icon'))).toBe(false);
+    expect(title.classList.contains('settings-title')).toBe(true);
+    expect(description.classList.contains('settings-description')).toBe(true);
+    expect(description.getAttribute('aria-hidden')).toBe(layout === 'rail' ? 'true' : null);
+    expect(screen.getByText('Help').parentElement).toBe(
+      screen.getByText('More information').parentElement,
+    );
+    expect(ref.current).toBe(root);
+    expect(root.getAttribute('data-custom')).toBe('yes');
+    fireEvent.click(root);
+    expect(clicked).toHaveBeenCalledTimes(1);
+  },
+);
+
+it('stacks item text beside centered icons and hides the whole column only for rail icons', () => {
+  const style = document.createElement('style');
+  style.textContent = sidebarCss.replace(/\.([a-zA-Z]+)\b/g, (selector, name: string) =>
+    sidebarClasses[name] ? `.${sidebarClasses[name]}` : selector,
+  );
+  document.head.append(style);
+  try {
+    const view = (layout: 'expanded' | 'rail' | 'horizontal') => (
+      <Sidebar layout={layout}>
+        <SidebarItem href="/" icon="Icon" description="Description">
+          Title
+        </SidebarItem>
+        <SidebarItem href="/text" description="Text description">
+          Text title
+        </SidebarItem>
+      </Sidebar>
+    );
+    const { rerender } = render(view('expanded'));
+    for (const layout of ['expanded', 'rail', 'horizontal'] as const) {
+      rerender(view(layout));
+      const title = screen.getByText('Title');
+      const column = title.parentElement!;
+      const row = column.parentElement!;
+      expect(getComputedStyle(row).alignItems).toBe('center');
+      expect(getComputedStyle(row).flexWrap).not.toBe('wrap');
+      expect(getComputedStyle(column).display).toBe('flex');
+      expect(getComputedStyle(column).flexDirection).toBe('column');
+      expect(getComputedStyle(column).position).toBe(layout === 'rail' ? 'absolute' : 'static');
+      expect(getComputedStyle(screen.getByText('Description')).display).toBe(
+        layout === 'rail' ? 'none' : 'inline',
+      );
+      expect(getComputedStyle(screen.getByText('Text title').parentElement!).position).toBe(
+        'static',
+      );
+    }
+  } finally {
+    style.remove();
+  }
+});
