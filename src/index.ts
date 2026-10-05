@@ -109,3 +109,10 @@ export type {
   AppShellContentProps,
   AppShellFooterProps,
 } from './components/app-shell';
+
+export { Disclosure, DisclosureSummary, DisclosureContent } from './components/disclosure';
+export type {
+  DisclosureProps,
+  DisclosureSummaryProps,
+  DisclosureContentProps,
+} from './components/disclosure';
