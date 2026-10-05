@@ -28,7 +28,7 @@ export function ShellDocument() {
   return (
     <AppShell navigationLayout={layout} style={{ minHeight: '520px' }}>
       <Sidebar appearance="app" layout={layout} scrollable>
-        <SidebarHeader>
+        <SidebarHeader hidden={layout.value === 'horizontal'}>
           <SidebarBrand
             logo={<Icon name="network" />}
             title="Connection manager"
