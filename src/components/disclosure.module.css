@@ -34,24 +34,18 @@
 
 .summary::before {
   content: '';
-  flex: 0 0 6px;
-  inline-size: 6px;
-  block-size: 6px;
-  border-block-start: 1.5px solid currentColor;
-  border-inline-end: 1.5px solid currentColor;
-  transform: rotate(45deg);
-}
-
-.summary:dir(rtl)::before {
-  transform: rotate(-45deg);
+  flex: 0 0 auto;
+  inline-size: 0;
+  block-size: 0;
+  border-block: 3px solid transparent;
+  border-inline-start: 6px solid currentColor;
+  border-inline-end: 0 solid transparent;
 }
 
 .disclosure[open] > .summary::before {
-  transform: rotate(135deg);
-}
-
-.disclosure[open] > .summary:dir(rtl)::before {
-  transform: rotate(-135deg);
+  border-block-start: 6px solid currentColor;
+  border-block-end: 0 solid transparent;
+  border-inline: 3px solid transparent;
 }
 
 .summary:focus-visible {
