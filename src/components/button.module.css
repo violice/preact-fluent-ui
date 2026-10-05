@@ -28,10 +28,10 @@
     color 100ms ease,
     box-shadow 100ms ease;
 }
-.button:hover:not(:disabled) {
+.button:hover:not(:disabled):not(.loading) {
   background: var(--color-control-hover);
 }
-.button:active:not(:disabled) {
+.button:active:not(:disabled):not(.loading) {
   background: var(--color-control-pressed);
   border-bottom-color: var(--color-control-border);
   box-shadow: none;
@@ -42,6 +42,9 @@
   border-color: var(--color-border);
   box-shadow: none;
   cursor: not-allowed;
+}
+.loading {
+  cursor: progress;
 }
 .compact {
   min-height: 32px;
@@ -55,11 +58,11 @@
   border-bottom-color: var(--color-primary-pressed);
   box-shadow: var(--shadow-primary);
 }
-.primary:hover:not(:disabled) {
+.primary:hover:not(:disabled):not(.loading) {
   background: var(--color-primary-hover);
   border-color: var(--color-primary-hover);
 }
-.primary:active:not(:disabled) {
+.primary:active:not(:disabled):not(.loading) {
   background: var(--color-primary-pressed);
   border-color: var(--color-primary-pressed);
 }
@@ -75,10 +78,10 @@
   border-color: transparent;
   box-shadow: none;
 }
-.subtle:hover:not(:disabled) {
+.subtle:hover:not(:disabled):not(.loading) {
   background: var(--color-surface-hover);
 }
-.subtle:active:not(:disabled) {
+.subtle:active:not(:disabled):not(.loading) {
   background: var(--color-surface-pressed);
 }
 .iconOnly {
@@ -89,18 +92,18 @@
 .danger {
   color: var(--color-danger);
 }
-.danger:hover:not(:disabled) {
+.danger:hover:not(:disabled):not(.loading) {
   color: var(--color-danger);
   background: var(--color-danger-bg);
   border-color: var(--color-danger);
 }
-.danger:active:not(:disabled) {
+.danger:active:not(:disabled):not(.loading) {
   background: var(--color-surface-pressed);
 }
 @media (forced-colors: active) {
   .primary:not(:disabled),
-  .primary:hover:not(:disabled),
-  .primary:active:not(:disabled) {
+  .primary:hover:not(:disabled):not(.loading),
+  .primary:active:not(:disabled):not(.loading) {
     forced-color-adjust: none;
     color: HighlightText;
     background: Highlight;
@@ -114,7 +117,7 @@
   .subtle:not(:disabled) {
     border-color: ButtonText;
   }
-  .button:hover:not(:disabled) {
+  .button:hover:not(:disabled):not(.loading) {
     outline: 1px solid Highlight;
     outline-offset: -3px;
   }
