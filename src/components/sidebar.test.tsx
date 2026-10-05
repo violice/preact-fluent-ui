@@ -1,4 +1,5 @@
 import { createRef } from 'preact';
+import { signal as reactiveSignal } from '@preact/signals';
 import sidebarCss from './sidebar.module.css?raw';
 import sidebarClasses from './sidebar.module.css';
 import type { JSX } from 'preact';
@@ -426,3 +427,111 @@ it.each(['mouseleave', 'blur'] as const)(
     expect(document.body.querySelector('[data-sidebar-hint]')).not.toBeNull();
   },
 );
+
+it.each(['workspace', 'body'] as const)(
+  'dismisses hover-only hints on Escape from %s without swallowing the application event',
+  (target) => {
+    render(
+      <>
+        <button>Workspace</button>
+        <Sidebar layout="rail">
+          <SidebarItem href="/">Home</SidebarItem>
+        </Sidebar>
+      </>,
+    );
+    const focused =
+      target === 'workspace' ? screen.getByRole('button', { name: 'Workspace' }) : document.body;
+    act(() => focused.focus());
+    expect(document.activeElement).toBe(focused);
+    const link = screen.getByRole('link', { name: 'Home' });
+    fireEvent.mouseEnter(link);
+    expect(document.body.querySelector('[data-sidebar-hint]')).not.toBeNull();
+    let received = 0;
+    const applicationListener = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        received++;
+        expect(event.defaultPrevented).toBe(false);
+      }
+    };
+    window.addEventListener('keydown', applicationListener);
+    try {
+      fireEvent.keyDown(focused, { key: 'Escape' });
+      expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+      expect(received).toBe(1);
+      fireEvent.mouseEnter(link);
+      expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+      fireEvent.mouseLeave(link);
+      fireEvent.mouseEnter(link);
+      expect(document.body.querySelector('[data-sidebar-hint]')).not.toBeNull();
+    } finally {
+      window.removeEventListener('keydown', applicationListener);
+    }
+  },
+);
+
+it('subscribes to global Escape only while a hint is visible and cleans up on unmount', () => {
+  const add = vi.spyOn(document, 'addEventListener');
+  const remove = vi.spyOn(document, 'removeEventListener');
+  try {
+    const { unmount } = render(
+      <Sidebar layout="rail">
+        <SidebarItem href="/">Home</SidebarItem>
+      </Sidebar>,
+    );
+    expect(add.mock.calls.filter(([type]) => type === 'keydown')).toHaveLength(0);
+    fireEvent.mouseEnter(screen.getByRole('link', { name: 'Home' }));
+    const subscription = add.mock.calls.find(([type]) => type === 'keydown');
+    expect(subscription).toBeDefined();
+    unmount();
+    expect(
+      remove.mock.calls.some(
+        ([type, listener]) => type === 'keydown' && listener === subscription?.[1],
+      ),
+    ).toBe(true);
+    expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+  } finally {
+    add.mockRestore();
+    remove.mockRestore();
+  }
+});
+
+it('allows native Signalish hidden false hints and updates false to true to false', () => {
+  const hidden = reactiveSignal(false);
+  render(
+    <Sidebar layout="rail">
+      <SidebarItem href="/" hidden={hidden}>
+        Home
+      </SidebarItem>
+    </Sidebar>,
+  );
+  const link = screen.getByRole('link', { name: 'Home' });
+  expect((link as HTMLAnchorElement).hidden).toBe(false);
+  fireEvent.mouseEnter(link);
+  expect(document.body.querySelector('[data-sidebar-hint]')).not.toBeNull();
+  act(() => {
+    hidden.value = true;
+  });
+  expect((link as HTMLAnchorElement).hidden).toBe(true);
+  expect(document.body.querySelector('[data-sidebar-hint]')).toBeNull();
+  act(() => {
+    hidden.value = false;
+  });
+  expect((link as HTMLAnchorElement).hidden).toBe(false);
+  expect(document.body.querySelector('[data-sidebar-hint]')).not.toBeNull();
+});
+
+it('respects application cancellation of Escape while a hovered hint is open', () => {
+  render(
+    <>
+      <button onKeyDown={(event) => event.preventDefault()}>Workspace</button>
+      <Sidebar layout="rail">
+        <SidebarItem href="/">Home</SidebarItem>
+      </Sidebar>
+    </>,
+  );
+  const button = screen.getByRole('button', { name: 'Workspace' });
+  act(() => button.focus());
+  fireEvent.mouseEnter(screen.getByRole('link', { name: 'Home' }));
+  fireEvent.keyDown(button, { key: 'Escape' });
+  expect(document.body.querySelector('[data-sidebar-hint]')).not.toBeNull();
+});

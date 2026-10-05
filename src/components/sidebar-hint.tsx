@@ -2,8 +2,23 @@ import { createPortal } from 'preact/compat';
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { RefObject } from 'preact';
 import styles from './sidebar.module.css';
-export function SidebarHint({ trigger, text }: { trigger: RefObject<HTMLElement>; text: string }) {
+export function SidebarHint({
+  trigger,
+  text,
+  onDismiss,
+}: {
+  trigger: RefObject<HTMLElement>;
+  text: string;
+  onDismiss: () => void;
+}) {
   const hint = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !event.defaultPrevented) onDismiss();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [onDismiss]);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   useLayoutEffect(() => {
     const update = () => {

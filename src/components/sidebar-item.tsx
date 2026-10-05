@@ -1,6 +1,6 @@
 import type { ComponentChildren, JSX, Ref, VNode } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { useContext, useRef, useState } from 'preact/hooks';
+import { useCallback, useContext, useRef, useState } from 'preact/hooks';
 import { mergeClasses, resolveClass } from '../classes';
 import { mergeProps } from '../utils/merge-props';
 import { useRender } from '../utils/use-render';
@@ -77,6 +77,10 @@ export const SidebarItem = /* @__PURE__ */ forwardRef<HTMLElement, SidebarItemPr
     const focused = useRef(false);
     const focusVisible = useRef(false);
     const dismissed = useRef(false);
+    const dismissHint = useCallback(() => {
+      dismissed.current = true;
+      setHint(false);
+    }, []);
     const hasIcon = icon !== undefined && icon !== null && icon !== false;
     const isActive = as === 'a' && !!sidebarValue(active ?? false);
     const text = label ?? (typeof children === 'string' ? children : undefined);
@@ -108,10 +112,7 @@ export const SidebarItem = /* @__PURE__ */ forwardRef<HTMLElement, SidebarItemPr
             setHint(!dismissed.current && hovered.current);
           },
           onKeyDown: (event) => {
-            if (event.key === 'Escape') {
-              dismissed.current = true;
-              setHint(false);
-            }
+            if (event.key === 'Escape') dismissHint();
           },
         },
         props as JSX.IntrinsicElements['a'],
@@ -148,9 +149,13 @@ export const SidebarItem = /* @__PURE__ */ forwardRef<HTMLElement, SidebarItemPr
     return (
       <>
         {root}
-        {hint && layout === 'rail' && text && !props.hidden && typeof document !== 'undefined' && (
-          <SidebarHint trigger={trigger} text={text} />
-        )}
+        {hint &&
+          layout === 'rail' &&
+          text &&
+          !sidebarValue(props.hidden ?? false) &&
+          typeof document !== 'undefined' && (
+            <SidebarHint trigger={trigger} text={text} onDismiss={dismissHint} />
+          )}
       </>
     );
   },
