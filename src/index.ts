@@ -121,3 +121,6 @@ export { Spinner } from './components/spinner';
 export type { SpinnerProps } from './components/spinner';
 export { LoadingState } from './components/loading-state';
 export type { LoadingStateProps } from './components/loading-state';
+
+export { Tooltip } from './components/tooltip';
+export type { TooltipProps, TooltipTriggerProps } from './components/tooltip';
