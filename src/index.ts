@@ -1,4 +1,26 @@
 export { Button } from './components/button';
+export {
+  Table,
+  TableContainer,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHeaderCell,
+  TableCell,
+  TableCaption,
+} from './components/table';
+export type {
+  TableProps,
+  TableContainerProps,
+  TableHeaderProps,
+  TableBodyProps,
+  TableFooterProps,
+  TableRowProps,
+  TableHeaderCellProps,
+  TableCellProps,
+  TableCaptionProps,
+} from './components/table';
 export type { ButtonProps } from './components/button';
 export { Card } from './components/card';
 export type { CardProps } from './components/card';
