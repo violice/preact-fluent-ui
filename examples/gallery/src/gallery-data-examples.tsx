@@ -78,7 +78,7 @@ function TableExample() {
         </DataToolbarGroup>
       </DataToolbar>
       <TableContainer tabIndex={0} role="region" aria-label="Scrollable connection profiles">
-        <Table density={compact ? 'compact' : 'regular'}>
+        <Table density={compact ? 'compact' : 'regular'} style={{ minWidth: '480px' }}>
           <TableCaption>Connection profiles</TableCaption>
           <TableHeader>
             <TableRow>
@@ -311,7 +311,7 @@ const tableCode = `import { Table, TableContainer, TableCaption, TableHeader, Ta
   TableRow, TableHeaderCell, TableCell } from '@violice/preact-fluent-ui';
 
 <TableContainer role="region" aria-label="Scrollable profiles" tabIndex={0}>
-  <Table density="regular">
+  <Table density="regular" style={{ minWidth: '480px' }}>
     <TableCaption>Connection profiles</TableCaption>
     <TableHeader><TableRow>
       <TableHeaderCell>Profile</TableHeaderCell>

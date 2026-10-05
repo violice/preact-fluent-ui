@@ -52,11 +52,11 @@ element attribute types; Table accepts density?: 'regular' | 'compact'; cells
 accept align?: 'start' | 'center' | 'end'. Components return JSX.Element and
 forward refs to the indicated native element.
 
-- [ ] Write tests rendering a labelled table with all parts. Assert caption association, exact element/ref targets, default scope='col', explicit scope='row', preserved headers and spanning attributes, native event handlers, and hidden forwarding. Include class/className precedence using the existing convention.
-- [ ] Run `npx vitest run src/components/table.test.tsx`; confirm failure because the family is absent.
-- [ ] Implement parts and exports. Default density is regular, alignment start, header scope col. Table has no wrapper. TableContainer supplies optional horizontal overflow without automatic tabindex. Use logical spacing, theme backgrounds and borders, and body-row hover. Do not impose mobile column hiding or grid roles.
-- [ ] Run the focused tests and `npm run typecheck`; expect success. Verify regular/compact styles manually during Task 6.
-- [ ] Commit the family with `feat: add semantic table components`.
+- [x] Write tests rendering a labelled table with all parts. Assert caption association, exact element/ref targets, default scope='col', explicit scope='row', preserved headers and spanning attributes, native event handlers, and hidden forwarding. Include class/className precedence using the existing convention.
+- [x] Run `npx vitest run src/components/table.test.tsx`; confirm failure because the family is absent.
+- [x] Implement parts and exports. Default density is regular, alignment start, header scope col. Table has no wrapper. TableContainer supplies optional horizontal overflow without automatic tabindex. Use logical spacing, theme backgrounds and borders, and body-row hover. Do not impose mobile column hiding or grid roles.
+- [x] Run the focused tests and `npm run typecheck`; expect success. Verify regular/compact styles manually during Task 6.
+- [x] Commit the family with `feat: add semantic table components`.
 
 ### Task 2: Pagination
 
@@ -69,11 +69,11 @@ and 'aria-label': string; optional disabled: boolean and
 formatPageLabel: (page: number, pageCount: number) => ComponentChildren.
 Forward an HTMLElement ref to nav. Reuse existing Button.
 
-- [ ] Write behavior tests: page=1/pageCount=3 disables previous, next emits 2; page=3 disables next, previous emits 2; pageCount=0 renders '0 / 0' with both buttons disabled; disabled blocks both callbacks. Rerender page=8/pageCount=3 and assert '3 / 3', no callback during rerender, previous emits 2. Assert custom labels/formatter, nav accessible name, ref, hidden, and keyboard focus retention on rerender.
-- [ ] Run `npx vitest run src/components/pagination.test.tsx`; confirm missing-component failures.
-- [ ] Implement controlled one-based navigation. Clamp stale page for rendering and button callbacks only; no state synchronization effect or callback during render. Default formatter outputs 'page / pageCount'. pageCount is a nonnegative integer by API contract. No numbered buttons, page-size select, record counting, or slicing.
-- [ ] Run focused tests and `npm run typecheck`; expect success.
-- [ ] Commit with `feat: add controlled pagination`.
+- [x] Write behavior tests: page=1/pageCount=3 disables previous, next emits 2; page=3 disables next, previous emits 2; pageCount=0 renders '0 / 0' with both buttons disabled; disabled blocks both callbacks. Rerender page=8/pageCount=3 and assert '3 / 3', no callback during rerender, previous emits 2. Assert custom labels/formatter, nav accessible name, ref, hidden, and keyboard focus retention on rerender.
+- [x] Run `npx vitest run src/components/pagination.test.tsx`; confirm missing-component failures.
+- [x] Implement controlled one-based navigation. Clamp stale page for rendering and button callbacks only; no state synchronization effect or callback during render. Default formatter outputs 'page / pageCount'. pageCount is a nonnegative integer by API contract. No numbered buttons, page-size select, record counting, or slicing.
+- [x] Run focused tests and `npm run typecheck`; expect success.
+- [x] Commit with `feat: add controlled pagination`.
 
 ### Task 3: DataList
 
@@ -84,11 +84,11 @@ DataListValue(dd), and matching Props types. DataList accepts
 direction?: 'horizontal' | 'vertical', default horizontal. Use native
 attributes and refs; direction describes each label/value pair, not HTML dir.
 
-- [ ] Write tests asserting dl > div > dt/dd composition, native ref targets, rich value children including links and badges, native attributes/hidden, and class precedence. Render horizontal/default/vertical roots and verify direction is consumed rather than forwarded as an invalid HTML attribute; inherited dir='rtl' remains intact.
-- [ ] Run `npx vitest run src/components/data-list.test.tsx`; confirm failure.
-- [ ] Implement exports and styles. Horizontal items share a label column, using a layout that preserves item wrappers and semantic markup; stack below 600px. Vertical stays stacked. Reset dl/dd margins, use muted labels, and allow long values to wrap. No implicit separators.
-- [ ] Run focused tests and `npm run typecheck`; expect success. Cover shared label alignment, both directions, long values, and RTL in Task 6 browser verification.
-- [ ] Commit with `feat: add directional data lists`.
+- [x] Write tests asserting dl > div > dt/dd composition, native ref targets, rich value children including links and badges, native attributes/hidden, and class precedence. Render horizontal/default/vertical roots and verify direction is consumed rather than forwarded as an invalid HTML attribute; inherited dir='rtl' remains intact.
+- [x] Run `npx vitest run src/components/data-list.test.tsx`; confirm failure.
+- [x] Implement exports and styles. Horizontal items share a label column, using a layout that preserves item wrappers and semantic markup; stack below 600px. Vertical stays stacked. Reset dl/dd margins, use muted labels, and allow long values to wrap. No implicit separators.
+- [x] Run focused tests and `npm run typecheck`; expect success. Cover shared label alignment, both directions, long values, and RTL in Task 6 browser verification.
+- [x] Commit with `feat: add directional data lists`.
 
 ### Task 4: Separator
 
@@ -99,11 +99,11 @@ attributes excluding role, aria-hidden, and aria-orientation, plus
 orientation?: 'horizontal' | 'vertical' and decorative?: boolean.
 Defaults are horizontal and true. Ref is HTMLDivElement.
 
-- [ ] Write tests asserting default role='none'/aria-hidden='true', semantic role='separator' and both aria-orientation values, semantic labels, native ref/class/style/hidden forwarding, and no default tabindex. Assert semantic mode does not retain decorative aria-hidden.
-- [ ] Run `npx vitest run src/components/separator.test.tsx`; confirm failure.
-- [ ] Implement derived semantic attributes and exports. Use theme border color and one-pixel logical sizing. Vertical stretches in flex layout; allow consumer sizing. Do not add margins or focus handling; include forced-colors styling.
-- [ ] Run focused tests and `npm run typecheck`; expect success. Verify vertical sizing and forced colors during Task 6.
-- [ ] Commit with `feat: add decorative and semantic separators`.
+- [x] Write tests asserting default role='none'/aria-hidden='true', semantic role='separator' and both aria-orientation values, semantic labels, native ref/class/style/hidden forwarding, and no default tabindex. Assert semantic mode does not retain decorative aria-hidden.
+- [x] Run `npx vitest run src/components/separator.test.tsx`; confirm failure.
+- [x] Implement derived semantic attributes and exports. Use theme border color and one-pixel logical sizing. Vertical stretches in flex layout; allow consumer sizing. Do not add margins or focus handling; include forced-colors styling.
+- [x] Run focused tests and `npm run typecheck`; expect success. Verify vertical sizing and forced colors during Task 6.
+- [x] Commit with `feat: add decorative and semantic separators`.
 
 ### Task 5: DataToolbar
 
@@ -114,11 +114,11 @@ native div attributes and HTMLDivElement refs. Group accepts
 align?: 'start' | 'end', default start. Consume existing controls and Task 2/4
 components through children; there is no mandatory dependency on those parts.
 
-- [ ] Write tests for native refs, attributes, hidden and class precedence, preservation of children/control handlers, no implicit role='toolbar', and groups preserving DOM order in dir='rtl'. Confirm align is consumed rather than forwarded to div.
-- [ ] Run `npx vitest run src/components/data-toolbar.test.tsx`; confirm failure.
-- [ ] Implement wrapping flex layout with logical spacing, min-width: 0, opposite-side end groups, and narrow-screen wrapping. Leave roles, labels, filter state, and focus behavior to callers. Reuse the family above and below a data view.
-- [ ] Run focused tests and `npm run typecheck`; expect success.
-- [ ] Commit with `feat: add composable data toolbars`.
+- [x] Write tests for native refs, attributes, hidden and class precedence, preservation of children/control handlers, no implicit role='toolbar', and groups preserving DOM order in dir='rtl'. Confirm align is consumed rather than forwarded to div.
+- [x] Run `npx vitest run src/components/data-toolbar.test.tsx`; confirm failure.
+- [x] Implement wrapping flex layout with logical spacing, min-width: 0, opposite-side end groups, and narrow-screen wrapping. Leave roles, labels, filter state, and focus behavior to callers. Reuse the family above and below a data view.
+- [x] Run focused tests and `npm run typecheck`; expect success.
+- [x] Commit with `feat: add composable data toolbars`.
 
 ### Task 6: Public package, documentation, and acceptance
 
@@ -133,13 +133,13 @@ table, pagination, data-toolbar, data-list, separator following existing
 gallery routing. TableContainer and other parts appear on their family's
 page, not individual routes. Gallery copy and documentation remain English.
 
-- [ ] Extend existing export/package contract checks with every component and Props type. Add compile-time rejection examples for Separator's reserved semantic props and DataList invalid direction. Extend gallery route tests for five family pages and alphabetical navigation. Run the relevant checks before integration and confirm the new expectations fail for the missing docs/contract wiring.
-- [ ] Add package probes and gallery pages. Each family's API tables describe all public parts and exact defaults. Show a controlled table example with search/filter controls, Pagination, and counter in DataToolbar; a bottom toolbar composition; horizontal/vertical DataList; and decorative/semantic Separator. Show long values and usable localized pagination labels. Keep TableCaption visible in its demo; label API tables by existing headings.
-- [ ] Update API docs, roadmap completion state, visual acceptance checklist, and unreleased changelog. Do not bump versions or publish.
-- [ ] Run `npm run build`, then `npm run check`, `npm run test:package:all`, `npm run build:gallery`, `npm run test:gallery-artifact`, and `npm run test:gallery-preview`. Inspect every result. Build runs first because gallery and package checks consume dist. Fix failures within this scope and rerun only affected checks before the final full verification.
-- [ ] Use T3 preview_status/preview_open and its browser tools when available. At 320px and desktop widths in light/dark themes inspect all five pages, both DataList directions, Table density, optional scroll container, toolbar wrapping and vertical separators. Check keyboard pagination focus, RTL composition, and forced colors if supported. Record unavailable checks explicitly rather than claiming success.
-- [ ] Review the complete diff against the spec, run `git diff --check`, and record actual check results. If execution method includes independent review, resolve its material findings before completion; do not exceed parent model/effort limits when selecting a reviewer.
-- [ ] Commit with `docs: document and verify data component families`. Store completed task context in ICM before reporting the result. No push, PR, publication, or consumer changes are required.
+- [x] Extend existing export/package contract checks with every component and Props type. Add compile-time rejection examples for Separator's reserved semantic props and DataList invalid direction. Extend gallery route tests for five family pages and alphabetical navigation. Run the relevant checks before integration and confirm the new expectations fail for the missing docs/contract wiring.
+- [x] Add package probes and gallery pages. Each family's API tables describe all public parts and exact defaults. Show a controlled table example with search/filter controls, Pagination, and counter in DataToolbar; a bottom toolbar composition; horizontal/vertical DataList; and decorative/semantic Separator. Show long values and usable localized pagination labels. Keep TableCaption visible in its demo; label API tables by existing headings.
+- [x] Update API docs, roadmap completion state, visual acceptance checklist, and unreleased changelog. Do not bump versions or publish.
+- [x] Run `npm run build`, then `npm run check`, `npm run test:package:all`, `npm run build:gallery`, `npm run test:gallery-artifact`, and `npm run test:gallery-preview`. Inspect every result. Build runs first because gallery and package checks consume dist. Fix failures within this scope and rerun only affected checks before the final full verification.
+- [x] Use T3 preview_status/preview_open and its browser tools when available. At 320px and desktop widths in light/dark themes inspect all five pages, both DataList directions, Table density, optional scroll container, toolbar wrapping and vertical separators. Check keyboard pagination focus, RTL composition, and forced colors if supported. Record unavailable checks explicitly rather than claiming success.
+- [x] Review the complete diff against the spec, run `git diff --check`, and record actual check results. If execution method includes independent review, resolve its material findings before completion; do not exceed parent model/effort limits when selecting a reviewer.
+- [x] Commit with `docs: document and verify data component families`. Store completed task context in ICM before reporting the result. No push, PR, publication, or consumer changes are required.
 
 ## Plan self-review
 

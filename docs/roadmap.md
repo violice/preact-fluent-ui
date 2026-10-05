@@ -58,7 +58,7 @@ Separator использует orientation для направления лин�
 - [Дизайн](superpowers/specs/2026-10-05-data-components-design.md)
 - [План](superpowers/plans/2026-10-05-data-components.md)
 - [x] Реализованы пять семейств и их публичные экспорты.
-- [ ] Итоговая проверка пакета, галереи, браузера и независимое ревью.
+- [x] Итоговая проверка пакета, галереи, браузера и независимое ревью. [Браузерные результаты](visual-acceptance.md#data-components-and-gallery-spacing-2026-10-05) отмечают оставшуюся ручную проверку forced colors.
 
 ## Источники
 
