@@ -349,3 +349,71 @@ it('clears copied tokens when their source declaration is removed', async () => 
   });
   expect(tooltip.style.getPropertyValue('--color-text')).toBe('');
 });
+
+function renderTooltipPair() {
+  return render(
+    <>
+      <Tooltip content="First description">{(props) => <button {...props}>First</button>}</Tooltip>
+      <Tooltip content="Second description">
+        {(props) => <button {...props}>Second</button>}
+      </Tooltip>
+    </>,
+  );
+}
+
+it('Escape dismisses focused and hovered tooltip instances together', () => {
+  renderTooltipPair();
+  act(() => screen.getByRole('button', { name: 'First' }).focus());
+  fireEvent.pointerEnter(screen.getByRole('button', { name: 'Second' }));
+  advance(500);
+  expect(screen.getAllByRole('tooltip')).toHaveLength(2);
+  fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+  expect(screen.queryAllByRole('tooltip')).toHaveLength(0);
+  advance(500);
+  expect(screen.queryAllByRole('tooltip')).toHaveLength(0);
+});
+
+it('Escape dismisses both tooltips during focus handoff before the leave grace period', () => {
+  renderTooltipPair();
+  act(() => screen.getByRole('button', { name: 'First' }).focus());
+  act(() => screen.getByRole('button', { name: 'Second' }).focus());
+  expect(screen.getAllByRole('tooltip')).toHaveLength(2);
+  fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+  expect(screen.queryAllByRole('tooltip')).toHaveLength(0);
+});
+
+it('Escape cancels a pending first hover and dismisses a visible second tooltip', () => {
+  renderTooltipPair();
+  fireEvent.pointerEnter(screen.getByRole('button', { name: 'First' }));
+  act(() => screen.getByRole('button', { name: 'Second' }).focus());
+  expect(screen.getAllByRole('tooltip')).toHaveLength(1);
+  fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+  expect(screen.queryAllByRole('tooltip')).toHaveLength(0);
+  advance(500);
+  expect(screen.queryAllByRole('tooltip')).toHaveLength(0);
+});
+
+it('first Modal Escape dismisses every tooltip and second Escape closes the dialog', () => {
+  const ref = createRef<HTMLButtonElement>();
+  const close = vi.fn();
+  render(
+    <Modal labelledBy="pair-title" initialFocusRef={ref} onClose={close}>
+      <h2 id="pair-title">Dialog</h2>
+      <Tooltip content="First description" triggerProps={{ ref }}>
+        {(props) => <button {...props}>First</button>}
+      </Tooltip>
+      <Tooltip content="Second description">
+        {(props) => <button {...props}>Second</button>}
+      </Tooltip>
+    </Modal>,
+  );
+  act(() => screen.getByRole('button', { name: 'First' }).focus());
+  fireEvent.pointerEnter(screen.getByRole('button', { name: 'Second' }));
+  advance(500);
+  expect(screen.getAllByRole('tooltip')).toHaveLength(2);
+  fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+  expect(screen.queryAllByRole('tooltip')).toHaveLength(0);
+  expect(close).not.toHaveBeenCalled();
+  fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+  expect(close).toHaveBeenCalledTimes(1);
+});

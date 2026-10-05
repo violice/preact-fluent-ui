@@ -84,7 +84,7 @@ export function Tooltip({
       if (event.key !== 'Escape' || (!visibleRef.current && timers.current.show === undefined))
         return;
       event.preventDefault();
-      event.stopImmediatePropagation();
+      event.stopPropagation();
       clearTimeout(timers.current.show);
       clearTimeout(timers.current.hide);
       timers.current = {};
