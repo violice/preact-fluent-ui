@@ -2,6 +2,12 @@ import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useSignal } from '@preact/signals';
 import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHeaderCell,
+  TableCell,
   Button,
   Checkbox,
   InfoBar,
@@ -220,31 +226,31 @@ export const utilityPages = utilityDocs.map((doc) => ({
           <InfoBar>{doc.note}</InfoBar>
           <CodeExample code={doc.code} />
         </section>
-        <section>
+        <section class={styles.docSection}>
           <h2 id={`${doc.slug}-api`}>API reference</h2>
           <pre class={styles.longText}>
             <code>{doc.signature}</code>
           </pre>
-          <table class={styles.propsTable} aria-labelledby={`${doc.slug}-api`}>
-            <thead>
-              <tr>
-                <th scope="col">Parameter</th>
-                <th scope="col">Type</th>
-                <th scope="col">Description</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table class={styles.propsTable} aria-labelledby={`${doc.slug}-api`}>
+            <TableHeader>
+              <TableRow>
+                <TableHeaderCell scope="col">Parameter</TableHeaderCell>
+                <TableHeaderCell scope="col">Type</TableHeaderCell>
+                <TableHeaderCell scope="col">Description</TableHeaderCell>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {utilityParameters[doc.title]!.map(([parameter, type, description]) => (
-                <tr key={parameter}>
-                  <th scope="row">{parameter}</th>
-                  <td>
+                <TableRow key={parameter}>
+                  <TableHeaderCell scope="row">{parameter}</TableHeaderCell>
+                  <TableCell>
                     <code>{type}</code>
-                  </td>
-                  <td>{description}</td>
-                </tr>
+                  </TableCell>
+                  <TableCell>{description}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
           <div class={styles.docSection}>
             <h3>Return value</h3>
             <p>
@@ -253,7 +259,7 @@ export const utilityPages = utilityDocs.map((doc) => ({
             <p>{utilityReturns[doc.title]![1]}</p>
           </div>
         </section>
-        <section>
+        <section class={styles.docSection}>
           <h2>Limitations</h2>
           <p>{doc.limits}</p>
         </section>

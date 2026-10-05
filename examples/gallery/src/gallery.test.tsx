@@ -8,6 +8,34 @@ afterEach(() => {
   window.history.replaceState(null, '', '/');
   vi.unstubAllGlobals();
 });
+it.each([
+  ['table', 'Table'],
+  ['pagination', 'Pagination'],
+  ['data-toolbar', 'DataToolbar'],
+  ['data-list', 'DataList'],
+  ['separator', 'Separator'],
+])('registers the %s canonical family page', async (slug, title) => {
+  const { galleryPages } = await import('./gallery-pages');
+  expect(galleryPages.find((page) => page.path === `/components/${slug}`)?.title).toBe(title);
+  history.replaceState(null, '', `/components/${slug}`);
+  render(<Gallery base="/" />);
+  expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(title);
+});
+
+it('filters and pages the data table example through controlled components', async () => {
+  history.replaceState(null, '', '/components/table');
+  render(<Gallery base="/" />);
+  const user = userEvent.setup();
+  const table = screen.getByRole('table', { name: 'Connection profiles' });
+  expect(table.textContent).toContain('Office');
+  expect(table.textContent).not.toContain('Travel');
+  await user.click(screen.getByRole('button', { name: 'Next' }));
+  expect(table.textContent).toContain('Travel');
+  await user.type(screen.getByRole('searchbox', { name: 'Search profiles' }), 'office');
+  expect(table.textContent).toContain('Office');
+  expect(table.textContent).not.toContain('Travel');
+  expect(screen.getByRole('button', { name: 'Next' }).hasAttribute('disabled')).toBe(true);
+});
 it('switches optional styles and restores settings on browser navigation', async () => {
   window.history.replaceState(null, '', '/?preset=minimal');
   render(<Gallery />);

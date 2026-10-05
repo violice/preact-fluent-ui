@@ -1,5 +1,25 @@
 # Visual acceptance
 
+## Data components and gallery spacing, 2026-10-05
+
+Checked the current gallery in T3 native Chromium after migrating component
+and utility API tables to the public Table family.
+
+| Check | Result |
+| --- | --- |
+| All 31 routes at 320px and 1280px, light and dark | 124 page checks passed. One main and one h1 per route; no document horizontal overflow. All documentation and demo tables have accessible names and scoped column headers. |
+| Documentation spacing | 32px between page sections, 16px inside documentation sections, and 40px between component family members. AppShell API geometry and visual inspection confirm the member separation. Shared containers cover component, utility, overview and guide pages; example component descendants retain their own spacing. |
+| DataList layout | Desktop horizontal labels and values share aligned columns. Selecting vertical stacks each label above its value. RTL and 320px long identifiers wrap inside the example. |
+| Table and DataToolbar | Search and pagination update visible rows; regular/compact table rows are available. Top and bottom toolbars wrap within narrow examples. API references use the public Table family while retaining heading-based names. |
+| Pagination | Empty/disabled controls cannot navigate. Native button activation updates the controlled page; focus remains on a still-enabled activated button. At a boundary Chromium blurs a button when it becomes disabled; this native boundary behavior is recorded separately for review. |
+| Separator | Decorative and semantic states and both orientations are covered by DOM tests. Native browser inspection confirms horizontal and vertical line sizing. |
+| Forced colors | Pending Windows manual acceptance. The preview does not expose forced-colors emulation; matchMedia remained false. System-color rules are present but this is not a browser acceptance claim. |
+
+The packed artifact compiles against Preact 10.29.8 and 10.27.0. Production
+gallery artifacts include 31 pages and 404 at both root and repository base.
+Browser snapshots after development builds required a reload because Vite
+observed transient missing dist CSS while the library build replaced dist.
+
 Checked on 2026-10-02 through T3 native preview tools, tab_1, at http://localhost:5173. The browser was T3Code Nightly 0.0.45-nightly.20261002.2572, Chromium 152.0.7977.130 / Electron 44.4.2 on Windows 10. The build shell was WSL2 Linux, Node 24.15.0, npm 12.1.0. Native preview_status initially reported an available blank tab; preview_open opened the gallery successfully. No alternate browser was used.
 
 ## Results

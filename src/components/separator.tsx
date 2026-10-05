@@ -8,6 +8,9 @@ export type SeparatorProps = Omit<
   JSX.HTMLAttributes<HTMLDivElement>,
   'role' | 'aria-hidden' | 'aria-orientation'
 > & {
+  role?: never;
+  'aria-hidden'?: never;
+  'aria-orientation'?: never;
   orientation?: 'horizontal' | 'vertical';
   decorative?: boolean;
 };

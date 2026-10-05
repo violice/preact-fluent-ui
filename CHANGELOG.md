@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Add native Table parts and an optional TableContainer, with regular and compact density.
+- Add controlled one-based Pagination with localized labels and empty-result handling.
+- Add DataToolbar and DataToolbarGroup for controls, counters and pagination above or below data views.
+- Add DataList parts with horizontal and vertical label/value layouts, responsive stacking and native definition-list semantics.
+- Add decorative and semantic Separator with horizontal and vertical orientation.
+- Add five canonical gallery pages, public API documentation and package contracts for the new families.
+- Use the public Table family for the gallery's component and utility API references.
+
 ## 0.3.0 (2026-10-05)
 
 - Make application styles the Sidebar default and add expanded/rail/horizontal layouts, scrollable navigation, SidebarBrand and button/custom rendered SidebarItem roots.

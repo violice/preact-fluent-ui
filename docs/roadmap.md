@@ -48,6 +48,18 @@ Prerender создаёт все известные страницы и 404.html 
 - [План и проверки](superpowers/plans/2026-10-04-gallery-navigation.md)
 - [x] Итоговая готовность подтверждена после финального ревью и браузерной проверки. Windows forced colors, reduced motion, реальный screen reader и настоящий browser zoom 200% остаются отдельными ручными проверками.
 
+## Компоненты данных
+
+Согласованы Table, Pagination, DataToolbar, DataList и отдельный Separator.
+DataList использует direction для расположения подписи и значения;
+Separator использует orientation для направления линии. Фильтрация,
+сортировка и разбиение данных остаются в приложении.
+
+- [Дизайн](superpowers/specs/2026-10-05-data-components-design.md)
+- [План](superpowers/plans/2026-10-05-data-components.md)
+- [x] Реализованы пять семейств и их публичные экспорты.
+- [ ] Итоговая проверка пакета, галереи, браузера и независимое ревью.
+
 ## Источники
 
 - [Каталог Fluent Web](https://fluent2.microsoft.design/components/web/react)

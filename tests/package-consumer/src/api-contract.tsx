@@ -728,3 +728,109 @@ export const appShellNegativeContracts = (
 // Sidebar has one application style and no appearance variant.
 // @ts-expect-error Sidebar appearance was removed
 <Sidebar appearance="app" />;
+
+import {
+  Table,
+  TableContainer,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHeaderCell,
+  TableCell,
+  TableCaption,
+  Pagination,
+  DataToolbar,
+  DataToolbarGroup,
+  DataList,
+  DataListItem,
+  DataListLabel,
+  DataListValue,
+  Separator,
+} from '@violice/preact-fluent-ui';
+import type {
+  TableProps,
+  TableContainerProps,
+  TableHeaderProps,
+  TableBodyProps,
+  TableFooterProps,
+  TableRowProps,
+  TableHeaderCellProps,
+  TableCellProps,
+  TableCaptionProps,
+  PaginationProps,
+  DataToolbarProps,
+  DataToolbarGroupProps,
+  DataListProps,
+  DataListItemProps,
+  DataListLabelProps,
+  DataListValueProps,
+  SeparatorProps,
+} from '@violice/preact-fluent-ui';
+const tableProps: TableProps = { class: slotSignal, hidden: false };
+const tableContainerProps: TableContainerProps = { class: slotSignal, hidden: false };
+const tableHeaderProps: TableHeaderProps = { class: slotSignal, hidden: false };
+const tableBodyProps: TableBodyProps = { class: slotSignal, hidden: false };
+const tableFooterProps: TableFooterProps = { class: slotSignal, hidden: false };
+const tableRowProps: TableRowProps = { class: slotSignal, hidden: false };
+const tableHeaderCellProps: TableHeaderCellProps = { class: slotSignal, hidden: false };
+const tableCellProps: TableCellProps = { class: slotSignal, hidden: false };
+const tableCaptionProps: TableCaptionProps = { class: slotSignal, hidden: false };
+const paginationProps: PaginationProps = {
+  page: 1,
+  pageCount: 3,
+  onPageChange: () => {},
+  previousLabel: 'Previous',
+  nextLabel: 'Next',
+  'aria-label': 'Pages',
+};
+const dataToolbarProps: DataToolbarProps = { class: slotSignal, hidden: false };
+const dataToolbarGroupProps: DataToolbarGroupProps = { class: slotSignal, hidden: false };
+const dataListProps: DataListProps = { class: slotSignal, hidden: false };
+const dataListItemProps: DataListItemProps = { class: slotSignal, hidden: false };
+const dataListLabelProps: DataListLabelProps = { class: slotSignal, hidden: false };
+const dataListValueProps: DataListValueProps = { class: slotSignal, hidden: false };
+const separatorProps: SeparatorProps = { class: slotSignal, hidden: false };
+export const dataComponentContracts = (
+  <>
+    <Table {...tableProps} ref={createRef<HTMLTableElement>()} />
+    <TableContainer {...tableContainerProps} ref={createRef<HTMLDivElement>()} />
+    <TableHeader {...tableHeaderProps} ref={createRef<HTMLTableSectionElement>()} />
+    <TableBody {...tableBodyProps} ref={createRef<HTMLTableSectionElement>()} />
+    <TableFooter {...tableFooterProps} ref={createRef<HTMLTableSectionElement>()} />
+    <TableRow {...tableRowProps} ref={createRef<HTMLTableRowElement>()} />
+    <TableHeaderCell {...tableHeaderCellProps} ref={createRef<HTMLTableCellElement>()} />
+    <TableCell {...tableCellProps} ref={createRef<HTMLTableCellElement>()} />
+    <TableCaption {...tableCaptionProps} ref={createRef<HTMLTableCaptionElement>()} />
+    <Pagination {...paginationProps} ref={createRef<HTMLElement>()} />
+    <DataToolbar {...dataToolbarProps} ref={createRef<HTMLDivElement>()} />
+    <DataToolbarGroup {...dataToolbarGroupProps} ref={createRef<HTMLDivElement>()} />
+    <DataList {...dataListProps} ref={createRef<HTMLDListElement>()} />
+    <DataListItem {...dataListItemProps} ref={createRef<HTMLDivElement>()} />
+    <DataListLabel {...dataListLabelProps} ref={createRef<HTMLElement>()} />
+    <DataListValue {...dataListValueProps} ref={createRef<HTMLElement>()} />
+    <Separator {...separatorProps} ref={createRef<HTMLDivElement>()} />
+  </>
+);
+export const dataNegativeContracts = (
+  <>
+    {/* @ts-expect-error Reject invalid or reserved public props. */}
+    <DataList direction="diagonal" />
+    {/* @ts-expect-error Reject invalid or reserved public props. */}
+    <Separator role="separator" />
+    {/* @ts-expect-error Reject invalid or reserved public props. */}
+    <Separator aria-hidden={false} />
+    {/* @ts-expect-error Reject invalid or reserved public props. */}
+    <Separator aria-orientation="vertical" />
+    {/* @ts-expect-error Reject invalid or reserved public props. */}
+    <Table density="dense" />
+    {/* @ts-expect-error Reject invalid or reserved public props. */}
+    <Pagination
+      page={1}
+      pageCount={3}
+      onPageChange={() => {}}
+      previousLabel="Back"
+      nextLabel="Next"
+    />
+  </>
+);

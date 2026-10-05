@@ -12,7 +12,7 @@
 }
 .sections {
   display: grid;
-  gap: 24px;
+  gap: 32px;
   justify-items: start;
 }
 .heading {
@@ -143,17 +143,8 @@
   outline-offset: 6px;
 }
 .propsTable {
-  width: 100%;
-  border-collapse: collapse;
   table-layout: fixed;
   overflow-wrap: anywhere;
-}
-.propsTable th,
-.propsTable td {
-  padding: 12px 8px;
-  border-bottom: 1px solid var(--color-control-border);
-  text-align: start;
-  vertical-align: top;
 }
 .propsTable th:first-child {
   width: 25%;
@@ -228,13 +219,24 @@
 }
 .docSection {
   display: grid;
-  gap: 12px;
+  gap: 16px;
   min-width: 0;
   align-content: start;
 }
+.apiReference {
+  display: grid;
+  gap: 32px;
+  min-width: 0;
+}
+.apiReference > section + section {
+  margin-block-start: 8px;
+}
+.apiReference > h2,
 .docSection > h2,
+.docSection > h3,
 .docSection > p,
-.docSection > ul {
+.docSection > ul,
+.docSection > pre {
   margin-block: 0;
 }
 .docSection > p,

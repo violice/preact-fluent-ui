@@ -1,4 +1,5 @@
 import { utilityPages } from './gallery-utils';
+import { dataDocs } from './gallery-data-examples';
 import { appShellDocs } from './gallery-app-shell-examples';
 import { sidebarExamples, sidebarCodes } from './gallery-sidebar-examples';
 import {
@@ -12,6 +13,12 @@ import {
 import type { ComponentType } from 'preact';
 import { useState } from 'preact/hooks';
 import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHeaderCell,
+  TableCell,
   Button,
   Card,
   Checkbox,
@@ -36,7 +43,7 @@ import { useGalleryHref } from './gallery-context';
 import styles from './gallery.module.css';
 
 type Prop = [name: string, type: string, description: string];
-type ComponentDoc = {
+export type ComponentDoc = {
   title: string;
   slug: string;
   purpose: string;
@@ -160,6 +167,7 @@ function EmptyExample() {
   );
 }
 const docs: ComponentDoc[] = [
+  ...dataDocs,
   ...appShellDocs,
   {
     title: 'Button',
@@ -583,6 +591,11 @@ const docs: ComponentDoc[] = [
   })),
 ];
 const families = [
+  ...['Table', 'DataList', 'DataToolbar'].map((title) => ({
+    title,
+    slug: title.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
+    members: docs.filter((doc) => doc.title.startsWith(title)),
+  })),
   {
     title: 'AppShell',
     slug: 'app-shell',
@@ -646,29 +659,29 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
           </InfoBar>
         </section>
       )}
-      <section>
+      <section class={styles.docSection}>
         <h2>Usage</h2>
         <CodeExample code={doc.code} />
       </section>
-      <section>
+      <section class={styles.apiReference}>
         <h2 id={`${doc.slug}-api-reference`}>API reference</h2>
         {(doc.members ?? [doc]).map((member) => (
           <section key={member.title} id={member.slug} class={styles.docSection}>
             {doc.members && <h3 id={`${member.slug}-api`}>{member.title}</h3>}
             <p>Import {member.title}Props for the complete TypeScript contract.</p>
             {doc.members && <p>{member.purpose}</p>}
-            <table
+            <Table
               class={styles.propsTable}
               aria-labelledby={doc.members ? `${member.slug}-api` : `${doc.slug}-api-reference`}
             >
-              <thead>
-                <tr>
-                  <th scope="col">Prop</th>
-                  <th scope="col">Type</th>
-                  <th scope="col">Description</th>
-                </tr>
-              </thead>
-              <tbody>
+              <TableHeader>
+                <TableRow>
+                  <TableHeaderCell scope="col">Prop</TableHeaderCell>
+                  <TableHeaderCell scope="col">Type</TableHeaderCell>
+                  <TableHeaderCell scope="col">Description</TableHeaderCell>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {[
                   ...member.props,
                   member.title === 'ConfirmDialog'
@@ -679,16 +692,16 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
                       ] as Prop)
                     : native,
                 ].map(([name, type, description]) => (
-                  <tr key={name}>
-                    <th scope="row">{name}</th>
-                    <td>
+                  <TableRow key={name}>
+                    <TableHeaderCell scope="row">{name}</TableHeaderCell>
+                    <TableCell>
                       <code>{type}</code>
-                    </td>
-                    <td>{description}</td>
-                  </tr>
+                    </TableCell>
+                    <TableCell>{description}</TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
 
             {doc.members && <p>{member.accessibility}</p>}
             {doc.members && member.title !== doc.title && !member.title.startsWith('AppShell') && (
@@ -697,7 +710,7 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
           </section>
         ))}
       </section>
-      <section>
+      <section class={styles.docSection}>
         <h2>Accessibility</h2>
         <p>{doc.accessibility}</p>
       </section>

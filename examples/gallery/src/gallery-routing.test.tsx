@@ -58,6 +58,7 @@ it('renders every component page with one heading and focused documentation', as
     if (page.group === 'Components') {
       expect(screen.getAllByRole('table')[0]).toBeTruthy();
       for (const table of screen.getAllByRole('table')) {
+        if (!table.classList.contains(galleryClasses.propsTable)) continue;
         expect(table.querySelector('caption')).toBeNull();
         expect(
           document.getElementById(table.getAttribute('aria-labelledby')!)?.matches('h2, h3'),
@@ -433,6 +434,23 @@ it('scrolls documentation links without scrolling the sidebar brand and actions'
 it('documents composite families on one canonical page with an API table for each export', async () => {
   const { galleryPages } = await import('./gallery-pages');
   for (const [slug, title, members] of [
+    [
+      'table',
+      'Table',
+      [
+        'Table',
+        'TableContainer',
+        'TableHeader',
+        'TableBody',
+        'TableFooter',
+        'TableRow',
+        'TableHeaderCell',
+        'TableCell',
+        'TableCaption',
+      ],
+    ],
+    ['data-list', 'DataList', ['DataList', 'DataListItem', 'DataListLabel', 'DataListValue']],
+    ['data-toolbar', 'DataToolbar', ['DataToolbar', 'DataToolbarGroup']],
     [
       'app-shell',
       'AppShell',

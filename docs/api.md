@@ -37,6 +37,65 @@ Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and 
 
 `IconName` contains exactly 22 names: `about`, `adapter`, `add`, `chevron-down`, `connected`, `copy`, `delete`, `diagnostics`, `disconnected`, `edit`, `eye`, `info`, `network`, `open`, `profile`, `refresh`, `restore`, `routes`, `settings`, `shield`, `vpn`, `warning`. Icon supplies no accessible label. Name the parent icon button with visible text or `aria-label`.
 
+## Data presentation
+
+All data components resolve signal-like `class` and `className` using
+`class ?? className` before appending their internal classes. They accept
+native attributes and forward refs to their native roots. No `classes` slots
+are needed because each part is a separate public component.
+
+| Component / Props type | Native element and ref | Additional props |
+| --- | --- | --- |
+| Table / TableProps | table, HTMLTableElement | `density?: 'regular' \| 'compact'`, default regular |
+| TableContainer / TableContainerProps | div, HTMLDivElement | Native props; optional horizontal scroll container |
+| TableHeader / TableHeaderProps | thead, HTMLTableSectionElement | Native props |
+| TableBody / TableBodyProps | tbody, HTMLTableSectionElement | Native props |
+| TableFooter / TableFooterProps | tfoot, HTMLTableSectionElement | Native props; summary rows inside the table |
+| TableRow / TableRowProps | tr, HTMLTableRowElement | Native props |
+| TableHeaderCell / TableHeaderCellProps | th, HTMLTableCellElement | `align?: 'start' \| 'center' \| 'end'`, default start; native `scope` defaults to col |
+| TableCell / TableCellProps | td, HTMLTableCellElement | `align?: 'start' \| 'center' \| 'end'`, default start |
+| TableCaption / TableCaptionProps | caption, HTMLTableCaptionElement | Native props; caption is visible |
+| Pagination / PaginationProps | nav, HTMLElement | Required `page`, `pageCount`, `onPageChange(page)`, `previousLabel`, `nextLabel`, `aria-label`; optional `disabled` and `formatPageLabel(page, pageCount)` |
+| DataToolbar / DataToolbarProps | div, HTMLDivElement | Native props and children |
+| DataToolbarGroup / DataToolbarGroupProps | div, HTMLDivElement | `align?: 'start' \| 'end'`, default start |
+| DataList / DataListProps | dl, HTMLDListElement | `direction?: 'horizontal' \| 'vertical'`, default horizontal |
+| DataListItem / DataListItemProps | div, HTMLDivElement | Native props; groups one label/value pair |
+| DataListLabel / DataListLabelProps | dt, HTMLElement | Native props |
+| DataListValue / DataListValueProps | dd, HTMLElement | Native props and rich children |
+| Separator / SeparatorProps | div, HTMLDivElement | `orientation?: 'horizontal' \| 'vertical'`, default horizontal; `decorative?: boolean`, default true; excludes role, aria-hidden and aria-orientation overrides |
+
+Table preserves native `scope`, `headers`, `colSpan`, `rowSpan`, and `aria-sort`.
+Use TableCaption or `aria-labelledby` to name it. Table has no wrapper or grid
+keyboard model. TableContainer does not add a tab stop automatically; supply
+`role="region"`, a name and `tabIndex={0}` when keyboard scrolling is needed.
+Column hiding, mobile card layouts, selection, and sorting belong to consumers.
+
+Pagination uses one-based pages and a nonnegative integer pageCount. A zero
+pageCount displays `0 / 0` and disables both buttons. Stale page values are
+clamped for display; rendering does not emit onPageChange. Actions emit valid
+adjacent pages. `disabled` defaults to false and disables both actions.
+`formatPageLabel?: (page: number, pageCount: number) => ComponentChildren`
+customizes the default `page / pageCount` indicator. Labels are required so
+applications control localization. Keep filtering and data slicing outside
+the component.
+
+DataToolbar wraps independent controls without automatically applying a
+`toolbar` role or composite keyboard model. DataToolbarGroup `align="end"`
+pushes the group to the logical end. Reuse the same family below a data view
+for counter text and Pagination; TableFooter remains a native tfoot.
+
+DataList direction describes each label/value pair. Horizontal uses aligned
+columns and stacks below 600px; vertical keeps labels above values. HTML `dir`
+controls LTR/RTL independently. Pair wrappers preserve native dl/dt/dd
+semantics and values can contain links, badges, or long text. Separators are
+not inserted automatically.
+
+Separator is decorative by default with `role="none"` and `aria-hidden=true`.
+`decorative={false}` exposes `role="separator"` and explicit aria-orientation.
+It is not focusable by default. Vertical separators stretch in a flex parent;
+provide a height through style/class when the surrounding layout has no
+height. Spacing belongs to the parent layout.
+
 ## Forms
 
 ```tsx
