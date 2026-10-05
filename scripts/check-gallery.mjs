@@ -9,7 +9,7 @@ const root = await readFile(resolve(directory, 'index.html'), 'utf8');
 const data = root.match(/<script[^>]*id="prerender-data"[^>]*>(.*?)<\/script>/s);
 assert.ok(data, 'Missing prerender page registry');
 const { pages } = JSON.parse(data[1]);
-assert.equal(pages.length, 35, 'Expected every registered documentation page');
+assert.equal(pages.length, 37, 'Expected every registered documentation page');
 assert.equal(new Set(pages.map((page) => page.path)).size, pages.length, 'Duplicate page paths');
 for (const page of [...pages, { path: '/404', title: 'Page not found' }]) {
   const file =
@@ -96,6 +96,8 @@ for (const [slug, members] of [
   ['spinner', ['spinner']],
   ['loading-state', ['loading-state']],
   ['tooltip', ['tooltip']],
+  ['text-preview', ['text-preview']],
+  ['code-block', ['code-block']],
   ['data-list', ['data-list', 'data-list-item', 'data-list-label', 'data-list-value']],
   ['toolbar', ['toolbar', 'toolbar-group']],
   [

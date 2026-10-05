@@ -202,7 +202,7 @@ async function inspectLibrary(directory, files) {
         `Library must not embed Preact: ${source}`,
       );
       assert(
-        /^\.\.\/(?:src\/(?:utils\/(?:merge-classes|resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|module\.css)|tooltip-(?:position|theme)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css))|node_modules\/(?:clsx|class-variance-authority)\/dist\/[^/]+\.mjs)$/.test(
+        /^\.\.\/(?:src\/(?:utils\/(?:merge-classes|resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|module\.css)|(?:tooltip-(?:position|theme)|text-style)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css))|node_modules\/(?:clsx|class-variance-authority)\/dist\/[^/]+\.mjs)$/.test(
           normalized,
         ) && !/\.test\./.test(normalized),
         `Unrelated source content in published map: ${source}`,
@@ -286,7 +286,7 @@ async function inspectConsumer(directory, mode) {
     'Button must have live generated mappings',
   );
   const unusedSources = Object.keys(mapped).filter((source) =>
-    /\/src\/(?:components\/(?:modal|confirm-dialog|dialog-content|card|info-bar|status-badge|select|field|input|textarea|checkbox|switch|page-header|empty-state|disclosure|loading-state|tooltip)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
+    /\/src\/(?:components\/(?:modal|confirm-dialog|dialog-content|card|info-bar|status-badge|select|field|input|textarea|checkbox|switch|page-header|empty-state|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
       source,
     ),
   );
@@ -321,7 +321,7 @@ async function inspectConsumer(directory, mode) {
   );
   if (mode === 'minimal') {
     const forbiddenSources = unusedSources.filter((source) =>
-      /\/(?:components\/(?:modal|confirm-dialog|field|input|textarea|checkbox|switch|disclosure|loading-state|tooltip)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
+      /\/(?:components\/(?:modal|confirm-dialog|field|input|textarea|checkbox|switch|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
         source,
       ),
     );

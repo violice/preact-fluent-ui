@@ -49,7 +49,7 @@ for (const [index, source] of sourcemap.sources.entries()) {
   );
   assert(!/(?:^|\/)preact(?:\/|$)/.test(normalized), `Embedded Preact source: ${source}`);
   assert(
-    /^\.\.\/(?:src\/(?:utils\/(?:merge-classes|resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|module\.css)|tooltip-(?:position|theme)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css))|node_modules\/(?:clsx|class-variance-authority)\/dist\/[^/]+\.mjs)$/.test(
+    /^\.\.\/(?:src\/(?:utils\/(?:merge-classes|resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|module\.css)|(?:tooltip-(?:position|theme)|text-style)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css))|node_modules\/(?:clsx|class-variance-authority)\/dist\/[^/]+\.mjs)$/.test(
       normalized,
     ) && !/\.test\./.test(normalized),
     `Unrelated sourcemap source: ${source}`,
@@ -106,7 +106,7 @@ const exportProbe = `
   for (const name of ['DataToolbar', 'DataToolbarGroup', 'AppToolbar']) {
     if (name in library) throw new Error('Removed export present: ' + name);
   }
-  for (const name of ['Disclosure', 'DisclosureSummary', 'DisclosureContent', 'Spinner', 'LoadingState', 'Tooltip', 'Table', 'TableContainer', 'TableHeader', 'TableBody', 'TableFooter', 'TableRow', 'TableHeaderCell', 'TableCell', 'TableCaption', 'Pagination', 'AppShellToolbar', 'Toolbar', 'ToolbarGroup', 'DataList', 'DataListItem', 'DataListLabel', 'DataListValue', 'Separator', 'Switch', 'Checkbox', 'Field', 'Input', 'Textarea', 'Button', 'Card', 'InfoBar', 'StatusBadge', 'Select', 'PageHeader', 'EmptyState', 'Icon', 'Modal', 'ConfirmDialog', 'DialogHeader', 'DialogBody', 'DialogFooter', 'Sidebar', 'SidebarHeader', 'SidebarNav', 'SidebarGroup', 'SidebarItem', 'SidebarFooter', 'SidebarBrand', 'AppShell', 'AppShellWorkspace', 'AppShellHeader', 'AppShellContent', 'AppShellFooter', 'mergeClasses', 'resolveClass', 'mergeProps', 'useRender']) {
+  for (const name of ['TextPreview', 'CodeBlock', 'Disclosure', 'DisclosureSummary', 'DisclosureContent', 'Spinner', 'LoadingState', 'Tooltip', 'Table', 'TableContainer', 'TableHeader', 'TableBody', 'TableFooter', 'TableRow', 'TableHeaderCell', 'TableCell', 'TableCaption', 'Pagination', 'AppShellToolbar', 'Toolbar', 'ToolbarGroup', 'DataList', 'DataListItem', 'DataListLabel', 'DataListValue', 'Separator', 'Switch', 'Checkbox', 'Field', 'Input', 'Textarea', 'Button', 'Card', 'InfoBar', 'StatusBadge', 'Select', 'PageHeader', 'EmptyState', 'Icon', 'Modal', 'ConfirmDialog', 'DialogHeader', 'DialogBody', 'DialogFooter', 'Sidebar', 'SidebarHeader', 'SidebarNav', 'SidebarGroup', 'SidebarItem', 'SidebarFooter', 'SidebarBrand', 'AppShell', 'AppShellWorkspace', 'AppShellHeader', 'AppShellContent', 'AppShellFooter', 'mergeClasses', 'resolveClass', 'mergeProps', 'useRender']) {
     if (typeof library[name] !== 'function') throw new Error(name + ' export is missing');
   }
 `;

@@ -36,6 +36,8 @@ import {
   StatusBadge,
   Switch,
   Textarea,
+  TextPreview,
+  CodeBlock as PlainCodeBlock,
 } from '../../../dist/index.js';
 import { CodeExample } from './code-block';
 import { samples } from './code-samples';
@@ -621,6 +623,94 @@ const families = [
   },
 ];
 const componentDocs: ComponentDoc[] = [
+  {
+    title: 'TextPreview',
+    slug: 'text-preview',
+    purpose: 'Read selectable diagnostics or configuration without changing whitespace.',
+    example: () => (
+      <div class={styles.form}>
+        <TextPreview
+          text={
+            'Connection: office\nAddress: 192.168.10.24\nGateway: 192.168.10.1\nAttempt 1: DNS lookup completed\nAttempt 2: request timed out after 30000ms while resolving the configured gateway and retrying the connection.\nAttempt 3: gateway unreachable\nRoute: 192.168.10.0/24\nInterface: ethernet\nResult: reconnect required'
+          }
+          aria-label="Connection diagnostics"
+          style={{ maxHeight: '100px' }}
+        />
+        <TextPreview
+          text={
+            '[network]\ngateway = 192.168.10.1\nroute = 192.168.10.0/24 via 192.168.10.1 dev ethernet'
+          }
+          wrap={false}
+          aria-label="Network configuration"
+          style={{ maxHeight: '120px' }}
+        />
+      </div>
+    ),
+    code: '<TextPreview text={diagnostics} aria-label="Diagnostics" style={{ maxHeight: "220px" }} />',
+    props: [
+      ['text', 'string', 'Literal selectable text, preserving whitespace and newlines.'],
+      ['wrap', 'boolean = true', 'Wrap long lines; false enables horizontal scrolling.'],
+      ['style.maxHeight', 'CSS-compatible value', 'Constrain the native pre and scroll inside it.'],
+    ],
+    accessibility:
+      'Native pre root, ref, hidden and attributes are forwarded. tabIndex defaults to 0 for keyboard scrolling and can be overridden. No live announcement or editing role.',
+  },
+  {
+    title: 'CodeBlock',
+    slug: 'code-block',
+    purpose: 'Read source code with optional generic syntax tokens and exact-source copying.',
+    example: () => (
+      <div class={styles.form}>
+        <PlainCodeBlock
+          code={'{\n  "gateway": "192.168.10.1",\n  "retry": 3\n}'}
+          language="json"
+          copy
+          codeLabel="Plain configuration"
+          preStyle={{ maxHeight: '140px' }}
+        />
+        <PlainCodeBlock
+          code={
+            '# Long diagnostic command\nnetwork inspect --gateway 192.168.10.1 --profile office --include-routes --include-diagnostics'
+          }
+          wrap
+          copy
+          codeLabel="Wrapped command"
+          preStyle={{ maxHeight: '100px' }}
+        />
+        <CodeExample code={'const ready = true;\nconsole.log("Connection ready");'} />
+      </div>
+    ),
+    code: '<CodeBlock code={source} language="json" copy codeLabel="Configuration" />',
+    props: [
+      ['code', 'string', 'Raw source; copying always uses this exact string.'],
+      [
+        'tokens',
+        'readonly CodeBlockToken[]',
+        'Optional safe text/kind tokens. Their text must concatenate to code to preserve displayed source. No parsing or runtime mismatch fallback.',
+      ],
+      ['language', 'string', 'Display label only.'],
+      ['wrap', 'boolean = false', 'Wrap long lines when enabled.'],
+      ['copy', 'boolean = false', 'Show a native copy button and live result.'],
+      [
+        'codeLabel',
+        'string = "Code"',
+        'Localized accessible name of the scrollable pre. Root aria-label only names the div.',
+      ],
+      [
+        'labels',
+        '{ copy?: string; success?: string; failure?: string }',
+        'Override English copy and result labels.',
+      ],
+      [
+        'preStyle',
+        'Native style',
+        'Constrain code height with maxHeight. Root style applies to the div.',
+      ],
+    ],
+    accessibility:
+      'Native div root and ref with pre/code semantics. hidden is forwarded. Source is escaped; plain or unknown kinds render as text. The pre has tabIndex 0. Clipboard rejection or absence announces failure.',
+    note: 'Token kinds: keyword, string, comment, function, type, property, number, literal, tag, attribute, operator, punctuation, command. Override --code-color-<kind> theme variables. Forced colors use CanvasText. Tokenization remains external; this gallery maps TanStack tokens to library kinds.',
+  },
   ...docs.filter((doc) => !families.some((family) => family.members.includes(doc))),
   ...families.map((family) => ({
     ...family.members[0]!,

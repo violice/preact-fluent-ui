@@ -534,6 +534,8 @@ it.each([
   ['spinner', 'Spinner'],
   ['loading-state', 'LoadingState'],
   ['tooltip', 'Tooltip'],
+  ['text-preview', 'TextPreview'],
+  ['code-block', 'CodeBlock'],
 ])('navigates to %s with base and appearance preserved', async (slug, title) => {
   history.replaceState(null, '', '/repo/?theme=dark');
   render(<Gallery base="/repo/" />);

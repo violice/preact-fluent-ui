@@ -126,3 +126,8 @@ export type { LoadingStateProps } from './components/loading-state';
 
 export { Tooltip } from './components/tooltip';
 export type { TooltipProps, TooltipTriggerProps } from './components/tooltip';
+
+export { TextPreview } from './components/text-preview';
+export type { TextPreviewProps } from './components/text-preview';
+export { CodeBlock } from './components/code-block';
+export type { CodeBlockProps, CodeBlockToken, CodeBlockTokenKind } from './components/code-block';

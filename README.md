@@ -128,3 +128,25 @@ See [release documentation](docs/release.md) for archive verification and publis
 ## License
 
 The MIT license covers this project's code. Fluent icon attribution and licensing are in [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt) and [licenses/fluent-system-icons.txt](licenses/fluent-system-icons.txt).
+
+`TextPreview` renders literal selectable text in a native `pre`, with wrapping enabled
+by default. Use `style={{ maxHeight: '220px' }}` for internal scrolling and
+`wrap={false}` for horizontal scrolling. Native attributes, `hidden`, and the
+`HTMLPreElement` ref are forwarded. `tabIndex` defaults to `0` and can be overridden.
+
+`CodeBlock` renders a native `div` containing `pre`/`code`. It accepts `code`, optional
+`language` display text, `wrap` (default `false`), and `copy` (default `false`).
+`codeLabel` names the scrollable `pre` (default `Code`); root `aria-label` names only
+the `div`. Localize copy feedback with `labels={{ copy, success, failure }}`.
+`preStyle={{ maxHeight: '400px' }}` constrains the source; root `style` applies to the
+div. Copying uses the exact raw `code` and reports clipboard absence or rejection.
+
+For external highlighting, pass `tokens: readonly CodeBlockToken[]`, where each
+item contains `text` and an optional `kind`. Token text must concatenate to `code`
+to preserve the displayed source. The library escapes all text and performs no
+parsing, retokenization, or mismatch fallback. Supported kinds are `keyword`,
+`string`, `comment`, `function`, `type`, `property`, `number`, `literal`, `tag`,
+`attribute`, `operator`, `punctuation`, and `command`. Omitted or unrecognized kinds
+render plain text. Override syntax colors with `--code-color-<kind>` variables.
+Forced colors render token spans in `CanvasText`. Both components add native
+`class` or `className` to library classes; `class` takes precedence when both exist.

@@ -941,3 +941,45 @@ export const toolbarNegativeContracts = (
 export { AppToolbar } from '@violice/preact-fluent-ui';
 // @ts-expect-error Application chrome props are named AppShellToolbarProps.
 export type { AppToolbarProps } from '@violice/preact-fluent-ui';
+
+import { TextPreview, CodeBlock } from '@violice/preact-fluent-ui';
+import type {
+  TextPreviewProps,
+  CodeBlockProps,
+  CodeBlockToken,
+  CodeBlockTokenKind,
+} from '@violice/preact-fluent-ui';
+const previewProps: TextPreviewProps = {
+  text: 'raw',
+  wrap: true,
+  hidden: true,
+  style: { maxHeight: '220px' },
+};
+const tokenKind: CodeBlockTokenKind = 'attribute';
+const codeTokens: readonly CodeBlockToken[] = [
+  { text: '<value>', kind: tokenKind },
+  { text: ' plain' },
+];
+const blockProps: CodeBlockProps = {
+  code: '<value> plain',
+  tokens: codeTokens,
+  copy: true,
+  codeLabel: 'Source',
+  labels: { success: 'Done' },
+  preStyle: { maxHeight: '400px' },
+};
+export const textCodeContract = (
+  <>
+    <TextPreview {...previewProps} ref={createRef<HTMLPreElement>()} />
+    <CodeBlock {...blockProps} ref={createRef<HTMLDivElement>()} />
+  </>
+);
+// @ts-expect-error Unknown generic token kind.
+const badToken: CodeBlockToken = { text: 'x', kind: 'attr' };
+// @ts-expect-error Raw code is required.
+const missingCode: CodeBlockProps = { tokens: [] };
+// @ts-expect-error TextPreview does not edit a value.
+const editablePreview: TextPreviewProps = { text: 'x', value: 'y' };
+// @ts-expect-error Rendering callbacks are not part of the generic token contract.
+const callbackCode: CodeBlockProps = { code: 'x', renderCode: () => 'x' };
+void [badToken, missingCode, editablePreview, callbackCode];
