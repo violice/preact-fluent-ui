@@ -56,9 +56,15 @@ it('renders every component page with one heading and focused documentation', as
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(page.title);
     if (page.group === 'Components') {
-      expect(screen.getByRole('table')).toBeTruthy();
+      expect(screen.getAllByRole('table')[0]).toBeTruthy();
+      for (const table of screen.getAllByRole('table')) {
+        expect(table.querySelector('caption')).toBeNull();
+        expect(
+          document.getElementById(table.getAttribute('aria-labelledby')!)?.matches('h2, h3'),
+        ).toBe(true);
+      }
       expect(screen.getByRole('heading', { name: 'Accessibility', level: 2 })).toBeTruthy();
-      expect(screen.getAllByRole('button', { name: 'Copy code' }).length).toBe(1);
+      expect(screen.getAllByRole('button', { name: 'Copy code' }).length).toBeGreaterThan(0);
     }
     view.unmount();
   }
@@ -156,7 +162,7 @@ it('uses real signals for value, disabled and class demonstrations', async () =>
   expect(button.className).not.toBe(original);
 });
 it('restores dialog focus and cleans up an open dialog during history navigation', async () => {
-  history.replaceState(null, '', '/components/modal');
+  history.replaceState(null, '', '/components/dialog');
   render(<Gallery base="/" />);
   const user = userEvent.setup();
   const opener = screen.getByRole('button', { name: 'Open dialog' });
@@ -257,12 +263,7 @@ it('loads the decorative brand icon inside the configured repository base', () =
   expect(icon?.getAttribute('alt')).toBe('');
 });
 
-for (const [path, title] of [
-  ['/components/sidebar', 'Sidebar'],
-  ['/components/sidebar-nav', 'SidebarNav'],
-  ['/components/sidebar-group', 'SidebarGroup'],
-  ['/components/sidebar-item', 'SidebarItem'],
-]) {
+for (const [path, title] of [['/components/sidebar', 'Sidebar']]) {
   it(`keeps ${title} demonstration selection local for pointer and keyboard activation`, async () => {
     history.replaceState(null, '', path + '?theme=dark');
     render(<Gallery base="/" />);
@@ -319,11 +320,8 @@ it('exposes all new utility and shell pages in base-aware navigation', async () 
   ).toEqual(['mergeClasses', 'mergeProps', 'resolveClass', 'useRender']);
   for (const [slug, title] of [
     ['app-shell', 'AppShell'],
-    ['app-shell-workspace', 'AppShellWorkspace'],
-    ['app-shell-header', 'AppShellHeader'],
-    ['app-shell-content', 'AppShellContent'],
-    ['app-shell-footer', 'AppShellFooter'],
-    ['sidebar-brand', 'SidebarBrand'],
+    ['sidebar', 'Sidebar'],
+    ['dialog', 'Dialog'],
   ]) {
     expect(screen.getByRole('link', { name: title, exact: true }).getAttribute('href')).toBe(
       `/repo/components/${slug}?theme=dark`,
@@ -360,7 +358,7 @@ it('passes appearance and base to an isolated shell document with one gallery ma
   expect(preview.getAttribute('src')).toBe('/repo/shell-preview.html?preset=minimal&theme=dark');
 });
 
-it.each(['/', '/getting-started', '/repo/', '/repo/getting-started'])(
+it.each(['/', '/repo/'])(
   'uses the Getting Started homepage and canonical navigation for %s',
   (path) => {
     history.replaceState(null, '', path + '?theme=dark&preset=minimal');
@@ -431,3 +429,74 @@ it('scrolls documentation links without scrolling the sidebar brand and actions'
     style.remove();
   }
 });
+
+it('documents composite families on one canonical page with an API table for each export', async () => {
+  const { galleryPages } = await import('./gallery-pages');
+  for (const [slug, title, members] of [
+    [
+      'app-shell',
+      'AppShell',
+      ['AppShell', 'AppShellWorkspace', 'AppShellHeader', 'AppShellContent', 'AppShellFooter'],
+    ],
+    [
+      'sidebar',
+      'Sidebar',
+      [
+        'Sidebar',
+        'SidebarHeader',
+        'SidebarNav',
+        'SidebarGroup',
+        'SidebarItem',
+        'SidebarFooter',
+        'SidebarBrand',
+      ],
+    ],
+    ['dialog', 'Dialog', ['Modal', 'DialogHeader', 'DialogBody', 'DialogFooter', 'ConfirmDialog']],
+  ] as const) {
+    history.replaceState(null, '', `/components/${slug}`);
+    const view = render(<Gallery base="/" />);
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(title);
+    expect(screen.getByRole('heading', { name: 'API reference', level: 2 })).toBeTruthy();
+    const nav = screen.getByRole('navigation', { name: 'Documentation' });
+    expect(within(nav).getByRole('link', { name: title, exact: true })).toBeTruthy();
+    for (const member of members) {
+      expect(screen.getByRole('heading', { name: member, level: 3 })).toBeTruthy();
+      expect(screen.getByRole('table', { name: member })).toBeTruthy();
+      if (member !== title)
+        expect(within(nav).queryByRole('link', { name: member, exact: true })).toBeNull();
+    }
+    expect(screen.queryByRole('heading', { name: 'Props', level: 2 })).toBeNull();
+    view.unmount();
+  }
+  expect(galleryPages.some((page) => page.path === '/getting-started')).toBe(false);
+  for (const path of [
+    '/getting-started',
+    '/components/modal',
+    '/components/confirm-dialog',
+    '/components/sidebar-nav',
+    '/components/app-shell-workspace',
+  ]) {
+    expect(galleryPages.some((page) => page.path === path)).toBe(false);
+    history.replaceState(null, '', path);
+    const view = render(<Gallery base="/" />);
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Page not found');
+    view.unmount();
+  }
+});
+
+it.each(['use-render', 'merge-props', 'merge-classes', 'resolve-class'])(
+  'documents parameters and returns alongside the %s signature',
+  (slug) => {
+    history.replaceState(null, '', `/utils/${slug}`);
+    render(<Gallery base="/" />);
+    const heading = screen.getByRole('heading', { name: 'API reference', level: 2 });
+    const api = within(heading.parentElement!);
+    expect(api.getByRole('columnheader', { name: 'Parameter' })).toBeTruthy();
+    expect(api.getByRole('columnheader', { name: 'Type' })).toBeTruthy();
+    expect(api.getByRole('columnheader', { name: 'Description' })).toBeTruthy();
+    expect(api.getByRole('rowheader', { name: 'Return value' })).toBeTruthy();
+    expect(api.getByRole('table', { name: 'API reference' }).querySelector('caption')).toBeNull();
+    expect(heading.parentElement!.querySelector('pre code')?.textContent).toContain('(');
+    expect(screen.queryByRole('heading', { name: 'Signature', level: 2 })).toBeNull();
+  },
+);

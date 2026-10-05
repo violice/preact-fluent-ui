@@ -45,6 +45,7 @@ type ComponentDoc = {
   props: Prop[];
   accessibility: string;
   note?: string;
+  members?: ComponentDoc[];
 };
 const native: Prop = [
   'Native HTML props and ref',
@@ -222,10 +223,10 @@ const docs: ComponentDoc[] = [
     purpose: 'Choose an option using the native select control.',
     example: SelectExample,
     code: `<Field label="Connection mode">
-  <Select value={mode} onChange={event => setMode(event.currentTarget.value)}>
+  {control => <Select {...control} value={mode} onChange={event => setMode(event.currentTarget.value)}>
     <option value="automatic">Automatic</option>
     <option value="manual">Manual configuration</option>
-  </Select>
+  </Select>}
 </Field>`,
     props: [
       ['classes', 'root, wrapper, icon', 'Style the select, outer span and decorative chevron.'],
@@ -581,6 +582,42 @@ const docs: ComponentDoc[] = [
     }[title],
   })),
 ];
+const families = [
+  {
+    title: 'AppShell',
+    slug: 'app-shell',
+    members: docs.filter((doc) => doc.title.startsWith('AppShell')),
+  },
+  {
+    title: 'Sidebar',
+    slug: 'sidebar',
+    members: docs.filter((doc) => doc.title.startsWith('Sidebar')),
+  },
+  {
+    title: 'Dialog',
+    slug: 'dialog',
+    members: ['Modal', 'DialogHeader', 'DialogBody', 'DialogFooter', 'ConfirmDialog'].map((title) =>
+      docs.find((doc) => doc.title === title)!,
+    ),
+  },
+];
+const componentDocs: ComponentDoc[] = [
+  ...docs.filter((doc) => !families.some((family) => family.members.includes(doc))),
+  ...families.map((family) => ({
+    ...family.members[0]!,
+    title: family.title,
+    slug: family.slug,
+    members: family.members,
+    ...(family.title === 'Dialog'
+      ? {
+          purpose:
+            'Compose a controlled modal or confirm an action with the dialog family. Dialog is a documentation group, not an exported component. Modal provides focus containment and restoration; DialogHeader, DialogBody and DialogFooter compose its contents. ConfirmDialog composes these parts with Cancel-first focus and pending action handling.',
+          note: 'Choose the standard or confirmation scenario in the live example. Mount Modal or ConfirmDialog only while open.',
+        }
+      : {}),
+  })),
+];
+
 function ComponentPage({ doc }: { doc: ComponentDoc }) {
   const Example = doc.example;
   return (
@@ -594,7 +631,7 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
       {doc.title !== 'PageHeader' && (
         <section aria-label={`${doc.title} example`} class={styles.docSection}>
           <h2>Example</h2>
-          {['Button', 'Modal', 'ConfirmDialog'].includes(doc.title) ? (
+          {['Button', 'Dialog'].includes(doc.title) ? (
             <Example />
           ) : (
             <div class={styles.preview}>
@@ -614,37 +651,51 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
         <CodeExample code={doc.code} />
       </section>
       <section>
-        <h2>Props</h2>
-        <p>Import {doc.title}Props for the complete TypeScript contract.</p>
-        <table class={styles.propsTable}>
-          <thead>
-            <tr>
-              <th scope="col">Prop</th>
-              <th scope="col">Type</th>
-              <th scope="col">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              ...doc.props,
-              doc.title === 'ConfirmDialog'
-                ? ([
-                    'class / className',
-                    'Signalish<string | undefined>',
-                    'Add a root class. className is the fallback. Other native HTML props are not accepted.',
-                  ] as Prop)
-                : native,
-            ].map(([name, type, description]) => (
-              <tr key={name}>
-                <th scope="row">{name}</th>
-                <td>
-                  <code>{type}</code>
-                </td>
-                <td>{description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <h2 id={`${doc.slug}-api-reference`}>API reference</h2>
+        {(doc.members ?? [doc]).map((member) => (
+          <section key={member.title} id={member.slug} class={styles.docSection}>
+            {doc.members && <h3 id={`${member.slug}-api`}>{member.title}</h3>}
+            <p>Import {member.title}Props for the complete TypeScript contract.</p>
+            {doc.members && <p>{member.purpose}</p>}
+            <table
+              class={styles.propsTable}
+              aria-labelledby={doc.members ? `${member.slug}-api` : `${doc.slug}-api-reference`}
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Prop</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ...member.props,
+                  member.title === 'ConfirmDialog'
+                    ? ([
+                        'class / className',
+                        'Signalish<string | undefined>',
+                        'Add a root class. className is the fallback. Other native HTML props are not accepted.',
+                      ] as Prop)
+                    : native,
+                ].map(([name, type, description]) => (
+                  <tr key={name}>
+                    <th scope="row">{name}</th>
+                    <td>
+                      <code>{type}</code>
+                    </td>
+                    <td>{description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {doc.members && <p>{member.accessibility}</p>}
+            {doc.members && member.title !== doc.title && !member.title.startsWith('AppShell') && (
+              <CodeExample code={member.code} />
+            )}
+          </section>
+        ))}
       </section>
       <section>
         <h2>Accessibility</h2>
@@ -670,7 +721,6 @@ export type GalleryPage = {
   group: 'Overview' | 'Components' | 'Guides' | 'Utils';
   component: ComponentType;
   demoOwnsHeading?: boolean;
-  navigationHidden?: boolean;
 };
 export const galleryPages: GalleryPage[] = [
   ...utilityPages,
@@ -681,14 +731,7 @@ export const galleryPages: GalleryPage[] = [
     component: GettingStarted,
   },
   { path: '/about', title: 'About', group: 'Overview', component: About },
-  {
-    path: '/getting-started',
-    title: 'Getting Started',
-    group: 'Overview',
-    component: GettingStarted,
-    navigationHidden: true,
-  },
-  ...docs.map((doc) => ({
+  ...componentDocs.map((doc) => ({
     path: `/components/${doc.slug}`,
     title: doc.title,
     group: 'Components' as const,

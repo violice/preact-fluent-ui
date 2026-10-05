@@ -116,11 +116,11 @@ export function ConnectionForm() {
       console.log(mode);
     }}>
       <Field label="Connection mode">
-        <Select value={mode}
+        {control => <Select {...control} value={mode}
           onChange={(event) => setMode(event.currentTarget.value)}>
           <option value="automatic">Automatic</option>
           <option value="manual">Manual</option>
-        </Select>
+        </Select>}
       </Field>
       <Button type="submit" variant="primary">Save</Button>
     </form>

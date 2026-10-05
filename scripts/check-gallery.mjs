@@ -9,7 +9,7 @@ const root = await readFile(resolve(directory, 'index.html'), 'utf8');
 const data = root.match(/<script[^>]*id="prerender-data"[^>]*>(.*?)<\/script>/s);
 assert.ok(data, 'Missing prerender page registry');
 const { pages } = JSON.parse(data[1]);
-assert.equal(pages.length, 41, 'Expected every registered documentation page');
+assert.equal(pages.length, 26, 'Expected every registered documentation page');
 assert.equal(new Set(pages.map((page) => page.path)).size, pages.length, 'Duplicate page paths');
 for (const page of [...pages, { path: '/404', title: 'Page not found' }]) {
   const file =
@@ -75,6 +75,51 @@ for (const page of pages.filter((page) => page.path.startsWith('/components/app-
   assert.ok(
     html.includes(`src="${base}shell-preview.html"`),
     `${page.path}: base-aware shell preview`,
+  );
+}
+for (const [slug, members] of [
+  [
+    'app-shell',
+    [
+      'app-shell',
+      'app-shell-workspace',
+      'app-shell-header',
+      'app-shell-content',
+      'app-shell-footer',
+    ],
+  ],
+  [
+    'sidebar',
+    [
+      'sidebar',
+      'sidebar-header',
+      'sidebar-nav',
+      'sidebar-group',
+      'sidebar-item',
+      'sidebar-footer',
+      'sidebar-brand',
+    ],
+  ],
+  ['dialog', ['modal', 'dialog-header', 'dialog-body', 'dialog-footer', 'confirm-dialog']],
+]) {
+  const html = await readFile(resolve(directory, `components/${slug}/index.html`), 'utf8');
+  assert.ok(html.includes('API reference'), `${slug}: API reference`);
+  for (const member of members) {
+    assert.ok(html.includes(`id="${member}"`), `${slug}: ${member} API subsection`);
+    if (member !== slug) {
+      assert.ok(
+        !pages.some((page) => page.path === `/components/${member}`),
+        `${member}: no constituent route`,
+      );
+    }
+  }
+}
+assert.ok(!pages.some((page) => page.path === '/getting-started'), 'Getting Started uses the root');
+for (const page of pages.filter((page) => page.path.startsWith('/utils/'))) {
+  const html = await readFile(resolve(directory, `${page.path.slice(1)}/index.html`), 'utf8');
+  assert.ok(
+    html.includes('API reference') && html.includes('Return value') && html.includes('Parameter'),
+    `${page.path}: parameter and return API reference`,
   );
 }
 console.log(`Gallery artifact verified: ${pages.length} pages and 404 at ${base}`);

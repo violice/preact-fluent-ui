@@ -92,6 +92,71 @@ function ClassesDemo({ resolve = false }: { resolve?: boolean }) {
     </div>
   );
 }
+type ApiRow = [parameter: string, type: string, description: string];
+const utilityParameters: Record<string, ApiRow[]> = {
+  useRender: [
+    [
+      'options',
+      'UseRenderOptions<Tag, S>',
+      'Required options object. Tag selects native prop and ref types; S types callback state.',
+    ],
+    ['options.defaultTagName', 'Tag, required', 'Native tag used when render is omitted.'],
+    [
+      'options.props',
+      'JSX.IntrinsicElements[Tag]',
+      'Optional native props, children and event handlers.',
+    ],
+    [
+      'options.render',
+      'RenderProp<JSX.IntrinsicElements[Tag], S>',
+      'Optional VNode template or callback receiving composed props and state. Forward all props and the ref.',
+    ],
+    [
+      'options.ref',
+      'Ref<RootElement<Tag>> | readonly Ref<RootElement<Tag>>[]',
+      'Optional typed root ref or readonly ref array; composed with native and template refs.',
+    ],
+    [
+      'options.state',
+      'S',
+      'Optional state passed to the render callback; defaults to an empty object.',
+    ],
+    ['Return value', 'VNode', 'The native or custom root element without an extra wrapper.'],
+  ],
+  mergeProps: [
+    [
+      '...sources',
+      '(Partial<P> | null | undefined)[]',
+      'Prop objects in precedence order. Nullish sources are ignored. Classes accumulate, styles merge and handlers compose right to left.',
+    ],
+    [
+      'Return value',
+      'P',
+      'New merged prop object. Inputs are unchanged; refs use right precedence.',
+    ],
+  ],
+  mergeClasses: [
+    [
+      '...classes',
+      'JSX.Signalish<string | undefined>[]',
+      'Strings or Signalish values read at call time. Empty values are skipped.',
+    ],
+    ['Return value', 'string', 'Joined class names, or an empty string when none remain.'],
+  ],
+  resolveClass: [
+    [
+      'classProp',
+      'JSX.Signalish<string | undefined>',
+      'Primary class value, read at call time. An empty string suppresses the fallback.',
+    ],
+    [
+      'className',
+      'JSX.Signalish<string | undefined>',
+      'Fallback used only when the primary value is nullish.',
+    ],
+    ['Return value', 'string | undefined', 'Resolved primary or fallback class value.'],
+  ],
+};
 const utilityDocs = [
   {
     title: 'useRender',
@@ -158,10 +223,30 @@ export const utilityPages = utilityDocs.map((doc) => ({
           <CodeExample code={doc.code} />
         </section>
         <section>
-          <h2>Signature</h2>
+          <h2 id={`${doc.slug}-api`}>API reference</h2>
           <pre class={styles.longText}>
             <code>{doc.signature}</code>
           </pre>
+          <table class={styles.propsTable} aria-labelledby={`${doc.slug}-api`}>
+            <thead>
+              <tr>
+                <th scope="col">Parameter</th>
+                <th scope="col">Type</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {utilityParameters[doc.title]!.map(([parameter, type, description]) => (
+                <tr key={parameter}>
+                  <th scope="row">{parameter}</th>
+                  <td>
+                    <code>{type}</code>
+                  </td>
+                  <td>{description}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </section>
         <section>
           <h2>Limitations</h2>

@@ -80,7 +80,7 @@ it('closes mobile navigation before settings and restores the visible toggle', a
 });
 
 it('submits the getting started profile example without changing gallery navigation or settings', async () => {
-  history.replaceState(null, '', '/getting-started?theme=dark&preset=minimal');
+  history.replaceState(null, '', '/?theme=dark&preset=minimal');
   render(<Gallery base="/" />);
   const user = userEvent.setup();
   const name = screen.getByRole('textbox', { name: 'Profile name' });
@@ -92,9 +92,7 @@ it('submits the getting started profile example without changing gallery navigat
   expect(
     screen.getByText('Saved Remote office with manual connection, automatic no.'),
   ).toBeTruthy();
-  expect(location.pathname + location.search + location.hash).toBe(
-    '/getting-started?theme=dark&preset=minimal',
-  );
+  expect(location.pathname + location.search + location.hash).toBe('/?theme=dark&preset=minimal');
   expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Getting Started');
 });
 
@@ -110,7 +108,7 @@ it('keeps form feedback immediately after its example and before its code', () =
   }
 });
 
-it.each(['sidebar', 'sidebar-nav', 'sidebar-group', 'sidebar-item'])(
+it.each(['sidebar'])(
   'keeps the %s local selection note outside the live example as feedback',
   (slug) => {
     history.replaceState(null, '', `/components/${slug}`);
@@ -123,20 +121,17 @@ it.each(['sidebar', 'sidebar-nav', 'sidebar-group', 'sidebar-item'])(
   },
 );
 
-it.each(['button', 'modal', 'confirm-dialog'])(
-  'keeps the %s sample result directly below its preview',
-  (slug) => {
-    history.replaceState(null, '', `/components/${slug}`);
-    render(<Gallery base="/" />);
-    const result = screen.getByText('Sample result').closest('[role="status"]')!;
-    expect(result.closest('[class*="preview"]')).toBeNull();
-    expect(result.previousElementSibling!.className).toContain('preview');
-    expect(document.querySelector('[class*="preview"] [class*="preview"]')).toBeNull();
-  },
-);
+it.each(['button', 'dialog'])('keeps the %s sample result directly below its preview', (slug) => {
+  history.replaceState(null, '', `/components/${slug}`);
+  render(<Gallery base="/" />);
+  const result = screen.getByText('Sample result').closest('[role="status"]')!;
+  expect(result.closest('[class*="preview"]')).toBeNull();
+  expect(result.previousElementSibling!.className).toContain('preview');
+  expect(document.querySelector('[class*="preview"] [class*="preview"]')).toBeNull();
+});
 
 it('places the removed dialog opener note below the preview', async () => {
-  history.replaceState(null, '', '/components/modal');
+  history.replaceState(null, '', '/components/dialog');
   render(<Gallery base="/" />);
   const user = userEvent.setup();
   await user.selectOptions(screen.getByLabelText('Dialog sample'), 'removed');
