@@ -753,8 +753,8 @@ import {
   TableCell,
   TableCaption,
   Pagination,
-  DataToolbar,
-  DataToolbarGroup,
+  Toolbar,
+  ToolbarGroup,
   DataList,
   DataListItem,
   DataListLabel,
@@ -772,8 +772,8 @@ import type {
   TableCellProps,
   TableCaptionProps,
   PaginationProps,
-  DataToolbarProps,
-  DataToolbarGroupProps,
+  ToolbarProps,
+  ToolbarGroupProps,
   DataListProps,
   DataListItemProps,
   DataListLabelProps,
@@ -797,8 +797,8 @@ const paginationProps: PaginationProps = {
   nextLabel: 'Next',
   'aria-label': 'Pages',
 };
-const dataToolbarProps: DataToolbarProps = { class: slotSignal, hidden: false };
-const dataToolbarGroupProps: DataToolbarGroupProps = { class: slotSignal, hidden: false };
+const toolbarProps: ToolbarProps = { class: slotSignal, hidden: false };
+const toolbarGroupProps: ToolbarGroupProps = { class: slotSignal, hidden: false };
 const dataListProps: DataListProps = { class: slotSignal, hidden: false };
 const dataListItemProps: DataListItemProps = { class: slotSignal, hidden: false };
 const dataListLabelProps: DataListLabelProps = { class: slotSignal, hidden: false };
@@ -816,8 +816,8 @@ export const dataComponentContracts = (
     <TableCell {...tableCellProps} ref={createRef<HTMLTableCellElement>()} />
     <TableCaption {...tableCaptionProps} ref={createRef<HTMLTableCaptionElement>()} />
     <Pagination {...paginationProps} ref={createRef<HTMLElement>()} />
-    <DataToolbar {...dataToolbarProps} ref={createRef<HTMLDivElement>()} />
-    <DataToolbarGroup {...dataToolbarGroupProps} ref={createRef<HTMLDivElement>()} />
+    <Toolbar {...toolbarProps} ref={createRef<HTMLDivElement>()} />
+    <ToolbarGroup {...toolbarGroupProps} ref={createRef<HTMLDivElement>()} />
     <DataList {...dataListProps} ref={createRef<HTMLDListElement>()} />
     <DataListItem {...dataListItemProps} ref={createRef<HTMLDivElement>()} />
     <DataListLabel {...dataListLabelProps} ref={createRef<HTMLElement>()} />
@@ -910,3 +910,34 @@ export const feedbackElements = (
 // @ts-expect-error Tooltip requires a render-function child.
 const invalidTooltipChild: TooltipProps = { content: 'Refresh', children: <Button /> };
 void invalidTooltipChild;
+
+import { AppShellToolbar, type AppShellToolbarProps } from '@violice/preact-fluent-ui';
+// @ts-expect-error The superseded toolbar export was removed.
+export { DataToolbar } from '@violice/preact-fluent-ui';
+// @ts-expect-error The superseded toolbar group export was removed.
+export { DataToolbarGroup } from '@violice/preact-fluent-ui';
+// @ts-expect-error The superseded toolbar props were removed.
+export type { DataToolbarProps } from '@violice/preact-fluent-ui';
+// @ts-expect-error The superseded toolbar group props were removed.
+export type { DataToolbarGroupProps } from '@violice/preact-fluent-ui';
+const appShellToolbarProps: AppShellToolbarProps = { class: slotSignal, hidden: false, dir: 'rtl' };
+export const appShellToolbarContract = (
+  <AppShellToolbar
+    {...appShellToolbarProps}
+    ref={createRef<HTMLDivElement>()}
+    onClick={(event) => event.currentTarget.focus()}
+  />
+);
+export const toolbarNegativeContracts = (
+  <>
+    {/* @ts-expect-error Groups only support logical start/end alignment. */}
+    <ToolbarGroup align="center" />
+    {/* @ts-expect-error AppShellToolbar has a native div ref. */}
+    <AppShellToolbar ref={createRef<HTMLButtonElement>()} />
+  </>
+);
+
+// @ts-expect-error Application chrome is named AppShellToolbar.
+export { AppToolbar } from '@violice/preact-fluent-ui';
+// @ts-expect-error Application chrome props are named AppShellToolbarProps.
+export type { AppToolbarProps } from '@violice/preact-fluent-ui';

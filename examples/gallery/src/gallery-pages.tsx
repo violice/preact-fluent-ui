@@ -597,7 +597,7 @@ const docs: ComponentDoc[] = [
   })),
 ];
 const families = [
-  ...['Table', 'DataList', 'DataToolbar', 'Disclosure'].map((title) => ({
+  ...['Table', 'DataList', 'Toolbar', 'Disclosure'].map((title) => ({
     title,
     slug: title.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
     members: docs.filter((doc) => doc.title.startsWith(title)),

@@ -1,7 +1,8 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { cleanup, render, screen, waitFor } from '@testing-library/preact';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { Gallery } from './gallery';
+import { ShellDocument } from './gallery-app-shell-examples';
 
 afterEach(() => {
   cleanup();
@@ -11,7 +12,7 @@ afterEach(() => {
 it.each([
   ['table', 'Table'],
   ['pagination', 'Pagination'],
-  ['data-toolbar', 'DataToolbar'],
+  ['toolbar', 'Toolbar'],
   ['data-list', 'DataList'],
   ['separator', 'Separator'],
 ])('registers the %s canonical family page', async (slug, title) => {
@@ -195,4 +196,23 @@ it('keeps appearance reset with modal actions and resets custom palette without 
   expect((screen.getByLabelText('Palette') as HTMLSelectElement).value).toBe('standard');
   expect(screen.queryByLabelText('Accent color')).toBeNull();
   expect(location.search).toBe('');
+});
+
+it('lets the application toolbar example change context and refresh status', async () => {
+  render(<ShellDocument />);
+  const user = userEvent.setup();
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Workspace context' }), 'lab');
+  const toolbar = screen.getByRole('combobox', { name: 'Workspace context' }).parentElement!
+    .parentElement!.parentElement!;
+  expect(within(toolbar).getByRole('status').textContent).toContain('Lab');
+  await user.click(screen.getByRole('button', { name: 'Refresh workspace' }));
+  expect(within(toolbar).getByRole('status').textContent).toContain('Refreshed');
+});
+
+it('documents AppShellToolbar inside the shell family without constituent routes', async () => {
+  const { galleryPages } = await import('./gallery-pages');
+  history.replaceState(null, '', '/components/app-shell');
+  render(<Gallery base="/" />);
+  expect(screen.getByRole('heading', { name: 'AppShellToolbar', level: 3 })).toBeTruthy();
+  expect(galleryPages.some((page) => /app-(shell-)?toolbar/.test(page.path))).toBe(false);
 });

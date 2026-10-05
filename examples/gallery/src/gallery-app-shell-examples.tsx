@@ -5,6 +5,9 @@ import {
   AppShellHeader,
   AppShellContent,
   AppShellFooter,
+  AppShellToolbar,
+  ToolbarGroup,
+  Button,
   Sidebar,
   SidebarBrand,
   SidebarHeader,
@@ -25,8 +28,17 @@ export function ShellDocument() {
     typeof window !== 'undefined' && window.innerWidth <= 640 ? 'rail' : 'expanded',
   );
   const selected = useSignal(0);
+  const context = useSignal('office');
+  const refreshed = useSignal(false);
   return (
-    <AppShell navigationLayout={layout} style={{ minHeight: '520px' }}>
+    <AppShell
+      navigationLayout={layout}
+      style={{
+        minHeight: '520px',
+        '--app-shell-content-max-width': '800px',
+        '--app-shell-content-padding': '20px',
+      }}
+    >
       <Sidebar layout={layout} scrollable>
         <SidebarHeader hidden={layout.value === 'horizontal'}>
           <SidebarBrand
@@ -83,10 +95,38 @@ export function ShellDocument() {
             </Select>
           </label>
         </AppShellHeader>
+        <AppShellToolbar>
+          <ToolbarGroup>
+            <Select
+              aria-label="Workspace context"
+              value={context}
+              onChange={(event) => {
+                context.value = event.currentTarget.value;
+                refreshed.value = false;
+              }}
+            >
+              <option value="office">Office</option>
+              <option value="lab">Lab</option>
+            </Select>
+            <span role="status">
+              {context.value === 'lab' ? 'Lab' : 'Office'} workspace.{' '}
+              {refreshed.value ? 'Refreshed' : 'Ready'}
+            </span>
+          </ToolbarGroup>
+          <ToolbarGroup align="end">
+            <Button
+              onClick={() => {
+                refreshed.value = true;
+              }}
+            >
+              Refresh workspace
+            </Button>
+          </ToolbarGroup>
+        </AppShellToolbar>
         <AppShellContent>
           <p>
-            Selected connection {selected.value + 1}. Navigation and actions remain inside this
-            preview.
+            Toolbar and content share an 800px maximum width and 20px inline padding. Selected
+            connection {selected.value + 1}. Navigation and actions remain inside this preview.
           </p>
         </AppShellContent>
         <AppShellFooter>Local workspace status</AppShellFooter>
@@ -104,11 +144,12 @@ function ShellPreview() {
     />
   );
 }
-const shellCode = `<AppShell navigationLayout={layout}>\n  <Sidebar layout={layout} scrollable>\n    <SidebarHeader><SidebarBrand title="Connection manager" logo={<Icon name="network" />} /></SidebarHeader>\n    <SidebarNav aria-label="Workspace"><SidebarItem href="/connections">Connections</SidebarItem></SidebarNav>\n    <SidebarFooter><SidebarItem as="button" onClick={openSettings}>Settings</SidebarItem></SidebarFooter>\n  </Sidebar>\n  <AppShellWorkspace>\n    <AppShellHeader>Workspace heading and actions</AppShellHeader>\n    <AppShellContent>Page content</AppShellContent>\n    <AppShellFooter>Workspace status</AppShellFooter>\n  </AppShellWorkspace>\n</AppShell>`;
+const shellCode = `<AppShell navigationLayout={layout} style={{ "--app-shell-content-max-width": "800px", "--app-shell-content-padding": "20px" }}>\n  <Sidebar layout={layout} scrollable>\n    <SidebarHeader><SidebarBrand title="Connection manager" logo={<Icon name="network" />} /></SidebarHeader>\n    <SidebarNav aria-label="Workspace"><SidebarItem href="/connections">Connections</SidebarItem></SidebarNav>\n    <SidebarFooter><SidebarItem as="button" onClick={openSettings}>Settings</SidebarItem></SidebarFooter>\n  </Sidebar>\n  <AppShellWorkspace>\n    <AppShellHeader>Workspace heading and actions</AppShellHeader>\n    <AppShellToolbar>\n      <ToolbarGroup>Context picker and status</ToolbarGroup>\n      <ToolbarGroup align="end"><Button onClick={refresh}>Refresh workspace</Button></ToolbarGroup>\n    </AppShellToolbar>\n    <AppShellContent>Page content</AppShellContent>\n    <AppShellFooter>Workspace status</AppShellFooter>\n  </AppShellWorkspace>\n</AppShell>`;
 export const appShellDocs = [
   'AppShell',
   'AppShellWorkspace',
   'AppShellHeader',
+  'AppShellToolbar',
   'AppShellContent',
   'AppShellFooter',
 ].map((title) => ({
@@ -118,6 +159,8 @@ export const appShellDocs = [
     AppShell: 'Arrange navigation and a workspace using a shared navigation layout.',
     AppShellWorkspace: 'Provide the single main landmark of an application.',
     AppShellHeader: 'Place workspace headings and actions above content.',
+    AppShellToolbar:
+      'Place caller-owned controls in workspace chrome. Shares content maximum width and padding with AppShellContent; direct child of AppShellWorkspace. Desktop minimum height 76px, block padding 18px; up to 640px block padding 12px and inline fallback 12px. Explicit content padding wins.',
     AppShellContent: 'Center page content within the workspace.',
     AppShellFooter: 'Place status or secondary actions below content.',
   }[title]!,

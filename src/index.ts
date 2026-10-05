@@ -1,6 +1,8 @@
+export { AppShellToolbar } from './components/app-shell-toolbar';
+export type { AppShellToolbarProps } from './components/app-shell-toolbar';
 export { Button } from './components/button';
-export { DataToolbar, DataToolbarGroup } from './components/data-toolbar';
-export type { DataToolbarProps, DataToolbarGroupProps } from './components/data-toolbar';
+export { Toolbar, ToolbarGroup } from './components/toolbar';
+export type { ToolbarProps, ToolbarGroupProps } from './components/toolbar';
 export { Separator } from './components/separator';
 export type { SeparatorProps } from './components/separator';
 export { DataList, DataListItem, DataListLabel, DataListValue } from './components/data-list';

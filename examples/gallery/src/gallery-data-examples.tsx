@@ -5,8 +5,8 @@ import {
   DataListItem,
   DataListLabel,
   DataListValue,
-  DataToolbar,
-  DataToolbarGroup,
+  Toolbar,
+  ToolbarGroup,
   Input,
   Pagination,
   Select,
@@ -46,8 +46,8 @@ function TableExample() {
   const currentPage = pageCount === 0 ? 0 : Math.min(page, pageCount);
   return (
     <div class={styles.sections} style={{ width: '100%' }}>
-      <DataToolbar>
-        <DataToolbarGroup>
+      <Toolbar>
+        <ToolbarGroup>
           <Input
             type="search"
             aria-label="Search profiles"
@@ -70,13 +70,13 @@ function TableExample() {
             <option value="enabled">Enabled</option>
             <option value="disabled">Disabled</option>
           </Select>
-        </DataToolbarGroup>
-        <DataToolbarGroup align="end">
+        </ToolbarGroup>
+        <ToolbarGroup align="end">
           <Button aria-pressed={compact} onClick={() => setCompact(!compact)}>
             Compact rows
           </Button>
-        </DataToolbarGroup>
-      </DataToolbar>
+        </ToolbarGroup>
+      </Toolbar>
       <TableContainer tabIndex={0} role="region" aria-label="Scrollable connection profiles">
         <Table density={compact ? 'compact' : 'regular'} style={{ minWidth: '480px' }}>
           <TableCaption>Connection profiles</TableCaption>
@@ -114,13 +114,13 @@ function TableExample() {
           </TableFooter>
         </Table>
       </TableContainer>
-      <DataToolbar>
-        <DataToolbarGroup>
+      <Toolbar>
+        <ToolbarGroup>
           <span>
             {filtered.length} of {profiles.length} profiles
           </span>
-        </DataToolbarGroup>
-        <DataToolbarGroup align="end">
+        </ToolbarGroup>
+        <ToolbarGroup align="end">
           <Pagination
             aria-label="Profile pages"
             page={page}
@@ -129,8 +129,8 @@ function TableExample() {
             previousLabel="Previous"
             nextLabel="Next"
           />
-        </DataToolbarGroup>
-      </DataToolbar>
+        </ToolbarGroup>
+      </Toolbar>
     </div>
   );
 }
@@ -177,28 +177,28 @@ function PaginationExample() {
   );
 }
 
-function DataToolbarExample() {
+function ToolbarExample() {
   const [page, setPage] = useState(1);
   return (
     <div class={styles.sections} style={{ width: '100%' }}>
-      <DataToolbar>
-        <DataToolbarGroup>
+      <Toolbar>
+        <ToolbarGroup>
           <Input type="search" aria-label="Search records" placeholder="Search records" />
           <Select aria-label="Status">
             <option>All records</option>
             <option>Enabled</option>
           </Select>
-        </DataToolbarGroup>
-        <DataToolbarGroup align="end">
+        </ToolbarGroup>
+        <ToolbarGroup align="end">
           <Button variant="primary">Add record</Button>
-        </DataToolbarGroup>
-      </DataToolbar>
+        </ToolbarGroup>
+      </Toolbar>
       <Separator />
-      <DataToolbar>
-        <DataToolbarGroup>
+      <Toolbar>
+        <ToolbarGroup>
           <span>24 records</span>
-        </DataToolbarGroup>
-        <DataToolbarGroup align="end">
+        </ToolbarGroup>
+        <ToolbarGroup align="end">
           <Pagination
             aria-label="Record pages"
             page={page}
@@ -207,17 +207,17 @@ function DataToolbarExample() {
             previousLabel="Previous"
             nextLabel="Next"
           />
-        </DataToolbarGroup>
-      </DataToolbar>
+        </ToolbarGroup>
+      </Toolbar>
       <div>
-        <DataToolbar>
-          <DataToolbarGroup>
+        <Toolbar>
+          <ToolbarGroup>
             <span>Reading order</span>
-          </DataToolbarGroup>
-          <DataToolbarGroup align="end">
+          </ToolbarGroup>
+          <ToolbarGroup align="end">
             <Button>Action</Button>
-          </DataToolbarGroup>
-        </DataToolbar>
+          </ToolbarGroup>
+        </Toolbar>
       </div>
     </div>
   );
@@ -227,8 +227,8 @@ function DataListExample() {
   const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
   return (
     <div class={styles.sections} style={{ width: '100%' }}>
-      <DataToolbar>
-        <DataToolbarGroup>
+      <Toolbar>
+        <ToolbarGroup>
           <label class={styles.label}>
             Direction
             <Select
@@ -239,8 +239,8 @@ function DataListExample() {
               <option value="vertical">Vertical</option>
             </Select>
           </label>
-        </DataToolbarGroup>
-      </DataToolbar>
+        </ToolbarGroup>
+      </Toolbar>
       <DataList direction={direction} aria-label="Connection details">
         <DataListItem>
           <DataListLabel>Profile</DataListLabel>
@@ -278,16 +278,16 @@ function SeparatorExample() {
       <Separator />
       <span>Semantic section boundary</span>
       <Separator decorative={false} aria-label="Section boundary" />
-      <DataToolbar>
-        <DataToolbarGroup>
+      <Toolbar>
+        <ToolbarGroup>
           <Button>First action</Button>
           <Separator orientation="vertical" />
           <Button>Second action</Button>
-        </DataToolbarGroup>
-      </DataToolbar>
+        </ToolbarGroup>
+      </Toolbar>
       <div>
-        <DataToolbar>
-          <DataToolbarGroup>
+        <Toolbar>
+          <ToolbarGroup>
             <span>Section</span>
             <Separator
               orientation="vertical"
@@ -296,8 +296,8 @@ function SeparatorExample() {
               style={{ height: '32px' }}
             />
             <span>Next section</span>
-          </DataToolbarGroup>
-        </DataToolbar>
+          </ToolbarGroup>
+        </Toolbar>
       </div>
     </div>
   );
@@ -322,21 +322,21 @@ const tableCode = `import { Table, TableContainer, TableCaption, TableHeader, Ta
 const paginationCode = `const [page, setPage] = useState(1);
 <Pagination page={page} pageCount={4} onPageChange={setPage}
   aria-label="Profile pages" previousLabel="Previous" nextLabel="Next" />`;
-const toolbarCode = `<DataToolbar>
-  <DataToolbarGroup>
+const toolbarCode = `<Toolbar>
+  <ToolbarGroup>
     <Input type="search" aria-label="Search profiles" />
     <Select aria-label="Status"><option>All profiles</option></Select>
-  </DataToolbarGroup>
-  <DataToolbarGroup align="end"><Button>Add profile</Button></DataToolbarGroup>
-</DataToolbar>
+  </ToolbarGroup>
+  <ToolbarGroup align="end"><Button>Add profile</Button></ToolbarGroup>
+</Toolbar>
 {/* Below the data view, reuse the same layout. */}
-<DataToolbar>
-  <DataToolbarGroup>24 profiles</DataToolbarGroup>
-  <DataToolbarGroup align="end">
+<Toolbar>
+  <ToolbarGroup>24 profiles</ToolbarGroup>
+  <ToolbarGroup align="end">
     <Pagination page={page} pageCount={4} onPageChange={setPage}
       aria-label="Profile pages" previousLabel="Previous" nextLabel="Next" />
-  </DataToolbarGroup>
-</DataToolbar>`;
+  </ToolbarGroup>
+</Toolbar>`;
 const listCode = `<DataList direction="horizontal">
   <DataListItem>
     <DataListLabel>Profile</DataListLabel>
@@ -345,11 +345,11 @@ const listCode = `<DataList direction="horizontal">
 </DataList>`;
 const separatorCode = `<Separator />
 <Separator decorative={false} aria-label="Section boundary" />
-<DataToolbarGroup>
+<ToolbarGroup>
   <Button>First action</Button>
   <Separator orientation="vertical" />
   <Button>Second action</Button>
-</DataToolbarGroup>`;
+</ToolbarGroup>`;
 
 const tableParts = [
   [
@@ -457,21 +457,21 @@ export const dataDocs: ComponentDoc[] = [
       'The root is a named nav. Buttons use normal Tab and Enter navigation. Keep page state and data slicing in the application.',
   },
   {
-    title: 'DataToolbar',
-    slug: 'data-toolbar',
+    title: 'Toolbar',
+    slug: 'toolbar',
     purpose: 'Compose wrapping controls above or below any data view.',
-    example: DataToolbarExample,
+    example: ToolbarExample,
     code: toolbarCode,
     props: [],
     accessibility:
       'No composite toolbar role or keyboard behavior is added. Each control needs its own accessible name.',
   },
   {
-    title: 'DataToolbarGroup',
-    slug: 'data-toolbar-group',
+    title: 'ToolbarGroup',
+    slug: 'toolbar-group',
     purpose: 'Keep related controls together and align secondary actions logically.',
-    example: DataToolbarExample,
-    code: '<DataToolbarGroup align="end"><Button>Add profile</Button></DataToolbarGroup>',
+    example: ToolbarExample,
+    code: '<ToolbarGroup align="end"><Button>Add profile</Button></ToolbarGroup>',
     props: [
       [
         'align',

@@ -97,13 +97,14 @@ for (const [slug, members] of [
   ['loading-state', ['loading-state']],
   ['tooltip', ['tooltip']],
   ['data-list', ['data-list', 'data-list-item', 'data-list-label', 'data-list-value']],
-  ['data-toolbar', ['data-toolbar', 'data-toolbar-group']],
+  ['toolbar', ['toolbar', 'toolbar-group']],
   [
     'app-shell',
     [
       'app-shell',
       'app-shell-workspace',
       'app-shell-header',
+      'app-shell-toolbar',
       'app-shell-content',
       'app-shell-footer',
     ],
@@ -143,3 +144,12 @@ for (const page of pages.filter((page) => page.path.startsWith('/utils/'))) {
   );
 }
 console.log(`Gallery artifact verified: ${pages.length} pages and 404 at ${base}`);
+
+assert.ok(!pages.some((page) => page.path.includes('data-toolbar')), 'Old toolbar routes absent');
+
+assert.ok(
+  !pages.some((page) =>
+    ['/components/app-toolbar', '/components/app-shell-toolbar'].includes(page.path),
+  ),
+  'Shell toolbar uses family page',
+);

@@ -50,7 +50,7 @@ Prerender создаёт все известные страницы и 404.html 
 
 ## Компоненты данных
 
-Согласованы Table, Pagination, DataToolbar, DataList и отдельный Separator.
+Согласованы Table, Pagination, Toolbar, DataList и отдельный Separator.
 DataList использует direction для расположения подписи и значения;
 Separator использует orientation для направления линии. Фильтрация,
 сортировка и разбиение данных остаются в приложении.
@@ -74,3 +74,5 @@ Separator использует orientation для направления лин�
 ## Disclosure, loading и Tooltip, 2026-10-05
 
 Реализованы нативные Disclosure/DisclosureSummary/DisclosureContent, Spinner, LoadingState, Button loading и Tooltip. Галерея содержит примеры ошибок, файлов, загрузки, действий и подсказок в таблице и Modal. ProgressBar, Popover и действия InfoBar остаются отдельными будущими задачами. Миграция приложений и публикация пакета не входят в эту работу. Браузерная приёмка новых компонентов выполняется отдельно; ручные forced colors и screen reader остаются в критериях проверки.
+
+Toolbar and ToolbarGroup replace the data-specific names. AppShellToolbar adds application chrome aligned to AppShell content, with caller-owned context, status and actions.

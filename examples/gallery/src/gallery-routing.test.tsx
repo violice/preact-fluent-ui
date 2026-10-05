@@ -451,11 +451,18 @@ it('documents composite families on one canonical page with an API table for eac
     ],
     ['data-list', 'DataList', ['DataList', 'DataListItem', 'DataListLabel', 'DataListValue']],
     ['disclosure', 'Disclosure', ['Disclosure', 'DisclosureSummary', 'DisclosureContent']],
-    ['data-toolbar', 'DataToolbar', ['DataToolbar', 'DataToolbarGroup']],
+    ['toolbar', 'Toolbar', ['Toolbar', 'ToolbarGroup']],
     [
       'app-shell',
       'AppShell',
-      ['AppShell', 'AppShellWorkspace', 'AppShellHeader', 'AppShellContent', 'AppShellFooter'],
+      [
+        'AppShell',
+        'AppShellWorkspace',
+        'AppShellHeader',
+        'AppShellToolbar',
+        'AppShellContent',
+        'AppShellFooter',
+      ],
     ],
     [
       'sidebar',

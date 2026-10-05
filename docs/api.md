@@ -56,8 +56,9 @@ are needed because each part is a separate public component.
 | TableCell / TableCellProps | td, HTMLTableCellElement | `align?: 'start' \| 'center' \| 'end'`, default start |
 | TableCaption / TableCaptionProps | caption, HTMLTableCaptionElement | Native props; caption is visible |
 | Pagination / PaginationProps | nav, HTMLElement | Required `page`, `pageCount`, `onPageChange(page)`, `previousLabel`, `nextLabel`, `aria-label`; optional `disabled` and `formatPageLabel(page, pageCount)` |
-| DataToolbar / DataToolbarProps | div, HTMLDivElement | Native props and children |
-| DataToolbarGroup / DataToolbarGroupProps | div, HTMLDivElement | `align?: 'start' \| 'end'`, default start |
+| AppShellToolbar / AppShellToolbarProps | div, HTMLDivElement | Native props, root ref and children; shared Toolbar inner layout |
+| Toolbar / ToolbarProps | div, HTMLDivElement | Native props and children |
+| ToolbarGroup / ToolbarGroupProps | div, HTMLDivElement | `align?: 'start' \| 'end'`, default start |
 | DataList / DataListProps | dl, HTMLDListElement | `direction?: 'horizontal' \| 'vertical'`, default horizontal |
 | DataListItem / DataListItemProps | div, HTMLDivElement | Native props; groups one label/value pair |
 | DataListLabel / DataListLabelProps | dt, HTMLElement | Native props |
@@ -79,8 +80,8 @@ customizes the default `page / pageCount` indicator. Labels are required so
 applications control localization. Keep filtering and data slicing outside
 the component.
 
-DataToolbar wraps independent controls without automatically applying a
-`toolbar` role or composite keyboard model. DataToolbarGroup `align="end"`
+Toolbar wraps independent controls without automatically applying a
+`toolbar` role or composite keyboard model. ToolbarGroup `align="end"`
 pushes the group to the logical end. Reuse the same family below a data view
 for counter text and Pagination; TableFooter remains a native tfoot.
 
@@ -292,3 +293,13 @@ instructions in visible text rather than relying on a disabled trigger hint.
 
 All six new components and their Props types are root exports. Tooltip also
 exports `TooltipTriggerProps`; placement/theme helpers remain internal.
+
+AppShellToolbar supplies application surface and bottom-border chrome around Toolbar.
+The inner layout shares AppShell's `--app-shell-content-max-width` with a 1240px
+default and `--app-shell-content-padding` with a 24px default. It uses border-box
+sizing, full width and logical automatic margins. Desktop minimum height is
+76px with 18px block padding. At widths up to 640px block padding is 12px and
+inline padding defaults to 12px; an explicit AppShell padding variable wins.
+Content can wrap and increase the height. Native attributes, events, hidden,
+classes and ref apply to the outer div. Children and business state belong to
+the application; no toolbar role or keyboard controller is supplied.

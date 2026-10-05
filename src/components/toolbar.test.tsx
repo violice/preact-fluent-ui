@@ -1,7 +1,7 @@
 import { createRef } from 'preact';
 import { cleanup, fireEvent, render, screen } from '@testing-library/preact';
 import { afterEach, expect, it } from 'vitest';
-import { Button, DataToolbar, DataToolbarGroup, Input } from '../index';
+import { Button, Toolbar, ToolbarGroup, Input } from '../index';
 
 afterEach(cleanup);
 
@@ -11,14 +11,14 @@ it('composes independent controls in reading order without toolbar keyboard sema
   const root = createRef<HTMLDivElement>();
   const group = createRef<HTMLDivElement>();
   const { unmount } = render(
-    <DataToolbar ref={root} dir="rtl" aria-label="Filter routes">
-      <DataToolbarGroup>
+    <Toolbar ref={root} dir="rtl" aria-label="Filter routes">
+      <ToolbarGroup>
         <Input aria-label="Search" onInput={(event) => values.push(event.currentTarget.value)} />
-      </DataToolbarGroup>
-      <DataToolbarGroup ref={group} align="end">
+      </ToolbarGroup>
+      <ToolbarGroup ref={group} align="end">
         <Button onClick={() => clicks++}>Add</Button>
-      </DataToolbarGroup>
-    </DataToolbar>,
+      </ToolbarGroup>
+    </Toolbar>,
   );
   expect(root.current?.tagName).toBe('DIV');
   expect(root.current?.hasAttribute('role')).toBe(false);
@@ -41,7 +41,7 @@ it('forwards native attributes and class precedence to root and group', () => {
   const root = createRef<HTMLDivElement>();
   const group = createRef<HTMLDivElement>();
   render(
-    <DataToolbar
+    <Toolbar
       ref={root}
       hidden
       class="primary"
@@ -49,8 +49,8 @@ it('forwards native attributes and class precedence to root and group', () => {
       id="filters"
       data-kind="filters"
     >
-      <DataToolbarGroup ref={group} hidden class="group" className="ignored" />
-    </DataToolbar>,
+      <ToolbarGroup ref={group} hidden class="group" className="ignored" />
+    </Toolbar>,
   );
   expect(root.current?.hidden).toBe(true);
   expect(root.current?.id).toBe('filters');
