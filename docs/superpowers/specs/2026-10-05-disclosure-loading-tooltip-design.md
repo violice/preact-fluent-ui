@@ -1,6 +1,6 @@
 # Disclosure, loading feedback and Tooltip
 
-Status: approved by the user on 2026-10-05. Product implementation has not started.
+Status: approved by the user on 2026-10-05 and implemented. Automated and browser layout checks pass; foreground input, screen-reader and unavailable media-mode checks are recorded in docs/visual-acceptance.md.
 
 ## Goal and scope
 

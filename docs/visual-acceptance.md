@@ -9,11 +9,42 @@ TableContainer, a local dark token scope and Modal. Global Appearance settings
 continue to control RTL and theme presets. API references use the Table family
 and existing documentation spacing.
 
-Automated integration verification and packed-consumer checks are recorded in
-the Task 5 report. Native keyboard disclosure behavior, tooltip clipping and
-positioning, Modal Escape/focus, themes, narrow layouts and RTL require the
-Task 6 browser pass. No new browser acceptance is claimed here. Windows forced
-colors and real screen-reader announcements remain manual checks.
+Checked the final package in T3 Chromium 152 at 320px and 1280px. Forty
+page/theme/direction combinations with the green palette and ten additional
+custom-color combinations had no page overflow. Pages retained one main and
+h1, named documentation tables and global RTL.
+
+Native Enter and Space toggle Disclosure, native name grouping closes the
+other member, and hidden removes its layout. The built CSS originally lowered
+:dir(rtl) to language selectors; logical border triangles now mirror correctly
+for English content under dir=rtl and point down when open.
+
+Spinner rings measure 16/24/32px. LoadingState has one status with a decorative
+spinner, no heading, 48px/24px card padding or zero inline padding. Busy Button
+retains its focused native element and 32/34/36px heights; repeated activation
+does not restart the refresh, and completion restores the normal state.
+
+Tooltip browser event probes verified delayed hover, trigger-to-tooltip travel,
+description association, nested table scrolling, native ResizeObserver updates
+after longer content, viewport flip/shift and 280px wrapping. Local token,
+color-scheme and direction changes update the open portal. A locally themed
+Modal tooltip is outside the scrolling dialog, inside the non-inert backdrop,
+and first Escape dismisses it while retaining the dialog. The local dark demo
+has readable default Button text and a dark color scheme.
+
+The collaborative browser reports document.hasFocus() false between actions.
+Native focus events are unreliable in that state, so tooltip focus and pointer
+probes explicitly dispatch DOM events; they verify real browser layout, not
+foreground pointer/keyboard input. Foreground focus and pointer travel still
+need manual acceptance. Native Disclosure keys, Button focus retention and
+Escape were exercised through browser actions. Windows forced colors, active
+reduced motion and real screen-reader announcements remain manual checks;
+their active media modes are unavailable in this preview.
+
+Automated verification passes 329 tests, release/type/lint/format/notices,
+library and 35-page gallery builds, eight artifact tests and preview checks.
+The final archive passes packed consumers on Preact 10.29.8 and 10.27.0.
+Detailed evidence is in this plan's local `.superpowers/sdd/` reports.
 
 ## Data components and gallery spacing, 2026-10-05
 

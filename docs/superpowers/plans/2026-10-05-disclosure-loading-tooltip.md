@@ -43,21 +43,21 @@
 
 **Interfaces:** Export Disclosure using native details attributes plus `appearance?: 'default' | 'card'`; DisclosureSummary uses summary attributes; DisclosureContent uses div attributes. Forward HTMLDetailsElement, HTMLElement and HTMLDivElement refs respectively. All return JSX.Element and export matching Props types.
 
-- [ ] Write `disclosure.test.tsx`: assert details/summary/div structure, native open/name/onToggle forwarding, changing open on rerender, exact ref targets, class precedence, hidden and long nested content. Use user-event for summary keyboard activation where jsdom supports native behavior; verify real toggling in browser acceptance.
-- [ ] Run `npx vitest run src/components/disclosure.test.tsx`; expect missing exports before implementation.
-- [ ] Implement the parts, exports and CSS: 14px semibold summary, 8px block padding, 8px content separation, compact transparent default, themed card option, focus outline and directional chevron. Do not impose scrolling on content.
-- [ ] Run the targeted test and `npm run typecheck`; expect passing results.
-- [ ] Review the task diff and commit `feat: add native disclosure components`.
+- [x] Write `disclosure.test.tsx`: assert details/summary/div structure, native open/name/onToggle forwarding, changing open on rerender, exact ref targets, class precedence, hidden and long nested content. Use user-event for summary keyboard activation where jsdom supports native behavior; verify real toggling in browser acceptance.
+- [x] Run `npx vitest run src/components/disclosure.test.tsx`; expect missing exports before implementation.
+- [x] Implement the parts, exports and CSS: 14px semibold summary, 8px block padding, 8px content separation, compact transparent default, themed card option, focus outline and directional chevron. Do not impose scrolling on content.
+- [x] Run the targeted test and `npm run typecheck`; expect passing results.
+- [x] Review the task diff and commit `feat: add native disclosure components`.
 
 ### Task 2: Spinner and LoadingState
 
 **Interfaces:** Spinner extends span attributes with `size?: 'small' | 'medium' | 'large'`, `label?: string` and root/indicator/label class slots. LoadingState extends div attributes with required `label: string`, `appearance?: 'default' | 'inline'`, optional children and root/spinner/label/content slots. Forward native span/div refs. Both return JSX.Element and export Props types.
 
-- [ ] Write spinner/loading-state tests: labeled spinner has one named status, unlabeled spinner is decorative, LoadingState has exactly one status with decorative spinner, labels/descriptions update on rerender, refs/classes/hidden are preserved. Include long localized labels.
-- [ ] Run `npx vitest run src/components/spinner.test.tsx src/components/loading-state.test.tsx`; expect missing exports.
-- [ ] Implement Spinner with 16/24/32px sizes, currentColor segment, muted track, static incomplete ring under reduced motion and distinguishable forced colors. Implement LoadingState with 48px/24px card padding and 12px gap, or horizontal borderless inline layout with 8px gap. Add public exports.
-- [ ] Run the targeted tests and `npm run typecheck`; expect passing results.
-- [ ] Review and commit `feat: add spinner and loading state`.
+- [x] Write spinner/loading-state tests: labeled spinner has one named status, unlabeled spinner is decorative, LoadingState has exactly one status with decorative spinner, labels/descriptions update on rerender, refs/classes/hidden are preserved. Include long localized labels.
+- [x] Run `npx vitest run src/components/spinner.test.tsx src/components/loading-state.test.tsx`; expect missing exports.
+- [x] Implement Spinner with 16/24/32px sizes, currentColor segment, muted track, static incomplete ring under reduced motion and distinguishable forced colors. Implement LoadingState with 48px/24px card padding and 12px gap, or horizontal borderless inline layout with 8px gap. Add public exports.
+- [x] Run the targeted tests and `npm run typecheck`; expect passing results.
+- [x] Review and commit `feat: add spinner and loading state`.
 
 ### Task 3: Button loading
 
@@ -65,11 +65,11 @@
 
 **Produces:** Extend ButtonProps with `loading?: boolean`, `loadingLabel?: string`; preserve native button ref and existing variant/size API. Add content/spinner slots if necessary without changing existing class precedence.
 
-- [ ] Write `button-loading.test.tsx`: loading text button keeps accessible name by default, explicit loadingLabel replaces text, icon-only name remains unchanged, aria-busy/aria-disabled are set, native disabled takes precedence, focused button remains focused on entering loading, caller click handler and form submission are suppressed for pointer/keyboard/programmatic click. After loading ends, handler and submit work again.
-- [ ] Run `npx vitest run src/components/button-loading.test.tsx`; expect failures for absent loading behavior.
-- [ ] Implement guarded click composition and decorative small Spinner. Preserve textual children and show spinner before them; replace visible icon content for size=icon. Keep variant foregrounds and existing 32/34/36px heights. Suppress pending hover/pressed presentation without dimming all busy content.
-- [ ] Run `npx vitest run src/components/button-loading.test.tsx src/components/controls.test.tsx src/components/confirm-dialog.test.tsx` and typecheck; expect passes.
-- [ ] Review and commit `feat: support button loading state`.
+- [x] Write `button-loading.test.tsx`: loading text button keeps accessible name by default, explicit loadingLabel replaces text, icon-only name remains unchanged, aria-busy/aria-disabled are set, native disabled takes precedence, focused button remains focused on entering loading, caller click handler and form submission are suppressed for pointer/keyboard/programmatic click. After loading ends, handler and submit work again.
+- [x] Run `npx vitest run src/components/button-loading.test.tsx`; expect failures for absent loading behavior.
+- [x] Implement guarded click composition and decorative small Spinner. Preserve textual children and show spinner before them; replace visible icon content for size=icon. Keep variant foregrounds and existing 32/34/36px heights. Suppress pending hover/pressed presentation without dimming all busy content.
+- [x] Run `npx vitest run src/components/button-loading.test.tsx src/components/controls.test.tsx src/components/confirm-dialog.test.tsx` and typecheck; expect passes.
+- [x] Review and commit `feat: support button loading state`.
 
 ### Task 4: Tooltip
 
@@ -77,32 +77,32 @@
 
 **Internal interfaces:** `getTooltipPosition(anchor: DOMRect, tooltip: {width:number;height:number}, viewport: {width:number;height:number}, placement: TooltipPlacement): {left:number;top:number;placement:TooltipPlacement}` is pure geometry. `copyTooltipTheme(trigger: HTMLElement, target: HTMLElement): void` copies computed library CSS custom properties, effective color-scheme and dir. Neither internal helper is a package-root export.
 
-- [ ] Write geometry tests for all placements, 8px gap, flipping, edge shifting and oversized content. Write interaction tests for 500ms hover delay, immediate focus, trigger-to-tooltip hover, Escape suppression, description deduplication, composed caller handlers/ref, rerendered content and unmount timer cleanup. Assert no wrapper is added around the trigger.
-- [ ] Run `npx vitest run src/components/tooltip-position.test.ts src/components/tooltip.test.tsx`; expect missing implementation.
-- [ ] Implement pure positioning with 8px viewport padding, flipping then shifting. Implement theme inheritance for all computed library variables so custom themes work. Keep tooltip max-width at min(280px, available viewport width).
-- [ ] Implement visibility state, useId, composed trigger props/ref, portal lifecycle and Escape listener. Focus or tooltip hover must keep it open when pointer leaves trigger. Escape clears timers and suppresses reopening until interaction ends. Remove handlers/observers/timers on teardown.
-- [ ] Implement resize/scroll/ResizeObserver positioning, portal above Modal, and inherited direction/theme. Inspect Modal mounting and z-index conventions before selecting the portal layer. Listen for captured scroll events so nested table scrolling repositions the tooltip.
-- [ ] Implement CSS with raised surface, themed border, 4px radius, subtle shadow, 12px/16px typography and 6px/8px padding. Tooltip itself receives pointer events for hoverability and contains no controls.
-- [ ] Run targeted tests and typecheck; expect passes. Add browser cases for custom-themed Modal, nested scrolling and viewport collisions to Task 6.
-- [ ] Review and commit `feat: add accessible tooltip`.
+- [x] Write geometry tests for all placements, 8px gap, flipping, edge shifting and oversized content. Write interaction tests for 500ms hover delay, immediate focus, trigger-to-tooltip hover, Escape suppression, description deduplication, composed caller handlers/ref, rerendered content and unmount timer cleanup. Assert no wrapper is added around the trigger.
+- [x] Run `npx vitest run src/components/tooltip-position.test.ts src/components/tooltip.test.tsx`; expect missing implementation.
+- [x] Implement pure positioning with 8px viewport padding, flipping then shifting. Implement theme inheritance for all computed library variables so custom themes work. Keep tooltip max-width at min(280px, available viewport width).
+- [x] Implement visibility state, useId, composed trigger props/ref, portal lifecycle and Escape listener. Focus or tooltip hover must keep it open when pointer leaves trigger. Escape clears timers and suppresses reopening until interaction ends. Remove handlers/observers/timers on teardown.
+- [x] Implement resize/scroll/ResizeObserver positioning, portal above Modal, and inherited direction/theme. Inspect Modal mounting and z-index conventions before selecting the portal layer. Listen for captured scroll events so nested table scrolling repositions the tooltip.
+- [x] Implement CSS with raised surface, themed border, 4px radius, subtle shadow, 12px/16px typography and 6px/8px padding. Tooltip itself receives pointer events for hoverability and contains no controls.
+- [x] Run targeted tests and typecheck; expect passes. Add browser cases for custom-themed Modal, nested scrolling and viewport collisions to Task 6.
+- [x] Review and commit `feat: add accessible tooltip`.
 
 ### Task 5: Public contracts and gallery documentation
 
 **Consumes:** All public APIs from Tasks 1–4.
 
-- [ ] Extend package type-contract and DOM-free export probes with every new component and Props type. Typecheck valid native props/ref targets and reject invalid sizes/placements. Add loading Button to the packed consumer fixture.
-- [ ] Add gallery examples for error details, paired file disclosures, initial and inline loading, busy button variants and icon-only actions, Tooltip in TableContainer and Modal. Use localized labels and explicit icon-button aria-label.
-- [ ] Add family pages and code samples through the existing gallery registries; extend navigation/route tests and artifact checks for the added pages. Use Table for API tables and retain current documentation spacing conventions.
-- [ ] Update API, changelog, roadmap and acceptance documentation. Explain native open/onToggle, loading versus disabled, single status announcements, triggerProps composition and disabled trigger limitations.
-- [ ] Run `npm run check`, `npm run build`, `npm run build:gallery`, `npm run test:package:all`, `npm run test:gallery-artifact`, `npm run test:gallery-preview`; expect all checks passing. Investigate failures before proceeding.
-- [ ] Review and commit `docs: document disclosure loading and tooltip components`.
+- [x] Extend package type-contract and DOM-free export probes with every new component and Props type. Typecheck valid native props/ref targets and reject invalid sizes/placements. Add loading Button to the packed consumer fixture.
+- [x] Add gallery examples for error details, paired file disclosures, initial and inline loading, busy button variants and icon-only actions, Tooltip in TableContainer and Modal. Use localized labels and explicit icon-button aria-label.
+- [x] Add family pages and code samples through the existing gallery registries; extend navigation/route tests and artifact checks for the added pages. Use Table for API tables and retain current documentation spacing conventions.
+- [x] Update API, changelog, roadmap and acceptance documentation. Explain native open/onToggle, loading versus disabled, single status announcements, triggerProps composition and disabled trigger limitations.
+- [x] Run `npm run check`, `npm run build`, `npm run build:gallery`, `npm run test:package:all`, `npm run test:gallery-artifact`, `npm run test:gallery-preview`; expect all checks passing. Investigate failures before proceeding.
+- [x] Review and commit `docs: document disclosure loading and tooltip components`.
 
 ### Task 6: Browser acceptance and final review
 
-- [ ] Use the T3 collaborative preview: preview_status, preview_open if needed, then gallery navigation and focused interactions. If tools are absent, use the supported available browser fallback. Record what could and could not be verified.
-- [ ] Verify each new page at 320px and 1280px in light/dark, custom theme and global RTL. Check no page overflow, readable loading states, unchanged button heights, native disclosure keyboard toggling and focus preservation during busy transitions.
-- [ ] Verify Tooltip delayed hover, immediate keyboard focus, Escape, hover over tooltip, nested table scroll, every viewport edge and local-themed Modal. Assert no clipping and no focus changes; verify trigger descriptions stay associated.
-- [ ] Verify reduced-motion and forced-colors behavior where supported. Explicitly record unsupported platform checks instead of claiming them passed.
-- [ ] Fix confirmed defects, rerun the checks affected by those changes, and update acceptance evidence.
+- [x] Use the T3 collaborative preview: preview_status, preview_open if needed, then gallery navigation and focused interactions. If tools are absent, use the supported available browser fallback. Record what could and could not be verified.
+- [x] Verify each new page at 320px and 1280px in light/dark, custom theme and global RTL. Check no page overflow, readable loading states, unchanged button heights, native disclosure keyboard toggling and focus preservation during busy transitions.
+- [x] Verify Tooltip delayed hover, immediate keyboard focus, Escape, hover over tooltip, nested table scroll, every viewport edge and local-themed Modal. Assert no clipping and no focus changes; verify trigger descriptions stay associated.
+- [x] Verify reduced-motion and forced-colors behavior where supported. Explicitly record unsupported platform checks instead of claiming them passed.
+- [x] Fix confirmed defects, rerun the checks affected by those changes, and update acceptance evidence.
 - [ ] Request independent review under the selected execution workflow; address findings before completion. Use only provider/model/effort settings permitted by the parent limits.
 - [ ] Run final `git diff --check` and inspect repository status. Store significant completion and any resolved errors in ICM before reporting results. Do not publish or merge.
