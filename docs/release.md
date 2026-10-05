@@ -1,5 +1,14 @@
 # npm releases
 
+## Published 0.4.0
+
+`@violice/preact-fluent-ui@0.4.0` was published on 2026-10-05 from `8a50de7af34acedc2c51085dd23d5253c0cc83ee`. The npm latest tag points to 0.4.0 and records SLSA provenance. A registry-downloaded archive passed the isolated TypeScript, Full/Minimal build and package checks against Preact 10.29.8.
+
+- [GitHub Release v0.4.0](https://github.com/violice/preact-fluent-ui/releases/tag/v0.4.0)
+- [Successful publish workflow](https://github.com/violice/preact-fluent-ui/actions/runs/37324024516)
+
+The release includes data components, loading feedback, Tooltip, Toolbar/AppShellToolbar, TextPreview, CodeBlock and the file-backed Changelog gallery page. Local registry evidence is saved in `.artifacts/registry/verified-0.4.0.json`.
+
 ## Published 0.1.0
 
 `@violice/preact-fluent-ui@0.1.0` was published on 2026-10-02 from commit `6307c6b869ca41fdeb4b31fac293639a940e2234`. At that release, the public registry's `latest` tag pointed to `0.1.0`; the initial registration version `0.0.0` remains under `bootstrap`.
