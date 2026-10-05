@@ -2,6 +2,11 @@ import { createRef } from 'preact';
 import { forwardRef } from 'preact/compat';
 import type { JSX, Ref } from 'preact';
 import {
+  AppShell,
+  AppShellWorkspace,
+  AppShellHeader,
+  AppShellContent,
+  AppShellFooter,
   useRender,
   Sidebar,
   SidebarHeader,
@@ -30,6 +35,11 @@ import {
   StatusBadge,
 } from '@violice/preact-fluent-ui';
 import type {
+  AppShellProps,
+  AppShellWorkspaceProps,
+  AppShellHeaderProps,
+  AppShellContentProps,
+  AppShellFooterProps,
   SidebarProps,
   SidebarHeaderProps,
   SidebarNavProps,
@@ -668,4 +678,49 @@ export const appSidebarContracts = (
     {/* @ts-expect-error Buttons cannot declare current page. */}
     <SidebarItem as="button" aria-current="page" />
   </Sidebar>
+);
+
+const shellProps: AppShellProps = {
+  navigationLayout: appLayout,
+  class: slotSignal,
+  className: slotSignal,
+  hidden: false,
+};
+const workspaceProps: AppShellWorkspaceProps = { tabIndex: -1, 'aria-label': 'Workspace' };
+const shellHeaderProps: AppShellHeaderProps = { title: 'Header' };
+const shellContentProps: AppShellContentProps = {
+  onClick: (event) => {
+    event.currentTarget.align = 'left';
+  },
+};
+const shellFooterProps: AppShellFooterProps = { hidden: true };
+export function AppShellContract({ callback = false }: { callback?: boolean }) {
+  return (
+    <AppShell {...shellProps} ref={refFor<HTMLDivElement>(callback)}>
+      <Sidebar appearance="app" layout={appLayout} />
+      <AppShellWorkspace {...workspaceProps} ref={refFor<HTMLElement>(callback)}>
+        <AppShellHeader {...shellHeaderProps} ref={refFor<HTMLDivElement>(callback)} />
+        <AppShellContent {...shellContentProps} ref={refFor<HTMLDivElement>(callback)}>
+          Content
+        </AppShellContent>
+        <AppShellFooter {...shellFooterProps} ref={refFor<HTMLDivElement>(callback)} />
+      </AppShellWorkspace>
+    </AppShell>
+  );
+}
+export const appShellNegativeContracts = (
+  <>
+    {/* @ts-expect-error Unknown layout. */}
+    <AppShell navigationLayout="compact" />
+    {/* @ts-expect-error Shell is a div, not a link. */}
+    <AppShell href="/" />
+    {/* @ts-expect-error Workspace is main, not a link. */}
+    <AppShellWorkspace href="/" />
+    {/* @ts-expect-error Structural parts do not have slots. */}
+    <AppShellContent classes={{ root: 'bad' }} />
+    {/* @ts-expect-error Shell requires a div ref. */}
+    <AppShell ref={createRef<HTMLButtonElement>()} />
+    {/* @ts-expect-error Header requires a div ref. */}
+    <AppShellHeader ref={createRef<HTMLAnchorElement>()} />
+  </>
 );

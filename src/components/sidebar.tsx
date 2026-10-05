@@ -41,6 +41,7 @@ export const Sidebar = /* @__PURE__ */ forwardRef<HTMLElement, SidebarProps>(fun
   return (
     <SidebarContext.Provider value={sidebarValue(layout)}>
       <aside
+        data-sidebar=""
         data-appearance={appearance}
         data-layout={sidebarValue(layout)}
         data-scrollable={sidebarValue(scrollable)}

@@ -58,3 +58,18 @@ export { mergeProps } from './utils/merge-props';
 
 export { useRender } from './utils/use-render';
 export type { RenderProp, UseRenderOptions } from './utils/use-render';
+
+export {
+  AppShell,
+  AppShellWorkspace,
+  AppShellHeader,
+  AppShellContent,
+  AppShellFooter,
+} from './components/app-shell';
+export type {
+  AppShellProps,
+  AppShellWorkspaceProps,
+  AppShellHeaderProps,
+  AppShellContentProps,
+  AppShellFooterProps,
+} from './components/app-shell';
