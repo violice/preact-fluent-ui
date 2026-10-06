@@ -21,12 +21,46 @@ export function compileDeclarations(declarations: Declaration[]): {
   }
   return {
     className: cx(...rules.keys()),
-    css: `@layer pfui.utilities{${[...rules.values()].join('')}}`,
+    css: `@layer pfui.reset,pfui.native,pfui.utilities;@layer pfui.utilities{${[...rules.values()].join('')}}`,
   };
 }
 export function compileStyles(
   style: StyleObject,
   context: StyleContext = {},
 ): { className: string; css: string } {
-  return compileDeclarations(normalizeStyles(style, context));
+  let globals = '';
+  function extract(input: StyleObject, nested = false): StyleObject {
+    const local: StyleObject = {};
+    for (const [key, value] of Object.entries(input)) {
+      if (key.startsWith('@keyframes')) {
+        if (nested) throw new Error('Keyframes must be declared at the top level');
+        if (!/^@keyframes [A-Za-z_][\w-]*$/.test(key) || !value || typeof value !== 'object')
+          throw new Error(`Invalid keyframes definition: ${key}`);
+        const frames = Object.entries(value)
+          .map(([frame, declarations]) => {
+            if (
+              !/^(from|to|(?:\d+(?:\.\d+)?%)(?:\s*,\s*\d+(?:\.\d+)?%)*)$/.test(frame) ||
+              !declarations ||
+              typeof declarations !== 'object'
+            )
+              throw new Error(`Invalid keyframe selector: ${frame}`);
+            if (
+              Object.values(declarations).some((item) => item !== null && typeof item === 'object')
+            )
+              throw new Error('Keyframes do not support nested selectors');
+            const normalized = normalizeStyles(declarations, context);
+            return `${frame}{${normalized.map((declaration) => `${declaration.property}:${declaration.value}`).join(';')}}`;
+          })
+          .join('');
+        const rule = `${key}{${frames}}`;
+        globals += rule;
+      } else local[key] = value && typeof value === 'object' ? extract(value, true) : value;
+    }
+    return local;
+  }
+  const output = compileDeclarations(normalizeStyles(extract(style), context));
+  return {
+    className: output.className,
+    css: globals ? `${output.css}@layer pfui.utilities{${globals}}` : output.css,
+  };
 }

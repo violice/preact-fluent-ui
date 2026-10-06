@@ -134,3 +134,32 @@ it('compiles css.dynamic with the pfui namespace', async () => {
   expect(Object.keys(props.style)[0]).toMatch(/^--pfui-local-/);
   expect(result.css).toContain('@layer pfui.utilities');
 });
+it('emits slot relationships and animation frames in the actual CSS asset', async () => {
+  const result = await compile(`import {sva} from ${JSON.stringify(api)};
+    const control=sva({slots:['input','indicator'],base:{input:{'&:checked + $indicator':{color:'red'}},indicator:{'@keyframes pfui-test-spin':{to:{transform:'rotate(360deg)'}},animation:'pfui-test-spin 800ms linear infinite'}}});
+    export const parts=()=>control();`);
+  const parts = result.module.parts();
+  const marker = parts.indicator.split(' ').find((name: string) => name.startsWith('pfui-sva-'));
+  expect(result.css).toContain(`:checked + .${marker}`);
+  expect(result.css).toContain('@keyframes pfui-test-spin');
+  expect(result.css.indexOf('@layer pfui.reset,pfui.native,pfui.utilities;')).toBeLessThan(
+    result.css.indexOf('@layer pfui.utilities{'),
+  );
+  expect(result.css).toContain('transform:rotate(360deg)');
+  expect(parts.indicator).not.toContain('transform');
+});
+it('bridges configured semantic themes to public Fluent variables used by components', async () => {
+  const { fluentPreset } = await import('../config/fluent-preset');
+  const { resolveConfig } = await import('../config/resolve-config');
+  const { generateThemeCss } = await import('./tokens');
+  const css = generateThemeCss(
+    resolveConfig({
+      presets: [fluentPreset],
+      themes: {
+        custom: { semanticTokens: { colors: { text: { value: 'purple' } } } },
+      },
+    }),
+  );
+  expect(css).toContain('--color-text:var(--pfui-colors-text)');
+  expect(css).not.toContain('--color-border:var(--pfui-colors-border)');
+});

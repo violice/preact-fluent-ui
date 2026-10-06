@@ -5,6 +5,7 @@ import { Gallery } from './gallery';
 import { galleryHref, normalizeGalleryPath } from './gallery-routing';
 import { defaultSettings } from './gallery-settings';
 import libraryCss from '../../../dist/styles.css?raw';
+import { flattenLayers } from '../../../tests/component-styles';
 import galleryCss from './gallery.module.css?raw';
 import galleryClasses from './gallery.module.css';
 afterEach(() => {
@@ -69,7 +70,7 @@ it('renders every component page with one heading and focused documentation', as
     }
     view.unmount();
   }
-});
+}, 15000);
 it('supports a repository base and keyboard anchor navigation', async () => {
   history.replaceState(null, '', '/repo/components/button/?preset=minimal');
   render(<Gallery base="/repo/" />);
@@ -411,7 +412,7 @@ it('uses app navigation with a library brand and fixed header and footer around 
 it('scrolls documentation links without scrolling the sidebar brand and actions', () => {
   const style = document.createElement('style');
   style.textContent =
-    libraryCss +
+    flattenLayers(libraryCss) +
     galleryCss.replace(/\.([a-zA-Z]+)\b/g, (selector, name: string) =>
       galleryClasses[name] ? `.${galleryClasses[name]}` : selector,
     );

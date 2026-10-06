@@ -1,106 +1,6 @@
-/* Optional ordinary fields. :where keeps component classes authoritative. */
-:where(
-  input:not(
-    [type='checkbox'],
-    [type='radio'],
-    [type='range'],
-    [type='color'],
-    [type='hidden'],
-    [type='button'],
-    [type='submit'],
-    [type='reset']
-  ),
-  select,
-  textarea
-) {
-  box-sizing: border-box;
-  font: var(--type-body) / 20px var(--font-body);
-  min-height: 36px;
-  padding: 7px 12px;
-  color: var(--color-text);
-  background: var(--color-control);
-  border: 1px solid var(--color-control-border);
-  border-bottom-color: var(--color-control-bottom);
-  border-radius: var(--radius-sm);
-  transition:
-    background-color 120ms ease,
-    border-color 120ms ease,
-    box-shadow 120ms ease;
-}
-:where(
-    input:not(
-      [type='checkbox'],
-      [type='radio'],
-      [type='range'],
-      [type='color'],
-      [type='hidden'],
-      [type='button'],
-      [type='submit'],
-      [type='reset']
-    ),
-    select,
-    textarea
-  ):hover:where(:not(:disabled)) {
-  background: var(--color-control-hover);
-  border-bottom-color: var(--color-text-subtle);
-}
-:where(
-  input:not(
-    [type='checkbox'],
-    [type='radio'],
-    [type='range'],
-    [type='color'],
-    [type='hidden'],
-    [type='button'],
-    [type='submit'],
-    [type='reset']
-  ),
-  select,
-  textarea
-):focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
-  border-bottom-color: var(--color-accent);
-}
-:where(
-  input:not(
-    [type='checkbox'],
-    [type='radio'],
-    [type='range'],
-    [type='color'],
-    [type='hidden'],
-    [type='button'],
-    [type='submit'],
-    [type='reset']
-  ),
-  select,
-  textarea
-):disabled {
-  color: var(--color-disabled);
-  background: var(--color-surface-muted);
-  border-color: var(--color-border);
-}
-:where(input, textarea)::placeholder {
-  color: var(--color-text-subtle);
-  opacity: 1;
-}
-:where(
-  input:not(
-    [type='checkbox'],
-    [type='radio'],
-    [type='range'],
-    [type='color'],
-    [type='hidden'],
-    [type='button'],
-    [type='submit'],
-    [type='reset']
-  ),
-  select,
-  textarea
-)[aria-invalid='true'] {
-  border-bottom-color: var(--color-danger);
-}
-@media (prefers-reduced-motion: reduce) {
+@layer pfui.reset, pfui.native, pfui.utilities;
+@layer pfui.native {
+  /* Optional ordinary fields. :where keeps component classes authoritative. */
   :where(
     input:not(
       [type='checkbox'],
@@ -115,44 +15,36 @@
     select,
     textarea
   ) {
-    transition: none;
-  }
-}
-@media (forced-colors: active) {
-  :where(
-    input:not(
-      [type='checkbox'],
-      [type='radio'],
-      [type='range'],
-      [type='color'],
-      [type='hidden'],
-      [type='button'],
-      [type='submit'],
-      [type='reset']
-    ),
-    select,
-    textarea
-  ) {
-    color: FieldText;
-    background: Field;
-    border-color: FieldText;
+    box-sizing: border-box;
+    font: var(--type-body) / 20px var(--font-body);
+    min-height: 36px;
+    padding: 7px 12px;
+    color: var(--color-text);
+    background: var(--color-control);
+    border: 1px solid var(--color-control-border);
+    border-bottom-color: var(--color-control-bottom);
+    border-radius: var(--radius-sm);
+    transition:
+      background-color 120ms ease,
+      border-color 120ms ease,
+      box-shadow 120ms ease;
   }
   :where(
-    input:not(
-      [type='checkbox'],
-      [type='radio'],
-      [type='range'],
-      [type='color'],
-      [type='hidden'],
-      [type='button'],
-      [type='submit'],
-      [type='reset']
-    ),
-    select,
-    textarea
-  ):disabled {
-    color: GrayText;
-    border-color: GrayText;
+      input:not(
+        [type='checkbox'],
+        [type='radio'],
+        [type='range'],
+        [type='color'],
+        [type='hidden'],
+        [type='button'],
+        [type='submit'],
+        [type='reset']
+      ),
+      select,
+      textarea
+    ):hover:where(:not(:disabled)) {
+    background: var(--color-control-hover);
+    border-bottom-color: var(--color-text-subtle);
   }
   :where(
     input:not(
@@ -168,7 +60,31 @@
     select,
     textarea
   ):focus-visible {
-    outline-color: Highlight;
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-bottom-color: var(--color-accent);
+  }
+  :where(
+    input:not(
+      [type='checkbox'],
+      [type='radio'],
+      [type='range'],
+      [type='color'],
+      [type='hidden'],
+      [type='button'],
+      [type='submit'],
+      [type='reset']
+    ),
+    select,
+    textarea
+  ):disabled {
+    color: var(--color-disabled);
+    background: var(--color-surface-muted);
+    border-color: var(--color-border);
+  }
+  :where(input, textarea)::placeholder {
+    color: var(--color-text-subtle);
+    opacity: 1;
   }
   :where(
     input:not(
@@ -184,6 +100,93 @@
     select,
     textarea
   )[aria-invalid='true'] {
-    border-bottom-style: dashed;
+    border-bottom-color: var(--color-danger);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :where(
+      input:not(
+        [type='checkbox'],
+        [type='radio'],
+        [type='range'],
+        [type='color'],
+        [type='hidden'],
+        [type='button'],
+        [type='submit'],
+        [type='reset']
+      ),
+      select,
+      textarea
+    ) {
+      transition: none;
+    }
+  }
+  @media (forced-colors: active) {
+    :where(
+      input:not(
+        [type='checkbox'],
+        [type='radio'],
+        [type='range'],
+        [type='color'],
+        [type='hidden'],
+        [type='button'],
+        [type='submit'],
+        [type='reset']
+      ),
+      select,
+      textarea
+    ) {
+      color: FieldText;
+      background: Field;
+      border-color: FieldText;
+    }
+    :where(
+      input:not(
+        [type='checkbox'],
+        [type='radio'],
+        [type='range'],
+        [type='color'],
+        [type='hidden'],
+        [type='button'],
+        [type='submit'],
+        [type='reset']
+      ),
+      select,
+      textarea
+    ):disabled {
+      color: GrayText;
+      border-color: GrayText;
+    }
+    :where(
+      input:not(
+        [type='checkbox'],
+        [type='radio'],
+        [type='range'],
+        [type='color'],
+        [type='hidden'],
+        [type='button'],
+        [type='submit'],
+        [type='reset']
+      ),
+      select,
+      textarea
+    ):focus-visible {
+      outline-color: Highlight;
+    }
+    :where(
+      input:not(
+        [type='checkbox'],
+        [type='radio'],
+        [type='range'],
+        [type='color'],
+        [type='hidden'],
+        [type='button'],
+        [type='submit'],
+        [type='reset']
+      ),
+      select,
+      textarea
+    )[aria-invalid='true'] {
+      border-bottom-style: dashed;
+    }
   }
 }

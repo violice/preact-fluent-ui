@@ -52,16 +52,20 @@ import './styled-system/theme.css';
 const panel = css({ display: 'grid', gap: '4', color: 'action', _md: { gap: '6' } });
 
 export function Panel({ width }: { width: number }) {
-  return <section {...css.dynamic({ width, padding: width / 10 })} class={cx(panel, css({ borderRadius: 'lg' }))} />;
+  const dynamic = css.dynamic({ width, padding: width / 10 });
+
+  return (
+    <section
+      class={cx(panel, dynamic.class)}
+      style={dynamic.style}
+    />
+  );
 }
 ```
 
-Ordinary JSX prop order applies: the explicit `class` above replaces the spread’s class. To retain both, compose them explicitly:
+Pass both values explicitly: `dynamic.class` contains the extracted CSS rules, and `dynamic.style` assigns their local CSS variables. Compose static and dynamic classes with `cx()`. If you also need inline styles, merge them with `dynamic.style`.
 
-```tsx
-const dynamic = css.dynamic({ width, padding: width / 10 });
-return <section {...dynamic} class={cx(panel, dynamic.class)} />;
-```
+You can also spread the result with `<section {...dynamic} />`. Ordinary JSX prop order applies; a later `class` or `style` replaces the corresponding spread value.
 
 `css()` returns a class string. Its style objects must be evaluable at build time. `css.dynamic()` returns `{ class, style }`: static declarations become extracted CSS, while each dynamic scalar becomes a local custom property. Expressions run once, in source order. Numbers receive units for lengths; unitless properties retain numbers. Strings can name category tokens or contain `{full.token.path}` aliases. `token.var('colors.action')` supplies an explicit variable reference.
 
@@ -102,3 +106,29 @@ All declared branches are extracted even when selection occurs at runtime. Undef
 Use `data-pfui-theme="green"` for a named palette and `data-color-mode="light"` or `"dark"` for explicit mode. Both attributes can sit on the same root or on separate nested elements; nested scopes inherit the current palette and can change mode independently. A nested named theme replaces its palette with the resolved named theme. Generated mode boundaries use native CSS `@scope`, so the target browser must support it. Portals must receive the desired theme attributes on their destination container.
 
 This is the first implementation. CSS types permit arbitrary property strings; they do not yet constrain each property to its token category. Only Vite integration is provided. Positional source-map accuracy and native Windows forced-colors behavior still need separate verification.
+
+## Component recipes
+
+All library components use the style engine. Each component lives in its own TSX file inside a family directory; recipes, helpers and tests are colocated. Public imports from the package root remain unchanged.
+
+Use `cva` for variants of one element and `sva` for component parts. An `sva` selector can reference another slot with `$slotName`:
+
+```ts
+const checkbox = sva({
+  slots: ['input', 'indicator'],
+  base: {
+    input: { '&:checked + $indicator': { backgroundColor: 'accent' } },
+    indicator: { borderRadius: 2 },
+  },
+});
+```
+
+The compiler adds stable slot markers, including to slots without base declarations. Apply every returned slot class to its corresponding element; selectors need those markers.
+
+Top-level `@keyframes name` definitions are extracted with the stylesheet. Frames accept `from`, `to`, percentages and comma-separated percentages; nested selectors and scoped keyframes are rejected. Choose unique animation names.
+
+Generated CSS declares the layer order `pfui.reset, pfui.native, pfui.utilities` before emitting utility rules. The optional reset and native-control styles use the first two layers. Unlayered application CSS can still override normal utility declarations.
+
+Tooltip and Sidebar hints use `css.dynamic` for measured geometry. Native `style` props remain available. TextPreview/CodeBlock retain their style adapter to preserve existing `wrap` precedence for both object and string styles.
+
+Fluent components continue reading public `--color-*`, `--font-*` and `--radius-*` variables, so local overrides retain their behavior. Configured themes also update these variables when overriding the corresponding semantic tokens. Default aliases remain one-way to avoid cycles. Local `--pfui-*` overrides affect styles that read those tokens directly; use the public Fluent variables for local component overrides or `data-pfui-theme` for configured themes.

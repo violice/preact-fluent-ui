@@ -49,7 +49,7 @@ for (const [index, source] of sourcemap.sources.entries()) {
   );
   assert(!/(?:^|\/)preact(?:\/|$)/.test(normalized), `Embedded Preact source: ${source}`);
   assert(
-    /^\.\.\/(?:src\/(?:utils\/(?:resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|styles\.ts|module\.css)|(?:tooltip-(?:position|theme)|text-style)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css)|styling\/(?:cx|conflicts|identity|normalize|recipe-runtime|style-props|css|cva|sva|token|index)\.ts))$/.test(
+    /^\.\.\/(?:src\/(?:utils\/(?:resolve-class|merge-props|use-render)\.ts|components\/(?:app-shell|button|card|checkbox|counter-badge|data-list|dialog|disclosure|empty-state|field|info-bar|input|loading-state|page-header|pagination|select|separator|sidebar|spinner|status-badge|switch|table|text|text-content|textarea|toolbar|tooltip)\/[^/]+\.(?:tsx|styles\.ts|ts)|icons\/[^/]+\.(?:ts|tsx)|styling\/(?:cx|conflicts|identity|normalize|recipe-runtime|style-props|css|cva|sva|token|index)\.ts))$/.test(
       normalized,
     ) && !/\.test\./.test(normalized),
     `Unrelated sourcemap source: ${source}`,

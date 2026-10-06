@@ -3,7 +3,7 @@ import { forwardRef } from 'preact/compat';
 import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import { fluentIconPaths } from './fluent-icon-paths';
-import styles from './icon.module.css';
+import styles from './icon.styles';
 
 export type IconName = keyof typeof fluentIconPaths;
 export type IconProps = Omit<JSX.SVGAttributes<SVGSVGElement>, 'children' | 'width' | 'height'> & {

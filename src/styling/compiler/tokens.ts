@@ -1,3 +1,4 @@
+import { fluentPreset } from '../config/fluent-preset.ts';
 import { flattenTokens, themeWithOverrides } from '../config/resolve-config.ts';
 import type { ResolvedConfig, TokenLeaf } from '../config/types.ts';
 export function variableName(path: string): string {
@@ -15,12 +16,28 @@ export function tokenReferences(config: ResolvedConfig): Record<string, string> 
 function valueCss(value: string | number): string {
   return String(value).replace(/\{([\w.-]+)\}/g, (_, path: string) => `var(${variableName(path)})`);
 }
+// Existing Fluent variables are the component contract. Theme overrides update both
+// namespaces at the same scope; default aliases must not create a variable cycle.
+const legacyVariables = Object.fromEntries(
+  Object.entries({
+    ...flattenTokens(fluentPreset.theme!.tokens!),
+    ...flattenTokens(fluentPreset.theme!.semanticTokens!),
+  }).flatMap(([path, leaf]) => {
+    const match = typeof leaf.value === 'string' && /^var\((--[\w-]+)\)$/.exec(leaf.value);
+    return match ? [[path, match[1]]] : [];
+  }),
+);
 function declarations(leaves: Record<string, TokenLeaf>, mode = 'base'): string {
   return Object.entries(leaves)
     .map(([path, leaf]) => {
       const value =
         typeof leaf.value === 'object' ? (leaf.value[mode] ?? leaf.value.base) : leaf.value;
-      return `${variableName(path)}:${valueCss(value)};`;
+      const reference = legacyVariables[path];
+      const bridge =
+        reference && valueCss(value) !== `var(${reference})`
+          ? `${reference}:var(${variableName(path)});`
+          : '';
+      return `${variableName(path)}:${valueCss(value)};${bridge}`;
     })
     .join('');
 }

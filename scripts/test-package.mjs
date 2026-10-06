@@ -218,7 +218,7 @@ async function inspectLibrary(directory, files) {
         `Library must not embed Preact: ${source}`,
       );
       assert(
-        /^\.\.\/(?:src\/(?:utils\/(?:resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|styles\.ts|module\.css)|(?:tooltip-(?:position|theme)|text-style)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css)|styling\/(?:cx|conflicts|identity|normalize|recipe-runtime|style-props|css|cva|sva|token|index)\.ts|styling\/config\/(?:fluent-preset|define-config|resolve-config|index)\.ts|styling\/compiler\/(?:vite|processor|atomic|tokens|dynamic|recipes)\.ts))$/.test(
+        /^\.\.\/(?:src\/(?:utils\/(?:resolve-class|merge-props|use-render)\.ts|components\/(?:app-shell|button|card|checkbox|counter-badge|data-list|dialog|disclosure|empty-state|field|info-bar|input|loading-state|page-header|pagination|select|separator|sidebar|spinner|status-badge|switch|table|text|text-content|textarea|toolbar|tooltip)\/[^/]+\.(?:tsx|styles\.ts|ts)|icons\/[^/]+\.(?:ts|tsx)|styling\/(?:cx|conflicts|identity|normalize|recipe-runtime|style-props|css|cva|sva|token|index)\.ts|styling\/config\/(?:fluent-preset|define-config|resolve-config|index)\.ts|styling\/compiler\/(?:vite|processor|atomic|tokens|dynamic|recipes)\.ts))$/.test(
           normalized,
         ) && !/\.test\./.test(normalized),
         `Unrelated source content in published map: ${source}`,
@@ -298,11 +298,11 @@ async function inspectConsumer(directory, mode) {
       mapped[source] = (mapped[source] ?? 0) + count;
   }
   assert(
-    Object.keys(mapped).some((source) => source.endsWith('/src/components/button.tsx')),
+    Object.keys(mapped).some((source) => source.endsWith('/src/components/button/button.tsx')),
     'Button must have live generated mappings',
   );
   const unusedSources = Object.keys(mapped).filter((source) =>
-    /\/src\/(?:components\/(?:modal|confirm-dialog|dialog-content|card|info-bar|status-badge|counter-badge|text|select|field|input|textarea|checkbox|switch|page-header|empty-state|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
+    /\/src\/(?:components\/[^/]+\/(?:modal|confirm-dialog|dialog-header|dialog-body|dialog-footer|card|info-bar|status-badge|counter-badge|text|select|field|input|textarea|checkbox|switch|page-header|empty-state|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
       source,
     ),
   );
@@ -337,7 +337,7 @@ async function inspectConsumer(directory, mode) {
   );
   if (mode === 'minimal') {
     const forbiddenSources = unusedSources.filter((source) =>
-      /\/(?:components\/(?:modal|confirm-dialog|field|input|textarea|checkbox|switch|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
+      /\/(?:components\/[^/]+\/(?:modal|confirm-dialog|field|input|textarea|checkbox|switch|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
         source,
       ),
     );
@@ -360,12 +360,12 @@ async function inspectConsumer(directory, mode) {
   } else {
     for (const control of ['field', 'input', 'textarea', 'checkbox', 'switch']) {
       assert(
-        unusedSources.some((source) => source.endsWith(`/components/${control}.tsx`)),
+        unusedSources.some((source) => source.endsWith(`/components/${control}/${control}.tsx`)),
         `Full consumer must retain a live ${control} control`,
       );
     }
     assert(
-      unusedSources.some((source) => source.endsWith('/components/modal.tsx')),
+      unusedSources.some((source) => source.endsWith('/components/dialog/modal.tsx')),
       'Full consumer must provide a live Modal control for the tree-shaking comparison',
     );
     assert(

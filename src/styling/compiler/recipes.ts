@@ -1,3 +1,5 @@
+import { styleHash } from '../identity.ts';
+import { cx } from '../cx.ts';
 import { compileStyles } from './atomic.ts';
 import type { StyleContext, StyleObject } from '../types.ts';
 interface Definition {
@@ -18,6 +20,24 @@ export function compileRecipe(
   const slots = definition.slots;
   if (multipart && (!slots?.length || new Set(slots).size !== slots.length))
     throw new Error('sva requires unique slots');
+  const marker = styleHash(JSON.stringify(definition));
+  const markers = Object.fromEntries(
+    (slots ?? []).map((slot) => [slot, `pfui-sva-${marker}-${styleHash(slot)}`]),
+  );
+  function selectors(style: StyleObject): StyleObject {
+    return Object.fromEntries(
+      Object.entries(style).map(([key, value]) => {
+        const selector =
+          typeof value === 'object' && value !== null
+            ? key.replace(/\$([\w-]+)/g, (_, slot: string) => {
+                if (!(slot in markers)) throw new Error(`Unknown sva selector slot: ${slot}`);
+                return `.${markers[slot]}`;
+              })
+            : key;
+        return [selector, typeof value === 'object' && value !== null ? selectors(value) : value];
+      }),
+    );
+  }
   function compile(
     style: StyleObject | Record<string, StyleObject> = {},
   ): string | Record<string, string> {
@@ -25,7 +45,7 @@ export function compileRecipe(
       const output: Record<string, string> = {};
       for (const [slot, value] of Object.entries(style)) {
         if (!slots!.includes(slot)) throw new Error(`Unknown sva slot: ${slot}`);
-        const result = compileStyles(value as StyleObject, context);
+        const result = compileStyles(selectors(value as StyleObject), context);
         output[slot] = result.className;
         css += result.css;
       }
@@ -39,10 +59,18 @@ export function compileRecipe(
     if (value != null && !definition.variants?.[key]?.[String(value)])
       throw new Error(`Unknown recipe default ${key}: ${value}`);
   }
+  const base = compile(definition.base);
   return {
     definition: {
       ...(multipart ? { slots } : {}),
-      base: compile(definition.base),
+      base: multipart
+        ? Object.fromEntries(
+            Object.entries(markers).map(([slot, name]) => [
+              slot,
+              cx(name, (base as Record<string, string>)[slot]),
+            ]),
+          )
+        : base,
       variants: Object.fromEntries(
         Object.entries(definition.variants ?? {}).map(([name, branches]) => [
           name,
