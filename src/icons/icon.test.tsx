@@ -76,8 +76,8 @@ describe('Icon', () => {
     expect(ref.current?.getAttribute('aria-hidden')).toBe('true');
     expect(ref.current?.getAttribute('focusable')).toBe('false');
     expect(ref.current?.classList.contains('first')).toBe(true);
-    expect(ref.current?.classList.contains('second')).toBe(true);
-    expect(ref.current?.classList.length).toBeGreaterThan(2);
+    expect(ref.current?.classList.contains('second')).toBe(false);
+    expect(ref.current?.classList.length).toBeGreaterThan(1);
     expect(ref.current?.hasAttribute('name')).toBe(false);
     expect(ref.current?.hasAttribute('size')).toBe(false);
   });

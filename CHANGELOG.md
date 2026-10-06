@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Apply resolveClass consistently before cx in components, including Tooltip signal fallbacks. class takes priority over className; an explicit empty class suppresses the fallback.
+
 - Rename the styling namespace to pfui and the dynamic API to css.dynamic().
 - Remove mergeClasses in favor of signal-aware cx; expose cx from both root and styling entries.
 - Use sva for InfoBar root/title/content slots.

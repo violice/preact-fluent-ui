@@ -2,6 +2,7 @@ import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { buttonClasses } from './button.styles';
 import { cx } from '../styling/cx';
+import { resolveClass } from '../utils/resolve-class';
 import { Spinner } from './spinner';
 export type ButtonProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'default' | 'primary' | 'subtle' | 'danger';
@@ -43,7 +44,7 @@ export const Button = /* @__PURE__ */ forwardRef<HTMLButtonElement, ButtonProps>
         }
         onClick?.(event);
       }}
-      class={cx(buttonClasses({ variant, size, loading }), classProp, className)}
+      class={cx(buttonClasses({ variant, size, loading }), resolveClass(classProp, className))}
     >
       {loading && <Spinner size="small" />}
       {loading ? (size === 'icon' ? null : (loadingLabel ?? children)) : children}

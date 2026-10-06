@@ -84,7 +84,7 @@ describe('Button loading', () => {
     expect(document.activeElement).toBe(button);
     expect((button as HTMLButtonElement).disabled).toBe(false);
     expect(button.classList.contains('first')).toBe(true);
-    expect(button.classList.contains('second')).toBe(true);
+    expect(button.classList.contains('second')).toBe(false);
   });
 
   it.each(['pointer', 'Enter', 'Space', 'programmatic'])(

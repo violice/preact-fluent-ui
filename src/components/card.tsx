@@ -1,6 +1,7 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { cx } from '../styling/cx';
+import { resolveClass } from '../utils/resolve-class';
 import styles from './card.module.css';
 
 export type CardProps = JSX.HTMLAttributes<HTMLElement> & {
@@ -18,8 +19,7 @@ export const Card = /* @__PURE__ */ forwardRef<HTMLElement, CardProps>(function 
       class={cx(
         styles.card,
         padding === 'none' ? styles.unpadded : undefined,
-        classProp,
-        className,
+        resolveClass(classProp, className),
       )}
     />
   );

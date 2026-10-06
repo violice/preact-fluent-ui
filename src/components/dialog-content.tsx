@@ -44,12 +44,14 @@ export const DialogHeader = /* @__PURE__ */ forwardRef<HTMLElement, DialogHeader
 
 export const DialogBody = /* @__PURE__ */ forwardRef<HTMLDivElement, DialogBodyProps>(
   function DialogBody({ class: classProp, className, ...props }, ref) {
-    return <div {...props} ref={ref} class={cx(styles.body, classProp, className)} />;
+    return <div {...props} ref={ref} class={cx(styles.body, resolveClass(classProp, className))} />;
   },
 );
 
 export const DialogFooter = /* @__PURE__ */ forwardRef<HTMLElement, DialogFooterProps>(
   function DialogFooter({ class: classProp, className, ...props }, ref) {
-    return <footer {...props} ref={ref} class={cx(styles.actions, classProp, className)} />;
+    return (
+      <footer {...props} ref={ref} class={cx(styles.actions, resolveClass(classProp, className))} />
+    );
   },
 );

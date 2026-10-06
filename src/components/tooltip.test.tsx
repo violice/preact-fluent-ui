@@ -1,3 +1,4 @@
+import { signal } from '@preact/signals';
 import { createRef } from 'preact';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/preact';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -416,4 +417,26 @@ it('first Modal Escape dismisses every tooltip and second Escape closes the dial
   expect(close).not.toHaveBeenCalled();
   fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
   expect(close).toHaveBeenCalledTimes(1);
+});
+
+it('resolves portal class aliases from signal values', () => {
+  const primary = signal<string | undefined>(undefined);
+  render(
+    <Tooltip content="Description" class={primary} className="fallback">
+      {(props) => <button {...props}>Action</button>}
+    </Tooltip>,
+  );
+  act(() => screen.getByRole('button').focus());
+  const tooltip = screen.getByRole('tooltip');
+  expect(tooltip.classList.contains('fallback')).toBe(true);
+  act(() => {
+    primary.value = 'primary';
+  });
+  expect(tooltip.classList.contains('primary')).toBe(true);
+  expect(tooltip.classList.contains('fallback')).toBe(false);
+  act(() => {
+    primary.value = '';
+  });
+  expect(tooltip.classList.contains('primary')).toBe(false);
+  expect(tooltip.classList.contains('fallback')).toBe(false);
 });

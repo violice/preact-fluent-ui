@@ -58,8 +58,8 @@ describe('layout', () => {
     expect(footer.textContent).toBe('Actions');
     for (const element of [header, body, footer]) {
       expect(element.classList.contains('first')).toBe(true);
-      expect(element.classList.contains('second')).toBe(element !== header);
-      expect(element.classList.length).toBeGreaterThan(element === header ? 1 : 2);
+      expect(element.classList.contains('second')).toBe(false);
+      expect(element.classList.length).toBeGreaterThan(1);
       expect(element.hasAttribute('aria-label')).toBe(true);
       expect(element.hasAttribute('title')).toBe(false);
       expect(element.hasAttribute('description')).toBe(false);

@@ -2,6 +2,7 @@ import type { JSX, VNode } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useId, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { cx } from '../styling/cx';
+import { resolveClass } from '../utils/resolve-class';
 import { useRender } from '../utils/use-render';
 import { getTooltipPosition } from './tooltip-position';
 import type { TooltipPlacement } from './tooltip-position';
@@ -200,7 +201,7 @@ export function Tooltip({
             ref={tooltip}
             id={id}
             role="tooltip"
-            class={cx(styles.tooltip, classProp ?? className, classes?.root)}
+            class={cx(styles.tooltip, resolveClass(classProp, className), classes?.root)}
             onPointerEnter={() => {
               interaction.current.tooltip = true;
               clearTimers();

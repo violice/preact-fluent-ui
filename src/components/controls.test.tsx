@@ -7,7 +7,7 @@ import { Button, Card, EmptyState, Icon, InfoBar, PageHeader, Select, StatusBadg
 afterEach(cleanup);
 
 describe('Button', () => {
-  it('forwards the native button ref and merges both class props', () => {
+  it('forwards the native button ref and resolves native class aliases', () => {
     const ref = createRef<HTMLButtonElement>();
     render(
       <Button ref={ref} class="first" className="second">
@@ -17,8 +17,8 @@ describe('Button', () => {
 
     expect(ref.current).toBeInstanceOf(HTMLButtonElement);
     expect(ref.current?.classList.contains('first')).toBe(true);
-    expect(ref.current?.classList.contains('second')).toBe(true);
-    expect(ref.current?.classList.length).toBeGreaterThan(2);
+    expect(ref.current?.classList.contains('second')).toBe(false);
+    expect(ref.current?.classList.length).toBeGreaterThan(1);
   });
 
   it('does not submit a form by default', async () => {
@@ -89,7 +89,7 @@ describe('Button', () => {
 });
 
 describe('shared controls', () => {
-  it('merges native SignalLike class values and reads their updated values on rerender', () => {
+  it('resolves native SignalLike class values and reads their updated values on rerender', () => {
     const signal = (value: string): JSX.SignalLike<string> => ({
       value,
       peek() {
@@ -127,11 +127,7 @@ describe('shared controls', () => {
     const { rerender } = render(content());
     for (const element of screen.getAllByTestId(/^signal-/)) {
       expect(element.classList.contains('first')).toBe(true);
-      expect(element.classList.contains('second')).toBe(
-        !['signal-select', 'signal-info', 'signal-header', 'signal-empty'].includes(
-          element.dataset.testid!,
-        ),
-      );
+      expect(element.classList.contains('second')).toBe(false);
       expect(element.classList.contains('value')).toBe(false);
     }
     classProp.value = 'updated';
@@ -139,11 +135,7 @@ describe('shared controls', () => {
     rerender(content());
     for (const element of screen.getAllByTestId(/^signal-/)) {
       expect(element.classList.contains('updated')).toBe(true);
-      expect(element.classList.contains('changed')).toBe(
-        !['signal-select', 'signal-info', 'signal-header', 'signal-empty'].includes(
-          element.dataset.testid!,
-        ),
-      );
+      expect(element.classList.contains('changed')).toBe(false);
       expect(element.classList.contains('first')).toBe(false);
       expect(element.classList.contains('second')).toBe(false);
     }
@@ -180,8 +172,8 @@ describe('shared controls', () => {
       expect(ref.current?.tagName).toBe(tag);
       expect(ref.current?.getAttribute('aria-label')).toBe(label);
       expect(ref.current?.classList.contains('first')).toBe(true);
-      expect(ref.current?.classList.contains('second')).toBe(true);
-      expect(ref.current?.classList.length).toBeGreaterThan(2);
+      expect(ref.current?.classList.contains('second')).toBe(false);
+      expect(ref.current?.classList.length).toBeGreaterThan(1);
       expect(ref.current?.hasAttribute('tone')).toBe(false);
     }
   });
@@ -253,7 +245,7 @@ describe('shared controls', () => {
     expect(select.classList.contains('root-slot')).toBe(true);
     expect(select.parentElement?.querySelector('svg')?.classList.contains('icon-slot')).toBe(true);
     expect(select.hasAttribute('classes')).toBe(false);
-    expect(select.classList.length).toBeGreaterThan(2);
+    expect(select.classList.length).toBeGreaterThan(1);
     expect(select.classList.contains('wrapper')).toBe(false);
     expect(select.parentElement?.tagName).toBe('SPAN');
     expect(select.parentElement?.classList.contains('wrapper')).toBe(true);
