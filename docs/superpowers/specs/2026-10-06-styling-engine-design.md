@@ -1,6 +1,6 @@
 # Styling engine for Preact Fluent UI
 
-Status: proposed design, awaiting review of this document. The user approved the conversational direction; implementation is not yet authorized by a reviewed spec and plan.
+Status: approved by the user on 2026-10-06, including cva/sva, Panda-like theme configuration and RecipeVariant/RecipeVariantProps. Implementation awaits review of the written implementation plan and selection of its execution method.
 
 ## Purpose
 
@@ -10,7 +10,7 @@ The selected direction is a hybrid engine using WyW-in-JS for build-time evaluat
 
 ## Public surface
 
-Proposed styling exports are `css`, `cx`, `token`, `cva`, `sva` and `RecipeVariants`. Configuration helpers are build-only exports from a config subpath; browser styling exports contain css/cx, token, cva/sva and RecipeVariants. A separate Vite subpath exposes the compiler integration. The existing class-variance-authority dependency is unrelated to this new cva API; no automatic implementation reuse is implied. Export names are part of this proposal, not existing APIs.
+Proposed styling exports are `css`, `cx`, `token`, `cva`, `sva`, `RecipeVariant` and `RecipeVariantProps`. Configuration helpers are build-only exports from a config subpath; browser styling exports contain css/cx, token, cva/sva and the type-only helpers RecipeVariant/RecipeVariantProps. A separate Vite subpath exposes the compiler integration. The existing class-variance-authority dependency is unrelated to this new cva API; no automatic implementation reuse is implied. Export names are part of this proposal, not existing APIs.
 
 `css(styleObject)` returns an opaque class string after compilation. Style objects support typed CSS properties, token references, nested selectors and configured conditions. Numeric lengths follow existing Box conventions; unitless properties remain unitless. Token references are symbolic CSS-variable references, not theme values evaluated at runtime.
 
@@ -87,6 +87,15 @@ Names are deterministic and namespaced to avoid collisions between packages. Exi
 
 `cva` accepts `base`, `variants`, `compoundVariants` and `defaultVariants`. It returns a small runtime selector over precompiled classes. All explicitly declared variant branches and compound styles are emitted, including branches selected only by runtime props. There is no requirement to discover every recipe invocation in consumer code.
 
+`RecipeVariant<typeof definition>` extracts variant keys as required properties. `RecipeVariantProps<typeof definition>` extracts optional properties for component props. Both helpers work with cva and sva and are type-only exports, with no runtime code. Required selections use the inferred branch values; optional props also admit undefined and null according to the default-suppression semantics below. This follows Panda's helper names.
+
+```ts
+type ButtonVariants = RecipeVariant<typeof button>;
+// { size: 'small' | 'medium' }
+type ButtonVariantProps = RecipeVariantProps<typeof button>;
+// { size?: 'small' | 'medium' | null | undefined }
+```
+
 Variant keys and values infer TypeScript types. Boolean branches support `true` and `false`. An omitted or undefined variant uses its default; null explicitly suppresses the default. Unknown values are type errors and produce descriptive errors in development for untyped callers. Production ignores an unknown branch rather than generating CSS.
 
 Compound predicates match all their specified variants against resolved selections. A predicate may list several accepted values. Matching compounds apply in declaration order. Precedence is base, selected variants in definition order, then matching compounds. `cx(cvaDefinition(selection), css(overrides))` applies engine overrides last for equivalent property/condition declarations.
@@ -134,7 +143,7 @@ Applications using their own `css`, token definitions, themes, recipes or respon
 
 ## Scope and migration
 
-First delivery includes the shared schema, configuration-driven tokens/themes, css/cx, cva/sva, Vite integration and Box hybrid behavior. Migration demonstrates one component recipe and one multipart recipe; wholesale CSS Module replacement is a separate task.
+First delivery includes the shared schema, configuration-driven tokens/themes, css/cx, cva/sva, Vite integration and Box hybrid behavior. Migration demonstrates one component recipe and one multipart recipe; wholesale CSS Module replacement is a separate task. However, complete replacement of the standalone clsx and class-variance-authority helpers is part of this delivery: migrate every production import, route legacy class joining through the engine, remove both direct dependencies, and prove neither package remains in published JavaScript or the dependency graph. Existing CSS Modules may remain as foreign class strings handled by cx.
 
 No runtime stylesheet injection, automatic theme detection, general wrapper-component inference, arbitrary dynamic responsive objects or universal CSS conflict solver is promised. Additional bundlers can be supported after Vite is validated.
 
@@ -145,6 +154,7 @@ No runtime stylesheet injection, automatic theme detection, general wrapper-comp
 - Runtime tests verify recipe defaults/compounds, composition and existing Box signals/render/style behavior.
 - Packed consumer fixtures cover applications with and without the plugin, CSS imports, safe Node imports, external Preact and absence of compiler dependencies in browser bundles.
 - Browser checks cover nested light/dark modes and brand themes, responsive layouts, dynamic dimensions and style overrides.
+- Artifact and dependency checks reject clsx/class-variance-authority imports or bundled modules after migration; license notices are regenerated.
 - Existing library checks remain required; migrating one component must preserve its accessibility and behavioral tests.
 
 Before implementation planning, review this spec, particularly plugin-free fallback behavior, API exports and composition semantics. The implementation plan must begin with a small WyW/Vite integration prototype and a stop condition for incompatible extraction or merge behavior.
