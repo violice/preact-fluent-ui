@@ -1,16 +1,8 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { cva } from 'class-variance-authority';
+import { infoBarClasses, titleClass, contentClass } from './info-bar.styles';
 import { mergeClasses } from '../utils/merge-classes';
 import { resolveClass } from '../utils/resolve-class';
-import styles from './info-bar.module.css';
-
-const infoBarClasses = cva(styles.infoBar, {
-  variants: {
-    tone: { info: null, success: styles.success, warning: styles.warning, error: styles.error },
-  },
-  defaultVariants: { tone: 'info' },
-});
 
 export type InfoBarProps = JSX.HTMLAttributes<HTMLDivElement> & {
   classes?: {
@@ -37,9 +29,9 @@ export const InfoBar = /* @__PURE__ */ forwardRef<HTMLDivElement, InfoBarProps>(
         classes?.root,
       )}
     >
-      {title && <strong class={mergeClasses(styles.title, classes?.title)}>{title}</strong>}
+      {title && <strong class={mergeClasses(titleClass, classes?.title)}>{title}</strong>}
       {children != null && (
-        <div class={mergeClasses(styles.content, classes?.content)}>{children}</div>
+        <div class={mergeClasses(contentClass, classes?.content)}>{children}</div>
       )}
     </div>
   );

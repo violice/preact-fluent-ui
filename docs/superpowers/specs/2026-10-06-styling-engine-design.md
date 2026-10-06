@@ -1,10 +1,10 @@
 # Styling engine for Preact Fluent UI
 
-Status: approved by the user on 2026-10-06, including cva/sva, Panda-like theme configuration and RecipeVariant/RecipeVariantProps. Implementation awaits review of the written implementation plan and selection of its execution method.
+Status: approved by the user on 2026-10-06, including cva/sva, Panda-like theme configuration and RecipeVariant/RecipeVariantProps. Implementation authorized inline after the prototype; user revisions remove Box and add css.props.
 
 ## Purpose
 
-Provide a shared styling foundation for the UI library and consumer applications. Preserve the convenient Box layout-prop API while moving fixed styles into generated CSS. Support typed tokens, scoped themes, variants, compound variants and recipes from the outset.
+Provide a shared styling foundation for the UI library and consumer applications. Use css() on native elements and components; remove Box from the target public API. Support typed tokens, scoped themes, variants, compound variants and recipes from the outset.
 
 The selected direction is a hybrid engine using WyW-in-JS for build-time evaluation and extraction. It must preserve the current package's explicit CSS imports, Preact externalization and safe Node imports. Existing CSS Modules can coexist during migration.
 
@@ -26,7 +26,7 @@ The configuration contains:
 - `theme.semanticTokens`: role-based values, optionally conditional with `base`, `_light` and `_dark` keys.
 - `theme.extend`: deep additions/overrides to the inherited theme.
 - `themes`: named token overrides for alternative brand palettes, independent from light/dark mode.
-- `conditions`: selector or at-rule definitions shared with css, Box and cva/sva.
+- `conditions`: selector or at-rule definitions shared with css and cva/sva.
 - `presets`: ordered build-time configuration inputs, with application configuration applied last.
 
 Direct token categories replace that inherited category; `extend` deep-merges leaves and preserves siblings. Merge order is presets in order, direct application replacements, then application extensions. Arrays replace rather than concatenate. Token aliases use `{colors.gray.50}` notation, including inside composite strings. Unknown references, incompatible leaf shapes and alias cycles are build errors.
@@ -106,32 +106,28 @@ Initial composition is explicit through `cx` and shared style objects. Recipe in
 
 ## CSS composition
 
-Use atomic declarations with deterministic identifiers and structured metadata containing property, selector and condition. Identical declarations deduplicate across compiled modules within a build. Shorthand/longhand conflicts must be resolved by normalization of the supported property set; removing a padding shorthand must not lose unrelated padding sides.
+Use atomic declarations with deterministic identifiers that carry property and selector/condition identity. cx decodes these without a mutable global runtime registry. Identical declarations deduplicate across compiled modules within a build. Physical and logical spacing cannot be mixed within equivalent composition contexts; reject this ambiguity. Shorthand/longhand conflicts must be resolved by normalization of the supported property set; removing a padding shorthand must not lose unrelated padding sides.
 
 Cascade layers define engine baseline, recipes and utility overrides. Selector specificity and overlapping responsive conditions still obey CSS rules; `cx` only removes conflicts within equivalent selector/condition contexts. Explicit `style` remains an inline override under normal CSS cascade rules, including ordinary limitations around `!important`.
 
 Version one must define and test its supported property normalization before claiming general CSS merging. Unsupported ambiguous constructs fail compilation with a location and explanation. CSS Modules and external CSS coexist without automatic conflict analysis.
 
-## Box integration
+## Dynamic css.props and Box removal
 
-Preserve current layout props, signal resolution, ref/render composition, hidden behavior, native DOM props and explicit style precedence. No new default visual styling is introduced.
+User revision on 2026-10-06: remove Box and its layout props/render API in favor of native elements or existing components styled with css(). Remove Box exports, source, gallery page and package-consumer contracts. This is a breaking change; document migration. Consumer application migrations are outside the current repository task.
 
-Without a consumer plugin, Box maps finite predefined values to shipped atomic classes: spacing tokens, display, flex direction/wrap, alignment and other explicitly enumerated layout values. Generate individual property-value rules, never a Cartesian product of layouts.
+`css(style)` returns a class string for build-time styles. `css.props(style)` returns `{ class, style }` for spreading onto a native element or a component that forwards those props. A pre-transform compiler pass extracts statically known property paths and substitutes automatically named element-local custom properties for nonliteral values. The resulting static style object goes through the same WyW processor. Dynamic expressions remain runtime expressions evaluated once, in source order.
 
-Other scalar values retain current behavior through inline declarations. CSS variables can be used where a property has a safe predefined carrier rule. This fallback must not change arbitrary CSS-string handling or break existing applications. Development must not warn on supported dynamic scalar values.
+Numeric dynamic lengths receive px; unitless properties retain unitless values. Signal values are resolved when css.props runs during a component render, preserving render subscription behavior. Null/undefined values omit their variable. Named tokens are resolved using the active compiled configuration. Nested statically declared selector/condition objects may contain dynamic leaves. Dynamic object shapes, spreads, computed keys and methods are rejected with actionable diagnostics rather than losing declarations.
 
-With the plugin, static Box layout values can become generated classes. Responsive objects such as `padding={{ base: 'space-3', md: 'space-5' }}` require compilation. Breakpoints and named conditions are shared with `css` and recipes, provided by explicit build configuration; there are no hidden breakpoint defaults. Noncompiled responsive objects produce a descriptive error instead of being serialized into invalid styles.
-
-Signals and values originating from measurements or requests remain runtime values. Finite token selections can choose shipped classes dynamically. Arbitrary values use the scalar fallback. Dynamic responsive objects are outside version one; use explicit CSS variables inside statically declared responsive styles instead.
+The early pass resolves imported css bindings, including aliases, and respects lexical shadowing. It does not require JSX and can transform css.props in ordinary TypeScript. Spread/class/style ordering on the element follows normal JSX semantics; callers use cx or explicitly merge style objects when overriding the returned props.
 
 ## Compiler architecture
 
-1. Shared schema defines properties, token paths, conditions, normalization and identifiers. It produces types, the finite Box class table and CSS.
+1. Shared schema defines properties, token paths, conditions, normalization and identifiers. It produces token types and atomic CSS.
 2. Custom WyW processors implement build-time APIs and emit CSS plus runtime replacements/metadata.
-3. A JSX prepass recognizes Box by resolved import binding, including aliases, rather than component name alone. It lowers safe static props into the styling pipeline before normal Preact JSX compilation.
-4. A small browser runtime selects classes for recipes and Box, merges known declarations and preserves scalar fallbacks. It never injects stylesheet rules into the DOM.
-
-The JSX prepass must preserve spread order. It optimizes only props whose precedence can be proven; uncertain spreads and wrappers remain runtime Box behavior. It must preserve class/className, style, signals and render-state layout. Extracting a prop must not remove information exposed through the existing Box render callback. Version one may leave render callbacks unoptimized rather than change their contract.
+3. An early css.props pass recognizes css by its import binding and lowers dynamic leaves before WyW extraction and Preact compilation.
+4. A small browser runtime selects recipe classes and resolves dynamic props, merges known declarations and preserves scalar fallbacks. It never injects stylesheet rules into the DOM.
 
 Styles are evaluated only from build-time-safe dependencies. Browser-dependent code is excluded from evaluation or rejected with a diagnostic. Source locations, sourcemaps, stable class names, rebuild invalidation and development CSS updates are required. Compatibility with this repository's Vite 8/Rolldown pipeline must be verified before implementation proceeds beyond the integration prototype.
 
@@ -139,19 +135,19 @@ Styles are evaluated only from build-time-safe dependencies. Browser-dependent c
 
 The UI package publishes compiled JS, declarations and explicit CSS assets. Its consumers need neither WyW nor the plugin to render library components, switch shipped themes or select shipped recipe variants.
 
-Applications using their own `css`, token definitions, themes, recipes or responsive Box extraction install the build integration. Compiler APIs must fail clearly when called untransformed, rather than silently return empty styles. Build dependencies remain separate from browser entrypoints. Existing theme/styles/reset/native-controls export contracts remain supported.
+Applications using their own `css`, token definitions, themes, recipes or dynamic css.props compilation install the build integration. Compiler APIs must fail clearly when called untransformed, rather than silently return empty styles. Build dependencies remain separate from browser entrypoints. Existing theme/styles/reset/native-controls export contracts remain supported.
 
 ## Scope and migration
 
-First delivery includes the shared schema, configuration-driven tokens/themes, css/cx, cva/sva, Vite integration and Box hybrid behavior. Migration demonstrates one component recipe and one multipart recipe; wholesale CSS Module replacement is a separate task. However, complete replacement of the standalone clsx and class-variance-authority helpers is part of this delivery: migrate every production import, route legacy class joining through the engine, remove both direct dependencies, and prove neither package remains in published JavaScript or the dependency graph. Existing CSS Modules may remain as foreign class strings handled by cx.
+First delivery includes the shared schema, configuration-driven tokens/themes, css/cx, cva/sva, Vite integration and dynamic css.props behavior. Migration demonstrates one component recipe and one multipart recipe; wholesale CSS Module replacement is a separate task. However, complete replacement of the standalone clsx and class-variance-authority helpers is part of this delivery: migrate every production import, route legacy class joining through the engine, remove both direct dependencies, and prove neither package remains in published JavaScript or the dependency graph. Existing CSS Modules may remain as foreign class strings handled by cx.
 
-No runtime stylesheet injection, automatic theme detection, general wrapper-component inference, arbitrary dynamic responsive objects or universal CSS conflict solver is promised. Additional bundlers can be supported after Vite is validated.
+No runtime stylesheet injection, automatic theme detection, general wrapper-component inference, dynamic style object shapes or universal CSS conflict solver is promised. Additional bundlers can be supported after Vite is validated.
 
 ## Validation
 
 - Compiler fixtures verify extracted CSS, diagnostics, aliases, spreads, normalization, conditions and deterministic output.
 - Type fixtures verify token references, preset merges, conditional semantic tokens, partial named-theme overrides, variants and slots.
-- Runtime tests verify recipe defaults/compounds, composition and existing Box signals/render/style behavior.
+- Runtime tests verify recipe defaults/compounds, composition and css.props signals/unit behavior.
 - Packed consumer fixtures cover applications with and without the plugin, CSS imports, safe Node imports, external Preact and absence of compiler dependencies in browser bundles.
 - Browser checks cover nested light/dark modes and brand themes, responsive layouts, dynamic dimensions and style overrides.
 - Artifact and dependency checks reject clsx/class-variance-authority imports or bundled modules after migration; license notices are regenerated.

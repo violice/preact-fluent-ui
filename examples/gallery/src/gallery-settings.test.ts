@@ -74,3 +74,10 @@ it('keeps interaction shades on the same side of the contrast threshold', () => 
   expect(css).toContain('--color-primary-hover: color-mix(in srgb, #333333, black 12%)');
   expect(css).toContain('--color-primary-pressed: color-mix(in srgb, #333333, black 20%)');
 });
+it('ignores additional engine variable roots while reading legacy theme blocks', () => {
+  expect(
+    themeTokenBlocks(
+      ':root{--color-text:black} @media(dark){:root{--color-text:white}} @media(forced){:root{--color-text:CanvasText}} :root{--fui-colors-text:var(--color-text)}',
+    ),
+  ).toHaveLength(3);
+});

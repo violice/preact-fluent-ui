@@ -41,7 +41,6 @@ import {
   StatusBadge,
   CounterBadge,
   Text,
-  Box,
 } from '@violice/preact-fluent-ui';
 import type {
   AppShellProps,
@@ -91,11 +90,6 @@ import type {
   TextColor,
   TextRenderProps,
   TextRenderState,
-  BoxProps,
-  BoxLayoutProps,
-  BoxSpacing,
-  BoxRenderProps,
-  BoxRenderState,
 } from '@violice/preact-fluent-ui';
 
 // The export map must reject source imports, even with bundler module resolution.
@@ -1027,38 +1021,6 @@ export function TextContract() {
         Heading
       </Text>
       <Text render={<a href="/profile" />}>Profile</Text>
-    </>
-  );
-}
-
-// @ts-expect-error Box has no styling slots on its single root.
-const badBoxSlots: BoxProps = { classes: { root: 'box' } };
-// @ts-expect-error Layout props use CSS names rather than abbreviated aliases.
-const badBoxPadding: BoxProps = { paddingX: 'space-4' };
-// @ts-expect-error Display accepts the documented CSS layout values.
-const badBoxDisplay: BoxProps = { display: 'diagonal' };
-export type BoxNegativeContracts = [typeof badBoxSlots, typeof badBoxPadding, typeof badBoxDisplay];
-export function BoxContract() {
-  const spacing: BoxSpacing = 'space-4';
-  const layout: BoxLayoutProps = {
-    display: 'grid',
-    gap: spacing,
-    minWidth: 0,
-    marginInline: 'auto',
-  };
-  const props: BoxProps = { ...layout, gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' };
-  const root = (native: BoxRenderProps, state: BoxRenderState) => (
-    <section {...native} data-layout={state.layout.display} />
-  );
-  return (
-    <>
-      <Box {...props} render={root}>
-        Grid
-      </Box>
-      <Box render={<Card />} ref={createRef<HTMLElement>()} display="flex" gap="space-2">
-        Card
-      </Box>
-      <Box render={<span />}>Inline</Box>
     </>
   );
 }

@@ -16,7 +16,19 @@
     "./theme.css": "./dist/theme.css",
     "./styles.css": "./dist/styles.css",
     "./reset.css": "./dist/reset.css",
-    "./native-controls.css": "./dist/native-controls.css"
+    "./native-controls.css": "./dist/native-controls.css",
+    "./styling": {
+      "types": "./dist/styling/index.d.ts",
+      "import": "./dist/styling.js"
+    },
+    "./config": {
+      "types": "./dist/styling/config/index.d.ts",
+      "import": "./dist/config.js"
+    },
+    "./vite": {
+      "types": "./dist/styling/compiler/vite.d.ts",
+      "import": "./dist/vite.js"
+    }
   },
   "sideEffects": [
     "**/*.css"
@@ -45,10 +57,16 @@
     "test:package:all": "node scripts/test-package-all.mjs",
     "check:gallery": "node scripts/check-gallery.mjs",
     "test:gallery-artifact": "node --test scripts/check-gallery.test.mjs",
-    "test:gallery-preview": "node --test scripts/gallery-preview.test.mjs"
+    "test:gallery-preview": "node --test scripts/gallery-preview.test.mjs",
+    "test:styling-package": "node scripts/test-styling-package.mjs"
   },
   "peerDependencies": {
-    "preact": "^10.27.0"
+    "@wyw-in-js/processor-utils": "^2.5.0",
+    "@wyw-in-js/vite": "^2.5.1",
+    "magic-string": "^0.30.21",
+    "oxc-parser": "^0.131.0",
+    "preact": "^10.27.0",
+    "vite": "^8.3.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",
@@ -60,9 +78,9 @@
     "@types/node": "^24.5.2",
     "@wyw-in-js/processor-utils": "2.5.0",
     "@wyw-in-js/vite": "2.5.1",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
     "jsdom": "^30.1.1",
+    "magic-string": "0.30.21",
+    "oxc-parser": "0.131.0",
     "oxfmt": "^0.70.0",
     "oxlint": "^1.85.0",
     "preact": "^10.27.0",
@@ -70,5 +88,22 @@
     "typescript": "^7.0.2",
     "vite": "^8.3.1",
     "vitest": "^5.0.1"
+  },
+  "peerDependenciesMeta": {
+    "@wyw-in-js/vite": {
+      "optional": true
+    },
+    "@wyw-in-js/processor-utils": {
+      "optional": true
+    },
+    "oxc-parser": {
+      "optional": true
+    },
+    "magic-string": {
+      "optional": true
+    },
+    "vite": {
+      "optional": true
+    }
   }
 }

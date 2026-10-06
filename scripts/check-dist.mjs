@@ -49,7 +49,7 @@ for (const [index, source] of sourcemap.sources.entries()) {
   );
   assert(!/(?:^|\/)preact(?:\/|$)/.test(normalized), `Embedded Preact source: ${source}`);
   assert(
-    /^\.\.\/(?:src\/(?:utils\/(?:merge-classes|resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|module\.css)|(?:tooltip-(?:position|theme)|text-style)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css))|node_modules\/(?:clsx|class-variance-authority)\/dist\/[^/]+\.mjs)$/.test(
+    /^\.\.\/(?:src\/(?:utils\/(?:merge-classes|resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|styles\.ts|module\.css)|(?:tooltip-(?:position|theme)|text-style)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css)|styling\/(?:cx|conflicts|identity|normalize|recipe-runtime|style-props|css|cva|sva|token|index)\.ts))$/.test(
       normalized,
     ) && !/\.test\./.test(normalized),
     `Unrelated sourcemap source: ${source}`,
@@ -70,8 +70,8 @@ assert(
 );
 for (const dependency of ['class-variance-authority', 'clsx']) {
   assert(
-    graph.modules.some((id) => id.replaceAll('\\', '/').includes(`/node_modules/${dependency}/`)),
-    `${dependency} must be bundled`,
+    !graph.modules.some((id) => id.replaceAll('\\', '/').includes(`/node_modules/${dependency}/`)),
+    `${dependency} must not be bundled`,
   );
 }
 assert(
@@ -83,19 +83,40 @@ assert(
   `Unexpected runtime imports: ${graph.externalImports.join(', ')}`,
 );
 
+for (const entry of ['index', 'styling']) {
+  const browser = graph.entries[entry];
+  assert(browser, `Missing browser graph: ${entry}`);
+  assert(
+    browser.externalImports.every((id) => id === 'preact' || id.startsWith('preact/')),
+    `Build dependency in ${entry}`,
+  );
+  assert(
+    !browser.modules.some((id) =>
+      /(?:compiler|config)\/|node_modules\/(?:@wyw-in-js|oxc-parser|magic-string)/.test(id),
+    ),
+    `Compiler module in ${entry}`,
+  );
+}
+
 const declarationFiles = (await readdir(new URL('dist/', root), { recursive: true })).filter(
   (file) => file.endsWith('.d.ts'),
 );
 for (const file of declarationFiles) {
   const declarations = await readFile(new URL(`dist/${file}`, root), 'utf8');
+  const buildOnly = file.startsWith('styling/compiler/');
   assert(
-    !/\.css|vite|vitest|class-variance-authority|clsx/.test(declarations),
+    !/\.css|vitest|class-variance-authority|clsx/.test(declarations) &&
+      (buildOnly || !/\bfrom ['"]vite['"]/.test(declarations)),
     `Declaration exposes build dependencies: ${file}`,
   );
   for (const match of declarations.matchAll(/\b(?:from\s*|import\s*\()\s*['"]([^'"]+)['"]/g)) {
     const specifier = match[1];
     assert(
-      specifier.startsWith('.') || specifier === 'preact' || specifier.startsWith('preact/'),
+      specifier.startsWith('.') ||
+        specifier === 'preact' ||
+        specifier.startsWith('preact/') ||
+        (buildOnly &&
+          ['vite', 'magic-string', 'oxc-parser', '@wyw-in-js/processor-utils'].includes(specifier)),
       `Unexpected declaration dependency: ${specifier}`,
     );
   }
@@ -103,10 +124,10 @@ for (const file of declarationFiles) {
 
 const exportProbe = `
   const library = await import(${JSON.stringify(jsUrl.href)});
-  for (const name of ['DataToolbar', 'DataToolbarGroup', 'AppToolbar']) {
+  for (const name of ['DataToolbar', 'DataToolbarGroup', 'AppToolbar', 'Box']) {
     if (name in library) throw new Error('Removed export present: ' + name);
   }
-  for (const name of ['TextPreview', 'CodeBlock', 'Disclosure', 'DisclosureSummary', 'DisclosureContent', 'Spinner', 'LoadingState', 'Tooltip', 'Table', 'TableContainer', 'TableHeader', 'TableBody', 'TableFooter', 'TableRow', 'TableHeaderCell', 'TableCell', 'TableCaption', 'Pagination', 'AppShellToolbar', 'Toolbar', 'ToolbarGroup', 'DataList', 'DataListItem', 'DataListLabel', 'DataListValue', 'Separator', 'Switch', 'Checkbox', 'Field', 'Input', 'Textarea', 'Button', 'Card', 'InfoBar', 'CounterBadge', 'Text', 'Box', 'StatusBadge', 'Select', 'PageHeader', 'EmptyState', 'Icon', 'Modal', 'ConfirmDialog', 'DialogHeader', 'DialogBody', 'DialogFooter', 'Sidebar', 'SidebarHeader', 'SidebarNav', 'SidebarGroup', 'SidebarItem', 'SidebarFooter', 'SidebarBrand', 'AppShell', 'AppShellWorkspace', 'AppShellHeader', 'AppShellContent', 'AppShellFooter', 'mergeClasses', 'resolveClass', 'mergeProps', 'useRender']) {
+  for (const name of ['TextPreview', 'CodeBlock', 'Disclosure', 'DisclosureSummary', 'DisclosureContent', 'Spinner', 'LoadingState', 'Tooltip', 'Table', 'TableContainer', 'TableHeader', 'TableBody', 'TableFooter', 'TableRow', 'TableHeaderCell', 'TableCell', 'TableCaption', 'Pagination', 'AppShellToolbar', 'Toolbar', 'ToolbarGroup', 'DataList', 'DataListItem', 'DataListLabel', 'DataListValue', 'Separator', 'Switch', 'Checkbox', 'Field', 'Input', 'Textarea', 'Button', 'Card', 'InfoBar', 'CounterBadge', 'Text', 'StatusBadge', 'Select', 'PageHeader', 'EmptyState', 'Icon', 'Modal', 'ConfirmDialog', 'DialogHeader', 'DialogBody', 'DialogFooter', 'Sidebar', 'SidebarHeader', 'SidebarNav', 'SidebarGroup', 'SidebarItem', 'SidebarFooter', 'SidebarBrand', 'AppShell', 'AppShellWorkspace', 'AppShellHeader', 'AppShellContent', 'AppShellFooter', 'mergeClasses', 'resolveClass', 'mergeProps', 'useRender']) {
     if (typeof library[name] !== 'function') throw new Error(name + ' export is missing');
   }
 `;
@@ -176,5 +197,5 @@ for (const file of [
 }
 
 console.log(
-  `Verified ${targets.size} export targets, four CSS files, sourcemap, bundled helpers, external Preact, DOM-free import, declarations, notices, and npm pack contents.`,
+  `Verified ${targets.size} export targets, four CSS files, sourcemap, own styling helpers, external Preact, DOM-free import, declarations, notices, and npm pack contents.`,
 );

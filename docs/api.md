@@ -12,7 +12,6 @@ Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and 
 | --- | --- | --- |
 | Button / ButtonProps | button | `variant?: 'default' \| 'primary' \| 'subtle' \| 'danger'` defaults to default; `size?: 'default' \| 'compact' \| 'icon'` defaults to default; native `type` defaults to button |
 | Card / CardProps | section | `padding?: 'regular' \| 'none'`, default regular; native props and children |
-| Box / BoxProps | div by default, HTMLElement ref | Optional flex/grid, spacing, size and overflow props described below; `render?: VNode \| (props: BoxRenderProps, state: BoxRenderState) => VNode`; native props and additive `class` with `className` fallback |
 | InfoBar / InfoBarProps | div | `tone?: 'info' \| 'success' \| 'warning' \| 'error'` defaults to info; `title?: string`; role defaults to alert for error, status otherwise; explicit role is allowed; `classes?: { root?, title?, content? }` |
 | CounterBadge / CounterBadgeProps | span | Count with a fixed 24px height, minimum 24px width, rounded corners and native HTML props. Longer counts expand only the width. Numeric children, including zero, are displayed as supplied. Uses `class` with `className` fallback. |
 | Text / TextProps | span by default, HTMLElement ref | `preset?: JSX.Signalish<TextPreset>` defaults to body1; `color?: JSX.Signalish<TextColor>` defaults to inherit; `render?: VNode \| (props: TextRenderProps, state: TextRenderState) => VNode`; native attributes and additive `class` with `className` fallback |
@@ -42,50 +41,7 @@ Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and 
 
 ## Layout
 
-`Box` adds layout to a native or component root without another wrapper. The
-default root is `div`; without layout props it preserves the root's existing
-display, spacing, typography and appearance. It adds no role or focus behavior.
-
-| Group | Props |
-| --- | --- |
-| Flex | `display`, `flex`, `flexDirection`, `flexWrap`, `flexGrow`, `flexShrink`, `flexBasis`, `order` |
-| Alignment | `alignItems`, `alignContent`, `alignSelf`, `justifyContent`, `justifyItems`, `justifySelf` |
-| Grid | `gridTemplateColumns`, `gridTemplateRows`, `gridAutoColumns`, `gridAutoRows`, `gridAutoFlow`, `gridColumn`, `gridRow` |
-| Gaps | `gap`, `rowGap`, `columnGap` |
-| Padding | `padding`, `paddingInline`, `paddingBlock`, `paddingInlineStart`, `paddingInlineEnd`, `paddingBlockStart`, `paddingBlockEnd` |
-| Margin | `margin`, `marginInline`, `marginBlock`, `marginInlineStart`, `marginInlineEnd`, `marginBlockStart`, `marginBlockEnd` |
-| Size | `width`, `height`, `minWidth`, `maxWidth`, `minHeight`, `maxHeight` |
-| Overflow | `overflow`, `overflowX`, `overflowY` |
-
-All layout props accept signals. Spacing accepts `space-1`, `space-2`, `space-3`,
-`space-4`, `space-5`, `space-6` and `space-8`, resolving to the corresponding theme
-variables. For example, `gap="space-4"` uses `var(--space-4)`. Numbers are pixels
-for lengths; numeric flex factors, order and grid placement remain unitless.
-Other strings are native CSS values, such as `marginInline="auto"`, `width="100%"`
-or `gridTemplateColumns="repeat(2, minmax(0, 1fr))"`. Use `0` for zero spacing.
-
-```tsx
-<Box render={<section />} display="flex" flexWrap="wrap" gap="space-4">
-  <Text>Saved routes</Text>
-  <Button>Add route</Button>
-</Box>
-<Box render={<Card />} display="grid" gap="space-3">
-  <Text>Connection details</Text>
-</Box>
-```
-
-`BoxLayoutProps` exposes just the layout props. `BoxSpacing` documents the spacing
-values. Render callbacks receive `BoxRenderProps` and `BoxRenderState.layout`,
-the resolved layout before native style overrides; callbacks must forward all
-props and the composed callback ref. `BoxProps` accepts an `HTMLElement` ref.
-
-Layout props become inline styles. Object `style` overrides matching layout
-properties; a native string `style` is appended to the generated declarations.
-Render templates use the same [style merging as useRender](#utilities):
-object styles merge, while string styles replace the preceding style value.
-For responsive layout, leave the changing property in an application CSS class
-and omit that Box prop. Native `hidden` remains effective with explicit display;
-`hidden="until-found"` retains the browser's reveal behavior.
+Box was removed in favor of `css()` and `css.props()` from the styling subpath or generated bindings. Native elements and existing components keep their own props and refs. See [the styling guide](styling.md) for compiler setup, recipes, token types and dynamic variables.
 
 ## Typography
 

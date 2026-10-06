@@ -38,14 +38,6 @@ export type {
 } from './components/table';
 export type { ButtonProps } from './components/button';
 export { Card } from './components/card';
-export { Box } from './components/box';
-export type {
-  BoxProps,
-  BoxLayoutProps,
-  BoxSpacing,
-  BoxRenderProps,
-  BoxRenderState,
-} from './components/box';
 export type { CardProps } from './components/card';
 export { InfoBar } from './components/info-bar';
 export type { InfoBarProps } from './components/info-bar';

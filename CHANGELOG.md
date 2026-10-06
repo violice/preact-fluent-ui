@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add the WyW-based styling engine: css/cx, cva/sva, compound variants, typed token references, configuration and scoped themes.
+- Add css.props() to extract static CSS and assign dynamic values or signals to local CSS variables.
+- Remove Box. Use native elements or existing components with css()/css.props().
+- Replace bundled clsx and class-variance-authority with the library’s own engine; migrate Button, Field, InfoBar and StatusBadge recipes.
+
 ## 0.5.0 (2026-10-06)
 
 - Align AppShellFooter width with Content and keep AppShellToolbar inline padding aligned with Content on mobile. Existing shell sizing variables apply to all three.

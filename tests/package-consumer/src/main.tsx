@@ -31,7 +31,6 @@ import {
   StatusBadge,
   CounterBadge,
   Text,
-  Box,
 } from '@violice/preact-fluent-ui';
 import '@violice/preact-fluent-ui/theme.css';
 import '@violice/preact-fluent-ui/styles.css';
@@ -48,7 +47,7 @@ function App() {
       <AppShellWorkspace>
         <AppShellContent>
           <PageHeader title="Installed package" description="Controls and localized dialogs" />
-          <Box render={<Card padding="none" />} display="grid" gap="space-2">
+          <Card padding="none" style={{ display: 'grid', gap: 'var(--space-2)' }}>
             <InfoBar title="Ready" tone="success">
               Installed from an npm archive.
             </InfoBar>
@@ -99,7 +98,7 @@ function App() {
               )}
             </Tooltip>
             <EmptyState title="No saved profiles">Create a profile to start.</EmptyState>
-          </Box>
+          </Card>
           {dialog === 'modal' && (
             <Modal
               labelledBy="installed-dialog"

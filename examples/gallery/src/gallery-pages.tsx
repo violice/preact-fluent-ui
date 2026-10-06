@@ -1,3 +1,4 @@
+import { css } from '../../../dist/styling.js';
 import { Changelog } from './gallery-changelog';
 import { feedbackDocs, BusyButtonsExample } from './gallery-feedback-examples';
 import { utilityPages } from './gallery-utils';
@@ -24,7 +25,6 @@ import {
   TableCell,
   Button,
   Card,
-  Box,
   Checkbox,
   DialogBody,
   DialogFooter,
@@ -183,68 +183,34 @@ function TextExample() {
     </div>
   );
 }
-function BoxExample() {
-  const [wideGap, setWideGap] = useState(false);
+function StylingExample() {
+  const [width, setWidth] = useState(220);
   return (
-    <Box display="grid" gap="space-4" minWidth={0}>
-      <Checkbox
-        label="Larger gap"
-        checked={wideGap}
-        onChange={(event) => setWideGap(event.currentTarget.checked)}
-      />
-      <Box
-        render={<section aria-label="Flex layout" />}
-        display="flex"
-        flexWrap="wrap"
-        alignItems="center"
-        gap={wideGap ? 'space-6' : 'space-2'}
-        data-box="flex"
+    <div class={css({ display: 'grid', gap: '4', minWidth: 0 })}>
+      <label>
+        Width{' '}
+        <input
+          type="range"
+          min="120"
+          max="360"
+          value={width}
+          onInput={(event) => setWidth(Number(event.currentTarget.value))}
+        />
+      </label>
+      <section
+        aria-label="Dynamic styles"
+        {...css.props({
+          width,
+          padding: '4',
+          backgroundColor: 'surface',
+          color: 'text',
+          '&:hover': { backgroundColor: 'var(--color-surface-hover)' },
+          '@media (max-width: 600px)': { maxWidth: '100%' },
+        })}
       >
-        <Text>Saved routes</Text>
-        <CounterBadge>12</CounterBadge>
-        <Button>Add route</Button>
-      </Box>
-      <Box
-        render={<Card aria-label="Composed card" />}
-        display="grid"
-        gap="space-3"
-        data-box="card"
-      >
-        <Text preset="subtitle2" render={<h2 />}>
-          Connection details
-        </Text>
-        <Text color="muted" render={<p />}>
-          Card styling with Box layout, without another wrapper.
-        </Text>
-      </Box>
-      <Box
-        display="grid"
-        gridTemplateColumns="repeat(auto-fit, minmax(min(100%, 140px), 1fr))"
-        gap="space-3"
-        data-box="grid"
-      >
-        <Card>First column</Card>
-        <Card>Second column</Card>
-      </Box>
-      <Box
-        display="flex"
-        paddingInlineStart="space-4"
-        paddingInlineEnd="space-2"
-        paddingBlock="space-2"
-        dir="rtl"
-        data-box="logical"
-      >
-        <Text>Logical spacing follows writing direction.</Text>
-      </Box>
-      <Box render={<p />} margin={0}>
-        <Box render={<span />} data-box="inline">
-          Native inline root
-        </Box>
-      </Box>
-      <Box display="flex" hidden data-box="hidden">
-        Hidden layout
-      </Box>
-    </Box>
+        <Text>Local width variable: {width}px</Text>
+      </section>
+    </div>
   );
 }
 function CounterExample() {
@@ -400,46 +366,23 @@ const docs: ComponentDoc[] = [
     note: 'The optional reset.css clears native h1–h6 and p margins and typography. Text preserves native block or inline display and uses the theme body font.',
   },
   {
-    title: 'Box',
-    slug: 'box',
-    purpose: 'Compose a native or component root with flex, grid, spacing and sizing props.',
-    example: BoxExample,
-    code: '<Box render={<section />} display="flex" flexWrap="wrap" alignItems="center" gap="space-4">\n  <Text>Saved routes</Text>\n  <Button>Add route</Button>\n</Box>\n\n<Box render={<Card />} display="grid" gap="space-3">\n  <Text>Connection details</Text>\n</Box>',
+    title: 'Styling engine',
+    slug: 'styling-engine',
+    purpose: 'Compile typed CSS objects and dynamic local variables without a layout wrapper.',
+    example: StylingExample,
+    code: 'const layout = css({ display: "flex", gap: "4" });\n<section class={layout}>...</section>\n\n<div {...css.props({ width: measuredWidth })} />',
     props: [
+      ['css(styles)', 'string', 'Static styles become atomic classes.'],
+      ['css.props(styles)', '{ class, style }', 'Dynamic leaves become local CSS variables.'],
       [
-        'render',
-        'VNode | (props: BoxRenderProps, state: BoxRenderState) => VNode',
-        'Default div. Composes props, styles and refs without a wrapper; callbacks must forward props and ref.',
-      ],
-      [
-        'Flex props',
-        'display, flex, flexDirection, flexWrap, flexGrow, flexShrink, flexBasis, order',
-        'Use CSS values. Signals are resolved during rendering.',
-      ],
-      [
-        'Grid props',
-        'gridTemplateColumns, gridTemplateRows, gridAutoColumns, gridAutoRows, gridAutoFlow, gridColumn, gridRow',
-        'Use native CSS track definitions and placement.',
-      ],
-      [
-        'Alignment',
-        'alignItems, alignContent, alignSelf, justifyContent, justifyItems, justifySelf',
-        'Applies CSS alignment on containers or items.',
-      ],
-      [
-        'Spacing',
-        'gap, rowGap, columnGap; padding/margin with Inline, Block and Start/End variants',
-        'space-1/2/3/4/5/6/8 use theme tokens. Numbers are pixels; strings are CSS values.',
-      ],
-      [
-        'Size and overflow',
-        'width, height, minWidth, maxWidth, minHeight, maxHeight, overflow, overflowX, overflowY',
-        'No size or clipping is imposed by default.',
+        'cva / sva',
+        'Recipe functions',
+        'Variants and compound variants for single or multiple slots.',
       ],
     ],
     accessibility:
-      'Choose the root according to its meaning. Box adds no role, focus behavior or typography. Native hidden remains effective with explicit display.',
-    note: 'Layout props become inline styles. Keep responsive properties in application CSS and omit the corresponding Box prop. Native style overrides matching layout props; render templates follow useRender style merging.',
+      'Use native semantic elements and existing components; styling adds no role or focus behavior.',
+    note: 'Requires fluentStyles() in Vite for your own style definitions. Built-in library components use precompiled CSS.',
   },
   {
     title: 'CounterBadge',
@@ -1003,7 +946,11 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
                 {member.title}
               </Text>
             )}
-            <p>Import {member.title}Props for the complete TypeScript contract.</p>
+            {member.title === 'Styling engine' ? (
+              <p>Import css, cx, cva and sva from the styling entry or generated bindings.</p>
+            ) : (
+              <p>Import {member.title}Props for the complete TypeScript contract.</p>
+            )}
             {doc.members && <p>{member.purpose}</p>}
             <Table
               class={styles.propsTable}
@@ -1019,19 +966,23 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
               <TableBody>
                 {[
                   ...member.props,
-                  member.title === 'Tooltip'
-                    ? ([
-                        'class / className',
-                        'Signalish<string | undefined>',
-                        'Add a portal root class. Caller native trigger props and refs belong in triggerProps.',
-                      ] as Prop)
-                    : member.title === 'ConfirmDialog'
-                      ? ([
-                          'class / className',
-                          'Signalish<string | undefined>',
-                          'Add a root class. className is the fallback. Other native HTML props are not accepted.',
-                        ] as Prop)
-                      : native,
+                  ...(member.title === 'Styling engine'
+                    ? []
+                    : [
+                        member.title === 'Tooltip'
+                          ? ([
+                              'class / className',
+                              'Signalish<string | undefined>',
+                              'Add a portal root class. Caller native trigger props and refs belong in triggerProps.',
+                            ] as Prop)
+                          : member.title === 'ConfirmDialog'
+                            ? ([
+                                'class / className',
+                                'Signalish<string | undefined>',
+                                'Add a root class. className is the fallback. Other native HTML props are not accepted.',
+                              ] as Prop)
+                            : native,
+                      ]),
                 ].map(([name, type, description]) => (
                   <TableRow key={name}>
                     <TableHeaderCell scope="row">{name}</TableHeaderCell>

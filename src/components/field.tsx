@@ -3,7 +3,7 @@ import { forwardRef } from 'preact/compat';
 import { useId } from 'preact/hooks';
 import { mergeClasses } from '../utils/merge-classes';
 import { resolveClass } from '../utils/resolve-class';
-import styles from './field.module.css';
+import { fieldClasses } from './field.styles';
 
 export type ValidationState = 'none' | 'error' | 'warning' | 'success';
 
@@ -47,6 +47,7 @@ export const Field = /* @__PURE__ */ forwardRef<HTMLDivElement, FieldProps>(func
   },
   ref,
 ) {
+  const styles = fieldClasses({ validationState });
   const generatedId = useId();
   const id = controlId ?? generatedId;
   const hasHint = hasContent(hint);
@@ -64,7 +65,7 @@ export const Field = /* @__PURE__ */ forwardRef<HTMLDivElement, FieldProps>(func
     <div
       {...props}
       ref={ref}
-      class={mergeClasses(styles.field, resolveClass(classProp, className), classes?.root)}
+      class={mergeClasses(styles.root, resolveClass(classProp, className), classes?.root)}
     >
       <label htmlFor={id} class={mergeClasses(styles.label, classes?.label)}>
         {label}
@@ -81,10 +82,7 @@ export const Field = /* @__PURE__ */ forwardRef<HTMLDivElement, FieldProps>(func
         </div>
       )}
       {hasValidation && (
-        <div
-          id={`${id}-validation`}
-          class={mergeClasses(styles.validation, styles[validationState], classes?.validation)}
-        >
+        <div id={`${id}-validation`} class={mergeClasses(styles.validation, classes?.validation)}>
           {validationMessage}
         </div>
       )}

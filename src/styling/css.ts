@@ -1,0 +1,22 @@
+import type { JSX } from 'preact';
+import type { StyleObject } from './types';
+import type { StyleProps } from './style-props';
+export interface DynamicStyleObject {
+  [property: string]: JSX.Signalish<string | number | null | undefined> | DynamicStyleObject;
+}
+export interface CssFunction {
+  (...styles: StyleObject[]): string;
+  props(style: DynamicStyleObject): StyleProps;
+}
+export const css: CssFunction = Object.assign(
+  (..._styles: StyleObject[]): string => {
+    throw new Error('css() requires the Fluent styling compiler; configure fluentStyles() in Vite');
+  },
+  {
+    props(_style: DynamicStyleObject): StyleProps {
+      throw new Error(
+        'css.props() requires the Fluent styling compiler; configure fluentStyles() in Vite',
+      );
+    },
+  },
+);

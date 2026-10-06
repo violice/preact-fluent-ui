@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build the approved WyW-based styling foundation with Panda-like tokens/themes, cva/sva and compatible Box layout props.
+**Goal:** Build the approved WyW-based styling foundation with Panda-like tokens/themes, cva/sva and automatic dynamic css.props.
 
-**Architecture:** A shared schema and build-time processors emit atomic CSS and compact runtime selectors. The package ships explicit CSS and compiled components; an optional consumer Vite integration compiles user-authored styles and static Box props. Existing CSS Modules coexist during migration.
+**Architecture:** A shared schema and build-time processors emit atomic CSS and compact runtime selectors. The package ships explicit CSS and compiled components; an optional consumer Vite integration compiles user-authored styles and dynamic css.props. Existing CSS Modules coexist during migration.
 
 **Tech stack:** TypeScript, Preact, WyW-in-JS, Vite 8/Rolldown, Vitest, existing Node artifact checks.
 
@@ -15,7 +15,7 @@
 - API names: css, cx, token, cva, sva, RecipeVariant, RecipeVariantProps; configuration helpers: defineConfig, definePreset.
 - Preserve explicit theme/styles/reset/native-controls CSS exports, external Preact and safe Node imports.
 - No runtime stylesheet injection or automatic browser theme selection.
-- Preserve Box scalar values, signals, render state, refs, hidden behavior and explicit style precedence.
+- User revision: remove Box. Preserve dynamic values through css.props-generated local variables; no Box JSX extractor.
 - Conditional semantic tokens accept scope selectors and at-rules, not element interaction states.
 - All declared cva/sva branches compile even when their selections are runtime values.
 - Compiler/config code must not enter browser bundles. No application migration, publication or push is part of this plan.
@@ -25,7 +25,7 @@
 
 ## Review focus
 
-- An arbitrary spread after a Box prop can override it; compilation must preserve JSX evaluation and precedence (Task 6).
+- JSX spreads and explicit class/style props retain normal evaluation and precedence; css.props lowers only its explicit style object (Task 6).
 - A nested brand inherits the outer mode but must not accidentally inherit outer primitive aliases (Tasks 3 and 8).
 - A shorthand overridden by one longhand must retain other sides, including RTL logical properties (Tasks 2 and 8).
 - Different application configurations must not share stale class/token output through compiler caches (Tasks 5 and 7).
@@ -37,7 +37,7 @@ New `src/styling/` holds browser-safe types, class metadata/composition, selecto
 
 New `tests/styling-consumer/` holds build fixtures with a dedicated Node test runner, separate from jsdom tests. `src/styling/**/*.test.ts` contains focused unit tests; compiler tests select the Node environment explicitly. Compiler/config declarations and exports are split from browser entrypoints through multi-entry build output.
 
-Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.json`, `scripts/build-css.mjs`, `scripts/check-dist.mjs` and package fixture tooling only as their owning task requires. Modify Box in Task 6; migrate Button and Field in Task 8. Keep `src/utils/merge-classes.ts` compatible during early tasks; replace its implementation with an engine adapter in Task 9.
+Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.json`, `scripts/build-css.mjs`, `scripts/check-dist.mjs` and package fixture tooling only as their owning task requires. Remove Box in Task 6; migrate Button and Field in Task 8. Keep `src/utils/merge-classes.ts` compatible during early tasks; replace its implementation with an engine adapter in Task 9.
 
 ## Task 1: Prove WyW integration with the current toolchain
 
@@ -101,17 +101,16 @@ Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.jso
 - [ ] Configure library tests to compile style definitions and exercise both dev and production fixtures. Assert editing a token updates emitted CSS and types without requiring a clean manual rebuild. Prototype fixtures remain as regression tests against integration changes.
 - [ ] Run focused tests and `npm run build`; commit `feat: integrate styling compiler with Vite`.
 
-## Task 6: Hybrid Box and safe JSX extraction
+## Task 6: Dynamic css.props and Box removal (user revision)
 
-**Files:** Modify `src/components/box.tsx`, `box.test.tsx`; create `src/styling/{box-values.ts,box-layout.ts}`, `src/styling/compiler/{box-table.ts,box-jsx.ts}`, tests `compiler/box-jsx.test.ts`, `box-layout.test.ts`.
+**Files:** Create `src/styling/{style-props.ts,style-props.test.tsx}`, `src/styling/compiler/dynamic.ts`; modify css types, integration fixtures, library exports, gallery and consumer contracts. Remove Box source, CSS and tests.
 
-**Interfaces:** `resolveBoxLayout(props): { layout: JSX.CSSProperties; className: string; style: JSX.CSSProperties }` returns resolved layout for existing render state plus class/inline output. `generateBoxTable(config): { values: BoxValueTable; css: string }` generates individual property-value classes. `transformBoxJsx(code: string, id: string, context: CompilerContext): TransformResult` runs before JSX lowering and recognizes actual import bindings.
+**Interfaces:** css.props(object) returns `{class, style}`. The early pass lowers dynamic leaves to variable references consumed by the common css processor; the browser helper resolves signals and numeric units. Import aliases and lexical shadows must be respected.
 
-- [ ] Extend Box tests before changing behavior: numeric units, string styles, native overrides, signals, hidden/until-found, ref composition and render-state layout. Add compiler assertions for aliased imports, shadowed local Box identifiers, expressions with side effects and spreads before/after fixed props. Side effects must execute once and in original order.
-- [ ] Run `npx vitest run src/components/box.test.tsx src/styling/box-layout.test.ts src/styling/compiler/box-jsx.test.ts` and observe failures for the new class/compilation cases while existing behavior passes.
-- [ ] Implement finite values from the shared schema, arbitrary scalar fallback and optional variable carrier rules. Retain Box's current style-string handling and compatibility spacing aliases. Exclude render callback instances from extraction initially, preserving state.layout exactly.
-- [ ] Implement safe static extraction and configured responsive objects. If spread precedence is uncertain, leave scalar props untouched; a responsive object that cannot safely compile is a source-located build error, never silently dropped. Uncompiled responsive objects throw a clear runtime error. Dynamic responsive objects are rejected; ordinary signal values remain valid scalar behavior.
-- [ ] Run focused tests, typecheck and library build; verify generated finite classes are individual rules rather than layout combinations. Commit `feat: compile Box styles with runtime compatibility`.
+- [ ] Test dynamic width with px, unitless opacity, signals, null, token values, nested responsive leaves and expression evaluation order.
+- [ ] Verify missing transformation fails before implementation, then implement binding-aware lowering with sourcemaps. Reject spreads/dynamic shapes/computed keys/methods rather than silently omitting them.
+- [ ] Remove Box exports/source/gallery/API contracts and replace its examples with css()/css.props() on semantic elements. Document the breaking change and ordinary JSX class/style merge precedence.
+- [ ] Run integration, signal, gallery, type and package checks; commit `feat: replace Box with compiled dynamic style props`.
 
 ## Task 7: Package boundaries and packed consumers
 
@@ -119,7 +118,7 @@ Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.jso
 
 **Interfaces:** Exports `./styling` (browser-safe), `./config`, `./vite`; exported compiled Fluent preset from config entry. Existing CSS assets retain their public paths; generated component/utility CSS is included in styles.css and generated preset variables in theme.css. Consumer-generated CSS is a separate Vite-managed asset. Entry modules do not import CSS automatically.
 
-- [ ] Add packed tests for plain consumers with no WyW installed: library imports and shipped variants/themes work, existing CSS imports resolve, and dynamic Box scalar values render. Compiled consumer tests import generated bindings and exercise custom tokens, css/cva/sva, responsive Box and alternate theme config.
+- [ ] Add packed tests for plain consumers with no WyW installed: library imports and shipped variants/themes work, existing CSS imports resolve, and dynamic css.props values render. Compiled consumer tests import generated bindings and exercise custom tokens, css/cva/sva, responsive css.props and alternate theme config.
 - [ ] Run `node --test tests/styling-consumer/run.test.mjs` and confirm missing exports fail.
 - [ ] Implement multi-entry ESM output and declarations; update artifact graphs to check every entry separately. Compiler dependencies may appear only in build-only entries. Assert compiler/config entries are not transitively reachable from root/styling browser entries, Preact stays external, and cold/DOM-trapped Node imports work.
 - [ ] Verify two packed consumer builds with distinct configs and generated directories produce independent output; stale generated types cannot silently accept removed tokens. Integrate the fixture runner into existing package validation without weakening existing consumers or peer-version coverage.
@@ -135,7 +134,7 @@ Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.jso
 - [ ] Run the current Button/Field tests before migration, then add assertions for generated style output and theme switching; demonstrate failures only for new expected integration behavior.
 - [ ] Move styles into cva/sva definitions, retaining exact current values/selectors. Keep difficult legacy rules in CSS Modules if the compiler does not yet support them; document each retained rule. Remove the old CVA import from Button; retain the dependency until Task 9 migrates all remaining production consumers.
 - [ ] Add gallery examples and README sections for plugin-free usage, compiler setup, tokens/presets/extend, conditional semantic tokens, brand scopes, cva/sva/types and dynamic scalar limitations. Check code samples in the compiled consumer fixture.
-- [ ] Use the T3 collaborative preview to verify same-element/nested brand and modes, responsive widths, signals, shorthand overrides in LTR/RTL and Button/Field keyboard states. Assert computed styles for scope cases rather than relying solely on screenshots. Record browser evidence and any target-runtime limits.
+- [ ] Use the T3 collaborative preview to verify same-element/nested brand and modes, responsive widths, dynamic variables, shorthand overrides in LTR/RTL and Button/Field keyboard states. Assert computed styles for scope cases rather than relying solely on screenshots. Record browser evidence and any target-runtime limits.
 - [ ] Run `npm run check`, `npm run build`, `npm run test:package:all`, the styling consumer runner and gallery build. Update license notices for introduced dependencies and rerun notices checks. Commit `feat: adopt styling recipes in Button and Field`.
 
 ## Task 9: Remove standalone clsx and class-variance-authority
@@ -159,6 +158,15 @@ Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.jso
 
 ## Plan self-review
 
-Coverage: tokens/presets/themes/types → Task 3; cva/sva → Task 4; atomic composition → Task 2; WyW/Vite → Tasks 1 and 5; Box → Task 6; distribution → Task 7; migration/docs/browser verification → Task 8; full clsx/CVA removal and artifact checks → Task 9. All five Review Focus cases have explicit tests in their owning tasks. Shared signatures are defined once in Interfaces blocks. The Task 1 stop condition prevents speculative toolchain compatibility from becoming an assumption in later work.
+Coverage: tokens/presets/themes/types → Task 3; cva/sva → Task 4; atomic composition → Task 2; WyW/Vite → Tasks 1 and 5; css.props/Box removal → Task 6; distribution → Task 7; migration/docs/browser verification → Task 8; full clsx/CVA removal and artifact checks → Task 9. All five Review Focus cases have explicit tests in their owning tasks. Shared signatures are defined once in Interfaces blocks. The Task 1 stop condition prevents speculative toolchain compatibility from becoming an assumption in later work.
 
 Execution is not started by writing this plan. Review the plan and select inline execution or task-by-task delegated execution before implementation.
+
+Implementation rulings: class names encode property/context identity without a runtime registry; mixed physical/logical spacing is rejected. User revisions supersede prior hybrid Box requirements and authorize css.props automatic local variables.
+
+
+## Delivery status (2026-10-06)
+
+The user authorized continuing beyond the feasibility prototype, then replaced hybrid Box with css()/css.props(). Implementation is consolidated into the first engine delivery rather than the original per-task commit sequence. Tasks 2–9 have working implementations and integration checks; file boundaries were combined where they share one responsibility (one recipe processor/compiler, token/theme generation together). The acceptance report records validation and remaining limits; unchecked historical substeps are not an assertion of full Panda API parity.
+
+See [acceptance report](../reports/2026-10-06-styling-acceptance.md). Class identity is encoded in names instead of runtime registration. Compiler-generated dynamic shorthands use independent longhand variables. Precise positional diagnostics, exhaustive CSS property/token typing and broader shorthand support remain follow-up work.

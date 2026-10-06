@@ -30,26 +30,19 @@ Render only one active Modal. Give Modal `labelledBy` the unique id used by its 
 
 ## Layout composition
 
-Use `Box` for simple layout containers and compose semantic roots through `render`:
+Use compiled classes on native elements or existing components:
 
 ```tsx
-import { Box, Card, Text } from '@violice/preact-fluent-ui';
+import { Card, Text } from '@violice/preact-fluent-ui';
+import { css } from './styled-system/css';
 
-<Box render={<Card />} display="grid" gap="space-4">
+<Card class={css({ display: 'grid', gap: 'space-4' })}>
   <Text preset="subtitle2" render={<h2 />}>Connection details</Text>
   <Text color="muted">Selected VPN profile</Text>
-</Box>
+</Card>
 ```
 
-Box preserves Card's styling and adds no wrapper. Spacing tokens such as
-`space-4` use the current theme's variables. Numeric lengths mean pixels;
-`marginInline="auto"` and CSS grid track definitions also work. Layout props
-accept signals. Logical spacing follows writing direction.
-
-Keep breakpoint rules in application CSS and omit the corresponding Box prop,
-which would otherwise apply an inline value. For example, supply `display="grid"`
-and `gap="space-4"`, while a class controls responsive `grid-template-columns`.
-See the [layout API](api.md#layout) for the supported props and style precedence.
+Box has been removed. Use `css.props()` for dynamic values or signals and `css()` for static and responsive styles. See [the styling guide](styling.md) for setup and class/style composition.
 
 ## Typography and native HTML reset
 
@@ -105,7 +98,7 @@ Compose `AppShell`, `AppShellWorkspace`, `AppShellHeader`, `AppShellToolbar`, `A
 
 `SidebarItem render` replaces its root with a VNode or callback. `as` still selects native types and defaults. A custom Link must forward composed props, children and ref to its native root. Do not nest an anchor or button inside another interactive root. `useRender` composes refs; `mergeProps` combines props with consumer handlers first and stops earlier handlers after `preventDefault()`. See the [utility API](api.md#utilities).
 
-Version 0.5.0 adds Text, Box and CounterBadge, plus Card padding="none" and Table dividers="between" for edge-to-edge tables. Use Text for explicit typography after importing reset.css and Box for layout without additional wrappers.
+Version 0.5.0 added Text and CounterBadge, plus Card padding="none" and Table dividers="between" for edge-to-edge tables. The upcoming styling engine replaces Box with css()/css.props().
 
 Version 0.4.0 includes data components, loading feedback, Tooltip, TextPreview, CodeBlock and AppShellToolbar. Toolbar and ToolbarGroup replace the former DataToolbar names without compatibility aliases. AppShellToolbar belongs directly inside AppShellWorkspace alongside Header and Content.
 

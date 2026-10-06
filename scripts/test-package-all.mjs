@@ -48,6 +48,7 @@ try {
   for (const preact of [lock.packages['node_modules/preact'].version, '10.27.0']) {
     await run([join(root, 'scripts/test-package.mjs'), '--tarball', archive, '--preact', preact]);
   }
+  await run([join(root, 'scripts/test-styling-package.mjs')]);
   if (process.env.GITHUB_OUTPUT) {
     await appendFile(process.env.GITHUB_OUTPUT, `archive=${packed[0].filename}\n`);
   }

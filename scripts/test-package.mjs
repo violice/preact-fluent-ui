@@ -151,10 +151,13 @@ async function inspectLibrary(directory, files) {
   );
   assert.deepEqual(Object.keys(manifest.exports).sort(), [
     '.',
+    './config',
     './native-controls.css',
     './reset.css',
     './styles.css',
+    './styling',
     './theme.css',
+    './vite',
   ]);
   for (const css of ['theme', 'styles', 'reset', 'native-controls']) {
     assert.equal(
@@ -177,7 +180,20 @@ async function inspectLibrary(directory, files) {
     );
   }
   for (const id of imports) {
-    assert(id === 'preact' || id.startsWith('preact/'), `Unexpected library runtime import: ${id}`);
+    assert(
+      id.startsWith('.') ||
+        id === 'preact' ||
+        id.startsWith('preact/') ||
+        id.startsWith('node:') ||
+        [
+          'vite',
+          'magic-string',
+          'oxc-parser',
+          '@wyw-in-js/vite',
+          '@wyw-in-js/processor-utils',
+        ].includes(id),
+      `Unexpected library module import: ${id}`,
+    );
   }
   assert(imports.size > 0, 'Library must retain its external Preact imports');
   for (const file of files.filter((file) => file.endsWith('.map'))) {
@@ -202,7 +218,7 @@ async function inspectLibrary(directory, files) {
         `Library must not embed Preact: ${source}`,
       );
       assert(
-        /^\.\.\/(?:src\/(?:utils\/(?:merge-classes|resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|module\.css)|(?:tooltip-(?:position|theme)|text-style)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css))|node_modules\/(?:clsx|class-variance-authority)\/dist\/[^/]+\.mjs)$/.test(
+        /^\.\.\/(?:src\/(?:utils\/(?:merge-classes|resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|styles\.ts|module\.css)|(?:tooltip-(?:position|theme)|text-style)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css)|styling\/(?:cx|conflicts|identity|normalize|recipe-runtime|style-props|css|cva|sva|token|index)\.ts|styling\/config\/(?:fluent-preset|define-config|resolve-config|index)\.ts|styling\/compiler\/(?:vite|processor|atomic|tokens|dynamic|recipes)\.ts))$/.test(
           normalized,
         ) && !/\.test\./.test(normalized),
         `Unrelated source content in published map: ${source}`,
@@ -216,8 +232,8 @@ async function inspectLibrary(directory, files) {
   const librarySources = maps.flatMap((map) => map.sources);
   for (const helper of ['clsx', 'class-variance-authority']) {
     assert(
-      librarySources.some((source) => source.includes(`/node_modules/${helper}/`)),
-      `${helper} must be bundled`,
+      !librarySources.some((source) => source.includes(`/node_modules/${helper}/`)),
+      `${helper} must not be bundled`,
     );
     assert(
       ![...imports].some((id) => id === helper || id.startsWith(`${helper}/`)),
@@ -286,7 +302,7 @@ async function inspectConsumer(directory, mode) {
     'Button must have live generated mappings',
   );
   const unusedSources = Object.keys(mapped).filter((source) =>
-    /\/src\/(?:components\/(?:modal|confirm-dialog|dialog-content|card|info-bar|status-badge|counter-badge|text|box|select|field|input|textarea|checkbox|switch|page-header|empty-state|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
+    /\/src\/(?:components\/(?:modal|confirm-dialog|dialog-content|card|info-bar|status-badge|counter-badge|text|select|field|input|textarea|checkbox|switch|page-header|empty-state|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
       source,
     ),
   );

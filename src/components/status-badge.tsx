@@ -1,15 +1,7 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { cva } from 'class-variance-authority';
+import { badgeClasses } from './status-badge.styles';
 import { mergeClasses } from '../utils/merge-classes';
-import styles from './status-badge.module.css';
-
-const badgeClasses = cva(styles.badge, {
-  variants: {
-    tone: { neutral: null, success: styles.success, warning: styles.warning, error: styles.error },
-  },
-  defaultVariants: { tone: 'neutral' },
-});
 
 export type StatusBadgeProps = JSX.HTMLAttributes<HTMLSpanElement> & {
   tone?: 'neutral' | 'success' | 'warning' | 'error';

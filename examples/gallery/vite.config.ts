@@ -3,11 +3,16 @@ import { resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import preact from '@preact/preset-vite';
 import { defineConfig } from 'vite';
+import { fluentStyles } from '../../src/styling/compiler/vite.ts';
 
 export default defineConfig({
   root: fileURLToPath(new URL('.', import.meta.url)),
   base: process.env.GALLERY_BASE ?? '/',
   plugins: [
+    fluentStyles({
+      outdir: '../../.artifacts/gallery-styled-system',
+      sources: ['../../../dist/styling.js'],
+    }),
     {
       name: 'gallery-static-preview',
       configurePreviewServer(server) {

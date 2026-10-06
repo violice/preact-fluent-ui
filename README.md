@@ -33,11 +33,15 @@ export function Example() {
 
 JavaScript imports do not load CSS. `theme.css` provides root tokens and the system light/dark color scheme. `styles.css` supplies every component's required styling. Reset and native-controls are optional. System fonts are used without distributing font files.
 
+## Styling engine
+
+Use `css()` for compiled classes, `css.props()` for dynamic values and `cva()` / `sva()` for recipes. Box has been removed; apply styles to a native element or an existing component. See [the styling guide](docs/styling.md) for compiler setup, tokens and scoped themes. Components ship precompiled CSS and do not require the compiler.
+
 ## Limitations
 
-Only one Modal may be active, and portaled dialogs use the root theme. Nested themes and ThemeProvider are not supported. The application owns layout sizing, responsive navigation, routing and business state.
+Only one Modal may be active, and portaled dialogs use the root theme. Scoped themes use data attributes; there is no ThemeProvider. The application owns layout sizing, responsive navigation, routing and business state.
 
-`styles.css` includes all component styles, even when you import only one component. Preact is a peer dependency; CVA and clsx are bundled and need no separate installation.
+`styles.css` includes all component styles, even when you import only one component. Preact is a peer dependency. Class composition and recipes use the library’s own styling engine.
 
 Forced-colors and reduced-motion CSS rules are included, but manual Windows verification is still pending. See [the pending Windows checks](docs/visual-acceptance.md#pending-windows-checks).
 
