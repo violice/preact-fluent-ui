@@ -134,3 +134,14 @@ describe('layout', () => {
       expect(screen.getByRole('region').hasAttribute(prop)).toBe(false);
   });
 });
+it('puts owned title and description styles on their slots', () => {
+  render(
+    <>
+      <PageHeader title="Owned page title" description="Owned page description" />
+      <EmptyState title="Owned empty title">No rows</EmptyState>
+    </>,
+  );
+  for (const text of ['Owned page title', 'Owned page description', 'Owned empty title']) {
+    expect(screen.getByText(text).className).toContain('pfui_');
+  }
+});

@@ -1,5 +1,5 @@
 import { css } from '../../styling';
-export const counterBadgeClasses = css({
+export const counterBadgeClass = css({
   display: 'inline-grid',
   placeItems: 'center',
   boxSizing: 'border-box',
@@ -27,4 +27,3 @@ export const counterBadgeClasses = css({
     background: 'Canvas',
   },
 });
-export default { badge: counterBadgeClasses };

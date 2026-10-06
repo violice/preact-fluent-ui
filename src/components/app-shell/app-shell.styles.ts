@@ -23,26 +23,6 @@ export const appShellClasses = sva({
         minWidth: '0',
         height: '100dvh',
       },
-      '& > [data-app-shell-workspace]': {
-        margin: '8px',
-        border: '1px solid var(--color-border)',
-        borderRadius: '12px',
-      },
-      "&[data-navigation-layout='rail']": {
-        gridTemplateColumns: 'var(--app-shell-rail-width, 64px) minmax(0, 1fr)',
-      },
-      "&[data-navigation-layout='horizontal']": {
-        gridTemplateColumns: 'minmax(0, 1fr)',
-        gridTemplateRows: 'auto 1fr',
-      },
-      "&[data-navigation-layout='horizontal'] > [data-sidebar]": {
-        position: 'static',
-        height: 'auto',
-      },
-      "&[data-navigation-layout='horizontal'] > [data-app-shell-workspace]": {
-        margin: '0',
-        borderRadius: '0',
-      },
       '&[hidden]': {
         display: 'none !important',
       },
@@ -92,6 +72,42 @@ export const appShellClasses = sva({
       flex: '1',
       '&[hidden]': {
         display: 'none !important',
+      },
+    },
+  },
+  variants: {
+    navigationLayout: {
+      expanded: {
+        workspace: {
+          margin: '8px',
+          border: '1px solid var(--color-border)',
+          borderRadius: '12px',
+        },
+      },
+      rail: {
+        workspace: {
+          margin: '8px',
+          border: '1px solid var(--color-border)',
+          borderRadius: '12px',
+        },
+        shell: {
+          gridTemplateColumns: 'var(--app-shell-rail-width, 64px) minmax(0, 1fr)',
+        },
+      },
+      horizontal: {
+        workspace: {
+          margin: '0',
+          border: '1px solid var(--color-border)',
+          borderRadius: '0',
+        },
+        shell: {
+          gridTemplateColumns: 'minmax(0, 1fr)',
+          gridTemplateRows: 'auto 1fr',
+          '& > [data-sidebar]': {
+            position: 'static',
+            height: 'auto',
+          },
+        },
       },
     },
   },

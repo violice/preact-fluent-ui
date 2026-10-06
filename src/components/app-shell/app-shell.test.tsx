@@ -109,16 +109,36 @@ it('updates all navigation layouts from a signal without adding landmarks', asyn
   }
 });
 
-it('declares reset-independent geometry with direct component selectors and theme colors', () => {
+it('declares reset-independent geometry, scoped sidebar integration and theme colors', () => {
   expect(css).toContain('--app-shell-navigation-width, 248px');
   expect(css).toContain('--app-shell-rail-width, 64px');
   expect(css).toContain('--app-shell-content-max-width, 1240px');
   expect(css).toContain('--app-shell-content-padding, 24px');
   expect(css).toMatch(/min-height:\s*100dvh/);
   expect(css).toMatch(/>\s*\[data-sidebar\]/);
-  expect(css).toMatch(/>\s*\[data-app-shell-workspace\]/);
+  expect(css).not.toContain('[data-navigation-layout=');
+  expect(css).toContain('border-radius:12px');
   expect(css).toContain('box-sizing:border-box');
   expect(css).toContain('margin-inline-start:auto');
   expect(css).toContain('var(--color-surface)');
   expect(css).not.toContain('@media');
+});
+it('passes workspace variant slots directly and isolates nested shells', () => {
+  const { rerender } = render(
+    <AppShell navigationLayout="expanded">
+      <AppShellWorkspace data-testid="workspace" />
+    </AppShell>,
+  );
+  const initial = screen.getByTestId('workspace').className;
+  rerender(
+    <AppShell navigationLayout="horizontal">
+      <AppShellWorkspace data-testid="workspace">
+        <AppShell navigationLayout="expanded">
+          <AppShellWorkspace data-testid="nested-workspace" />
+        </AppShell>
+      </AppShellWorkspace>
+    </AppShell>,
+  );
+  expect(screen.getByTestId('workspace').className).not.toBe(initial);
+  expect(screen.getByTestId('nested-workspace').className).toBe(initial);
 });

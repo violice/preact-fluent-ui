@@ -69,4 +69,3 @@ export const spinnerClasses = sva({
     size: 'medium',
   },
 });
-export default spinnerClasses();

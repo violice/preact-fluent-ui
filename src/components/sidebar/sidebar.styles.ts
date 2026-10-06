@@ -18,6 +18,9 @@ export const sidebarClasses = sva({
     'brandContent',
     'brandTitle',
     'hint',
+    'itemWithIcon',
+    'itemTextWithIcon',
+    'brandContentWithLogo',
   ],
   base: {
     sidebar: {
@@ -37,85 +40,6 @@ export const sidebarClasses = sva({
       '&[hidden]': {
         display: 'none',
       },
-      "&[data-scrollable='true'] $nav": {
-        flex: '1',
-        minHeight: '0',
-        overflowY: 'auto',
-      },
-      "&[data-layout='rail'] $item[data-has-icon='true']": {
-        justifyContent: 'center',
-      },
-      "&[data-layout='rail'] $label": {
-        position: 'absolute',
-        width: '1px',
-        height: '1px',
-        padding: '0',
-        margin: '-1px',
-        overflow: 'hidden',
-        clipPath: 'inset(50%)',
-        whiteSpace: 'nowrap',
-        border: '0',
-      },
-      "&[data-layout='rail'] $item[data-has-icon='true'] $itemText": {
-        position: 'absolute',
-        width: '1px',
-        height: '1px',
-        padding: '0',
-        margin: '-1px',
-        overflow: 'hidden',
-        clipPath: 'inset(50%)',
-        whiteSpace: 'nowrap',
-        border: '0',
-      },
-      "&[data-layout='rail'] $brand[data-has-logo='true'] $brandContent": {
-        position: 'absolute',
-        width: '1px',
-        height: '1px',
-        padding: '0',
-        margin: '-1px',
-        overflow: 'hidden',
-        clipPath: 'inset(50%)',
-        whiteSpace: 'nowrap',
-        border: '0',
-      },
-      "&[data-layout='rail'] $description": {
-        display: 'none',
-      },
-      "&[data-layout='rail'] $brand": {
-        justifyContent: 'center',
-      },
-      "&[data-layout='horizontal']": {
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      "&[data-layout='horizontal'] $nav": {
-        flexDirection: 'row',
-        alignItems: 'center',
-        overflowX: 'auto',
-        overflowY: 'hidden',
-      },
-      "&[data-layout='horizontal'] $group": {
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      "&[data-layout='horizontal'] $content": {
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      "&[data-layout='horizontal'] $item": {
-        width: 'auto',
-        flexShrink: '0',
-      },
-      "&[data-layout='horizontal'] $item[aria-current='page']::before": {
-        insetInline: 'var(--space-2)',
-        insetBlock: 'auto 0',
-        width: 'auto',
-        height: '3px',
-      },
-      "&[data-layout='horizontal'] $footer": {
-        marginBlockStart: '0',
-        marginInlineStart: 'auto',
-      },
     },
     header: {
       minWidth: '0',
@@ -128,11 +52,11 @@ export const sidebarClasses = sva({
     footer: {
       minWidth: '0',
       padding: 'var(--space-2)',
-      marginTop: 'auto',
       '&[hidden]': {
         display: 'none',
       },
       flexShrink: '0',
+      marginBlockStart: 'auto',
     },
     nav: {
       display: 'flex',
@@ -294,6 +218,114 @@ export const sidebarClasses = sva({
       },
     },
   },
+  variants: {
+    layout: {
+      expanded: {},
+      rail: {
+        itemWithIcon: {
+          justifyContent: 'center',
+        },
+        label: {
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          padding: '0',
+          margin: '-1px',
+          overflow: 'hidden',
+          clipPath: 'inset(50%)',
+          whiteSpace: 'nowrap',
+          border: '0',
+        },
+        itemTextWithIcon: {
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          padding: '0',
+          margin: '-1px',
+          overflow: 'hidden',
+          clipPath: 'inset(50%)',
+          whiteSpace: 'nowrap',
+          border: '0',
+        },
+        brandContentWithLogo: {
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          padding: '0',
+          margin: '-1px',
+          overflow: 'hidden',
+          clipPath: 'inset(50%)',
+          whiteSpace: 'nowrap',
+          border: '0',
+        },
+        description: {
+          display: 'none',
+        },
+        brand: {
+          justifyContent: 'center',
+        },
+      },
+      horizontal: {
+        sidebar: {
+          flexDirection: 'row',
+          alignItems: 'center',
+        },
+        nav: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+        },
+        group: {
+          flexDirection: 'row',
+          alignItems: 'center',
+        },
+        content: {
+          flexDirection: 'row',
+          alignItems: 'center',
+        },
+        item: {
+          width: 'auto',
+          flexShrink: '0',
+          "&[aria-current='page']::before": {
+            insetInline: 'var(--space-2)',
+            insetBlock: 'auto 0',
+            width: 'auto',
+            height: '3px',
+          },
+        },
+        footer: {
+          marginBlockStart: '0',
+          marginInlineStart: 'auto',
+        },
+      },
+    },
+    scrollable: {
+      false: {},
+      true: {
+        nav: {
+          flex: '1',
+          minHeight: '0',
+          overflowY: 'auto',
+        },
+      },
+    },
+  },
+  defaultVariants: {
+    layout: 'expanded',
+    scrollable: false,
+  },
+  compoundVariants: [
+    {
+      layout: 'horizontal',
+      scrollable: true,
+      css: {
+        nav: {
+          overflowY: 'hidden',
+        },
+      },
+    },
+  ],
 });
 export default sidebarClasses();
 

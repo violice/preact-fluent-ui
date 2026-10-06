@@ -3,7 +3,7 @@ import { forwardRef } from 'preact/compat';
 import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import { fluentIconPaths } from './fluent-icon-paths';
-import styles from './icon.styles';
+import { iconClass } from './icon.styles';
 
 export type IconName = keyof typeof fluentIconPaths;
 export type IconProps = Omit<JSX.SVGAttributes<SVGSVGElement>, 'children' | 'width' | 'height'> & {
@@ -20,7 +20,7 @@ export const Icon = /* @__PURE__ */ forwardRef<SVGSVGElement, IconProps>(functio
     <svg
       {...props}
       ref={ref}
-      class={cx(styles.icon, resolveClass(classProp, className))}
+      class={cx(iconClass, resolveClass(classProp, className))}
       width={size}
       height={size}
       viewBox={`0 0 ${glyph.size} ${glyph.size}`}

@@ -25,11 +25,6 @@ export const tableClasses = sva({
     },
     header: {
       background: 'var(--color-surface-muted)',
-      '& $heading': {
-        paddingBlock: '12px',
-        color: 'var(--color-text-muted)',
-        fontSize: '12px',
-      },
       '&[hidden]': {
         display: 'none',
       },
@@ -42,6 +37,11 @@ export const tableClasses = sva({
       '&[hidden]': {
         display: 'none',
       },
+      'thead > tr > &': {
+        paddingBlock: '12px',
+        color: 'var(--color-text-muted)',
+        fontSize: '12px',
+      },
     },
     cell: {
       padding: '14px 16px',
@@ -52,9 +52,6 @@ export const tableClasses = sva({
       },
     },
     body: {
-      '& $row:hover': {
-        background: 'var(--color-surface-hover)',
-      },
       '&[hidden]': {
         display: 'none',
       },
@@ -62,6 +59,9 @@ export const tableClasses = sva({
     row: {
       '&[hidden]': {
         display: 'none',
+      },
+      ':where(tbody) > &:hover': {
+        background: 'var(--color-surface-hover)',
       },
     },
     footer: {
@@ -83,13 +83,12 @@ export const tableClasses = sva({
     density: {
       regular: {},
       compact: {
-        table: {
-          '& $heading': {
-            padding: '8px 12px',
-          },
-          '& $cell': {
-            padding: '8px 12px',
-          },
+        heading: {
+          padding: '8px 12px',
+          'thead > tr > &': { paddingBlock: '8px' },
+        },
+        cell: {
+          padding: '8px 12px',
         },
       },
     },

@@ -1,7 +1,8 @@
 import { createPortal } from 'preact/compat';
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { RefObject } from 'preact';
-import styles, { sidebarHintPosition } from './sidebar.styles';
+import { sidebarHintPosition } from './sidebar.styles';
+import { useSidebarStyles } from './sidebar-context';
 import { cx } from '../../styling/cx';
 export function SidebarHint({
   trigger,
@@ -12,6 +13,7 @@ export function SidebarHint({
   text: string;
   onDismiss: () => void;
 }) {
+  const styles = useSidebarStyles();
   const hint = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {

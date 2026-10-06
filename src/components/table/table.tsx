@@ -3,6 +3,7 @@ import { forwardRef } from 'preact/compat';
 import { cx } from '../../styling/cx';
 import { resolveClass } from '../../utils/resolve-class';
 import { tableClasses } from './table.styles';
+import { TableContext } from './table-context';
 
 export type TableProps = JSX.TableHTMLAttributes<HTMLTableElement> & {
   density?: 'regular' | 'compact';
@@ -15,6 +16,8 @@ export const Table = /* @__PURE__ */ forwardRef<HTMLTableElement, TableProps>(fu
 ) {
   const styles = tableClasses({ density, dividers });
   return (
-    <table {...props} ref={ref} class={cx(styles.table, resolveClass(classProp, className))} />
+    <TableContext.Provider value={styles}>
+      <table {...props} ref={ref} class={cx(styles.table, resolveClass(classProp, className))} />
+    </TableContext.Provider>
   );
 });

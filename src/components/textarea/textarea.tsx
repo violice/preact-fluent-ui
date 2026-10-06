@@ -2,7 +2,7 @@ import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { cx } from '../../styling/cx';
 import { resolveClass } from '../../utils/resolve-class';
-import styles from './textarea.styles';
+import { textareaClass } from './textarea.styles';
 
 export type TextareaProps = JSX.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
@@ -12,7 +12,7 @@ export const Textarea = /* @__PURE__ */ forwardRef<HTMLTextAreaElement, Textarea
       <textarea
         {...props}
         ref={ref}
-        class={cx(styles.textarea, resolveClass(classProp, className))}
+        class={cx(textareaClass, resolveClass(classProp, className))}
       />
     );
   },

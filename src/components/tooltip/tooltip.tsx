@@ -7,7 +7,7 @@ import { useRender } from '../../utils/use-render';
 import { getTooltipPosition } from './tooltip-position';
 import type { TooltipPlacement } from './tooltip-position';
 import { copyTooltipTheme } from './tooltip-theme';
-import styles, { tooltipPosition } from './tooltip.styles';
+import { tooltipClass, tooltipPosition } from './tooltip.styles';
 
 export type TooltipTriggerProps = JSX.HTMLAttributes<HTMLElement> & {
   ref: (node: HTMLElement | null) => void;
@@ -211,7 +211,7 @@ export function Tooltip({
             id={id}
             role="tooltip"
             class={cx(
-              styles.tooltip,
+              tooltipClass,
               dynamic.class,
               resolveClass(classProp, className),
               classes?.root,

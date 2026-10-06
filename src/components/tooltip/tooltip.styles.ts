@@ -1,5 +1,5 @@
 import { css } from '../../styling';
-export const tooltipClasses = css({
+export const tooltipClass = css({
   boxSizing: 'border-box',
   position: 'fixed',
   zIndex: '30',
@@ -20,7 +20,6 @@ export const tooltipClasses = css({
     borderColor: 'CanvasText',
   },
 });
-export default { tooltip: tooltipClasses };
 
 export function tooltipPosition(position: { top: number; left: number; maxWidth: number }) {
   return css.dynamic({ top: position.top, left: position.left, maxWidth: position.maxWidth });

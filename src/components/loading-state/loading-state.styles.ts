@@ -51,18 +51,18 @@ export const loadingStateClasses = sva({
           gridTemplateColumns: 'auto minmax(0, 1fr)',
           alignItems: 'center',
           gap: '8px',
-          '& $spinner': {
-            gridColumn: '1',
-            gridRow: '1',
-          },
-          '& $label': {
-            gridColumn: '2',
-            fontSize: 'var(--type-body)',
-          },
-          '& $content': {
-            gridColumn: '2',
-            gap: '8px',
-          },
+        },
+        spinner: {
+          gridColumn: '1',
+          gridRow: '1',
+        },
+        label: {
+          gridColumn: '2',
+          fontSize: 'var(--type-body)',
+        },
+        content: {
+          gridColumn: '2',
+          gap: '8px',
         },
       },
     },
@@ -71,4 +71,3 @@ export const loadingStateClasses = sva({
     appearance: 'default',
   },
 });
-export default loadingStateClasses();

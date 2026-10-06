@@ -2,7 +2,7 @@ import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { cx } from '../../styling/cx';
 import { resolveClass } from '../../utils/resolve-class';
-import styles from './sidebar.styles';
+import { useSidebarStyles } from './sidebar-context';
 export type SidebarBrandProps = Omit<JSX.HTMLAttributes<HTMLDivElement>, 'title'> & {
   title: string;
   description?: string;
@@ -16,6 +16,7 @@ export const SidebarBrand = /* @__PURE__ */ forwardRef<HTMLDivElement, SidebarBr
     { title, description, logo, classes, class: classProp, className, ...props },
     ref,
   ) {
+    const styles = useSidebarStyles();
     const hasLogo = logo !== undefined && logo !== null && logo !== false;
     return (
       <div
@@ -29,7 +30,9 @@ export const SidebarBrand = /* @__PURE__ */ forwardRef<HTMLDivElement, SidebarBr
             {logo}
           </span>
         )}
-        <div class={cx(styles.brandContent, classes?.content)}>
+        <div
+          class={cx(styles.brandContent, hasLogo && styles.brandContentWithLogo, classes?.content)}
+        >
           <div class={cx(styles.brandTitle, classes?.title)}>{title}</div>
           {description && (
             <div class={cx(styles.description, classes?.description)}>{description}</div>

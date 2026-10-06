@@ -1,6 +1,6 @@
 import { sva } from '../../styling';
 export const emptyStateClasses = sva({
-  slots: ['empty', 'content'],
+  slots: ['empty', 'content', 'title'],
   base: {
     empty: {
       boxSizing: 'border-box',
@@ -18,16 +18,6 @@ export const emptyStateClasses = sva({
       background: 'var(--color-card)',
       textAlign: 'center',
       color: 'var(--color-text-muted)',
-      '& h2': {
-        margin: '0',
-        fontSize: '18px',
-        fontWeight: '600',
-        color: 'var(--color-text)',
-      },
-      '& p': {
-        margin: '0',
-        maxWidth: '440px',
-      },
       '&[hidden]': {
         display: 'none',
       },
@@ -36,6 +26,16 @@ export const emptyStateClasses = sva({
       display: 'grid',
       justifyItems: 'center',
       gap: '12px',
+      '& p': {
+        margin: '0',
+        maxWidth: '440px',
+      },
+    },
+    title: {
+      margin: '0',
+      fontSize: '18px',
+      fontWeight: '600',
+      color: 'var(--color-text)',
     },
   },
 });

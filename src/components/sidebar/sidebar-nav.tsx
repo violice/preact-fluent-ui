@@ -2,7 +2,7 @@ import type { FunctionComponent, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { cx } from '../../styling/cx';
 import { resolveClass } from '../../utils/resolve-class';
-import styles from './sidebar.styles';
+import { useSidebarStyles } from './sidebar-context';
 
 export type SidebarNavProps = JSX.HTMLAttributes<HTMLElement> &
   (
@@ -14,5 +14,6 @@ export const SidebarNav: FunctionComponent<SidebarNavProps> = /* @__PURE__ */ fo
   HTMLElement,
   SidebarNavProps
 >(function SidebarNav({ class: classProp, className, ...props }, ref) {
+  const styles = useSidebarStyles();
   return <nav {...props} ref={ref} class={cx(styles.nav, resolveClass(classProp, className))} />;
 });

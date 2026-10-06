@@ -2,7 +2,7 @@ import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { cx } from '../../styling/cx';
 import { resolveClass } from '../../utils/resolve-class';
-import styles from './dialog-content.styles';
+import { dialogHeaderStyles as styles } from './dialog-content.styles';
 
 export type DialogHeaderProps = Omit<
   JSX.HTMLAttributes<HTMLElement>,

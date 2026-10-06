@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Select Sidebar, AppShell and Table slot variants once in their parent and share classes through context; isolate nested recipe selections.
+- Simplify invariant styles to css and independent element variants to cva; apply LoadingState and owned heading styles directly to slots.
+
 - Migrate all component styles to css/cva/sva; remove component CSS Modules.
 - Group component families into directories with one component per file, preserving public exports.
 - Add sva slot selector references and build-time keyframes; order reset/native styles below utilities.

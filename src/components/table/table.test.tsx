@@ -130,3 +130,65 @@ it('preserves hidden and native attributes with primary class precedence', () =>
   expect(ref.current?.classList.contains('primary')).toBe(true);
   expect(ref.current?.classList.contains('fallback')).toBe(false);
 });
+it('passes density slots directly to cells without leaking into nested tables', () => {
+  render(
+    <Table density="compact">
+      <TableBody>
+        <TableRow>
+          <TableCell data-testid="compact-cell">
+            <Table density="regular">
+              <TableBody>
+                <TableRow>
+                  <TableCell data-testid="regular-cell">Nested</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>,
+  );
+  expect(screen.getByTestId('compact-cell').className).not.toBe(
+    screen.getByTestId('regular-cell').className,
+  );
+});
+it('preserves contextual header padding rules in production CSS for each density', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { flattenLayers } = await import('../../../tests/component-styles');
+  const style = document.createElement('style');
+  style.textContent = flattenLayers(readFileSync('dist/styles.css', 'utf8'));
+  document.head.append(style);
+  try {
+    const view = (density: 'regular' | 'compact') => (
+      <Table density={density}>
+        <TableHeader>
+          <TableRow>
+            <TableHeaderCell>Header padding</TableHeaderCell>
+          </TableRow>
+        </TableHeader>
+      </Table>
+    );
+    const { rerender } = render(view('regular'));
+    const headerPadding = () => {
+      const cell = screen.getByText('Header padding');
+      return Array.from(style.sheet!.cssRules)
+        .filter((rule): rule is CSSStyleRule => rule instanceof CSSStyleRule)
+        .filter((rule) =>
+          rule.selectorText
+            .split(',')
+            .some(
+              (selector) => /^thead\s*>\s*tr\s*>/.test(selector.trim()) && cell.matches(selector),
+            ),
+        )
+        .map((rule) => rule.style.getPropertyValue('padding-block-start'))
+        .filter(Boolean);
+    };
+    // These contextual rules outrank generic cell padding irrespective of the
+    // minifier's rule order. The browser check covers physical/logical mapping.
+    expect(headerPadding()).toEqual(['12px']);
+    rerender(view('compact'));
+    expect(headerPadding()).toEqual(['8px']);
+  } finally {
+    style.remove();
+  }
+});

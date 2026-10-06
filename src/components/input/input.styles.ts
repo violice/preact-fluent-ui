@@ -1,5 +1,5 @@
 import { css } from '../../styling';
-export const inputClasses = css({
+export const inputClass = css({
   boxSizing: 'border-box',
   minWidth: '0',
   minHeight: '36px',
@@ -70,4 +70,3 @@ export const inputClasses = css({
     transition: 'none',
   },
 });
-export default { input: inputClasses };

@@ -1,7 +1,6 @@
 import { css } from '../styling';
-export const iconClasses = css({
+export const iconClass = css({
   display: 'inline-block',
   flex: 'none',
   verticalAlign: 'middle',
 });
-export default { icon: iconClasses };

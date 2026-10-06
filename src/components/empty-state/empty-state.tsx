@@ -37,8 +37,8 @@ export const EmptyState = /* @__PURE__ */ forwardRef<HTMLElement, EmptyStateProp
         class={cx(styles.empty, resolveClass(classProp, className), classes?.root)}
         role={role}
       >
-        <Icon name={icon} size={24} class={cx(classes?.icon)} />
-        <h2 class={cx(classes?.title)}>{title}</h2>
+        <Icon name={icon} size={24} class={classes?.icon} />
+        <h2 class={cx(styles.title, classes?.title)}>{title}</h2>
         <div class={cx(styles.content, classes?.content)}>{children}</div>
       </section>
     );

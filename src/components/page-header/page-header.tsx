@@ -31,9 +31,9 @@ export const PageHeader = /* @__PURE__ */ forwardRef<HTMLElement, PageHeaderProp
           ref={ref}
           class={cx(styles.header, resolveClass(classProp, className), classes?.root)}
         >
-          <div class={cx(classes?.content)}>
-            <h1 class={cx(classes?.title)}>{title}</h1>
-            <p class={cx(classes?.description)}>{description}</p>
+          <div class={classes?.content}>
+            <h1 class={cx(styles.title, classes?.title)}>{title}</h1>
+            <p class={cx(styles.description, classes?.description)}>{description}</p>
           </div>
           {actions != null && <div class={cx(styles.actions, classes?.actions)}>{actions}</div>}
         </header>

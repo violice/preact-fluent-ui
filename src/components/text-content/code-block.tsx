@@ -5,7 +5,7 @@ import { cx } from '../../styling/cx';
 import { resolveClass } from '../../utils/resolve-class';
 import { Button } from '../button/button';
 import { textStyle } from './text-style';
-import styles, { codeTokenClasses } from './text-content.styles';
+import styles, { codeTokenClasses } from './code-block.styles';
 
 export type CodeBlockTokenKind =
   | 'keyword'

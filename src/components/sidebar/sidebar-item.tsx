@@ -9,7 +9,7 @@ import type { RenderProp } from '../../utils/use-render';
 import { SidebarContext, sidebarValue } from './sidebar-context';
 import type { SidebarLayout } from './sidebar-context';
 import { SidebarHint } from './sidebar-hint';
-import styles from './sidebar.styles';
+
 type ItemState = { active: boolean; layout: SidebarLayout };
 type Common = {
   icon?: ComponentChildren;
@@ -71,7 +71,7 @@ export const SidebarItem = /* @__PURE__ */ forwardRef<HTMLElement, SidebarItemPr
     },
     ref,
   ) {
-    const layout = useContext(SidebarContext);
+    const { layout, styles } = useContext(SidebarContext);
     const trigger = useRef<HTMLElement>(null);
     const [hint, setHint] = useState(false);
     const hovered = useRef(false);
@@ -125,7 +125,12 @@ export const SidebarItem = /* @__PURE__ */ forwardRef<HTMLElement, SidebarItemPr
           'aria-current': as === 'a' && isActive ? 'page' : undefined,
           'aria-label': label ?? props['aria-label'],
           'data-has-icon': hasIcon,
-          class: cx(styles.item, resolveClass(classProp, className), classes?.root),
+          class: cx(
+            styles.item,
+            hasIcon && styles.itemWithIcon,
+            resolveClass(classProp, className),
+            classes?.root,
+          ),
           children: (
             <>
               {hasIcon && (
@@ -133,7 +138,7 @@ export const SidebarItem = /* @__PURE__ */ forwardRef<HTMLElement, SidebarItemPr
                   {icon}
                 </span>
               )}
-              <span class={styles.itemText}>
+              <span class={cx(styles.itemText, hasIcon && styles.itemTextWithIcon)}>
                 <span class={cx(styles.itemContent, classes?.content)}>{children}</span>
                 {description && (
                   <span

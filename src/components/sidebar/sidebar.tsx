@@ -4,7 +4,7 @@ import { SidebarContext, sidebarValue } from './sidebar-context';
 import type { SidebarLayout } from './sidebar-context';
 import { cx } from '../../styling/cx';
 import { resolveClass } from '../../utils/resolve-class';
-import styles from './sidebar.styles';
+import { sidebarClasses } from './sidebar.styles';
 
 export type SidebarProps = JSX.HTMLAttributes<HTMLElement> & {
   layout?: JSX.Signalish<SidebarLayout>;
@@ -15,12 +15,15 @@ export const Sidebar = /* @__PURE__ */ forwardRef<HTMLElement, SidebarProps>(fun
   { class: classProp, className, layout = 'expanded', scrollable = false, ...props },
   ref,
 ) {
+  const resolvedLayout = sidebarValue(layout);
+  const resolvedScrollable = sidebarValue(scrollable);
+  const styles = sidebarClasses({ layout: resolvedLayout, scrollable: resolvedScrollable });
   return (
-    <SidebarContext.Provider value={sidebarValue(layout)}>
+    <SidebarContext.Provider value={{ layout: resolvedLayout, styles }}>
       <aside
         data-sidebar=""
-        data-layout={sidebarValue(layout)}
-        data-scrollable={sidebarValue(scrollable)}
+        data-layout={resolvedLayout}
+        data-scrollable={resolvedScrollable}
         {...props}
         ref={ref}
         class={cx(styles.sidebar, resolveClass(classProp, className))}

@@ -1,5 +1,5 @@
 import { css } from '../../styling';
-export const textareaClasses = css({
+export const textareaClass = css({
   boxSizing: 'border-box',
   minWidth: '0',
   resize: 'vertical',
@@ -71,4 +71,3 @@ export const textareaClasses = css({
     transition: 'none',
   },
 });
-export default { textarea: textareaClasses };

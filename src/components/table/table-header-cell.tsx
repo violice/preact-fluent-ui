@@ -2,7 +2,8 @@ import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { cx } from '../../styling/cx';
 import { resolveClass } from '../../utils/resolve-class';
-import styles, { tableAlignClasses } from './table.styles';
+import { tableAlignClasses } from './table.styles';
+import { useTableStyles } from './table-context';
 
 export type TableHeaderCellProps = Omit<JSX.ThHTMLAttributes<HTMLTableCellElement>, 'align'> & {
   align?: 'start' | 'center' | 'end';
@@ -15,6 +16,7 @@ export const TableHeaderCell = /* @__PURE__ */ forwardRef<
   { align = 'start', scope = 'col', class: classProp, className, ...props },
   ref,
 ) {
+  const styles = useTableStyles();
   return (
     <th
       {...props}

@@ -111,7 +111,11 @@ This is the first implementation. CSS types permit arbitrary property strings; t
 
 All library components use the style engine. Each component lives in its own TSX file inside a family directory; recipes, helpers and tests are colocated. Public imports from the package root remain unchanged.
 
-Use `cva` for variants of one element and `sva` for component parts. An `sva` selector can reference another slot with `$slotName`:
+Use `css` for an invariant element, `cva` for variants of one element and `sva` for component parts. Select multipart variants once in the parent and pass the returned slot classes to children, through context when parts are separate components. Sidebar, AppShell and Table use this pattern; nested roots establish their own selection and standalone parts use cached defaults. Do not select the same recipe again in each child.
+
+Keep CSS selectors for native state (`:checked`, `:hover`, `open`) and DOM structure, such as table dividers. A parent prop that changes several parts belongs in `sva.variants`; a prop owned by an independent child, such as ToolbarGroup alignment, belongs in its own `cva`. Use `cx` to compose ready classes and conditional modifiers; retain `resolveClass` for the public `class`/`className` precedence.
+
+An `sva` selector can reference another slot with `$slotName`:
 
 ```ts
 const checkbox = sva({

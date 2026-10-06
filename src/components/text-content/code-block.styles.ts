@@ -1,16 +1,7 @@
 import { sva, cva } from '../../styling';
-export const textContentClasses = sva({
-  slots: ['preview', 'block', 'text', 'toolbar', 'copy'],
+export const codeBlockClasses = sva({
+  slots: ['block', 'text', 'toolbar', 'copy'],
   base: {
-    preview: {
-      boxSizing: 'border-box',
-      minWidth: '0',
-      maxWidth: '100%',
-      border: '1px solid var(--color-border)',
-      borderRadius: 'var(--radius-md)',
-      background: 'var(--color-surface-muted)',
-      color: 'var(--color-text)',
-    },
     block: {
       boxSizing: 'border-box',
       minWidth: '0',
@@ -54,7 +45,7 @@ export const textContentClasses = sva({
     },
   },
 });
-export default textContentClasses();
+export default codeBlockClasses();
 export const codeTokenClasses = cva({
   variants: {
     kind: {

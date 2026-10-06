@@ -676,3 +676,31 @@ it('stacks item text beside centered icons and hides the whole column only for r
     style.remove();
   }
 });
+it('passes selected layout slots to descendants and isolates nested sidebars', async () => {
+  const layout = reactiveSignal<'expanded' | 'rail' | 'horizontal'>('expanded');
+  render(
+    <Sidebar layout={layout}>
+      <SidebarNav aria-label="Outer">
+        <SidebarItem href="/outer">Outer item</SidebarItem>
+      </SidebarNav>
+      <Sidebar layout="expanded">
+        <SidebarNav aria-label="Inner">
+          <SidebarItem href="/inner">Inner item</SidebarItem>
+        </SidebarNav>
+      </Sidebar>
+    </Sidebar>,
+  );
+  const outer = screen.getByRole('link', { name: 'Outer item' });
+  const inner = screen.getByRole('link', { name: 'Inner item' });
+  const initial = outer.className;
+  const nested = inner.className;
+  await act(() => {
+    layout.value = 'horizontal';
+  });
+  expect(outer.className).not.toBe(initial);
+  expect(inner.className).toBe(nested);
+  await act(() => {
+    layout.value = 'expanded';
+  });
+  expect(outer.className).toBe(initial);
+});

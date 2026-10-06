@@ -3,7 +3,7 @@ import { forwardRef } from 'preact/compat';
 import { cx } from '../../styling/cx';
 import { resolveClass } from '../../utils/resolve-class';
 import { textStyle } from './text-style';
-import styles from './text-content.styles';
+import { textPreviewClass } from './text-preview.styles';
 
 export type TextPreviewProps = Omit<
   JSX.HTMLAttributes<HTMLPreElement>,
@@ -24,7 +24,7 @@ export const TextPreview = /* @__PURE__ */ forwardRef<HTMLPreElement, TextPrevie
         ref={ref}
         tabIndex={tabIndex}
         style={textStyle(style, wrap)}
-        class={cx(styles.preview, styles.text, resolveClass(classProp, className))}
+        class={cx(textPreviewClass, resolveClass(classProp, className))}
       >
         {text}
       </pre>
