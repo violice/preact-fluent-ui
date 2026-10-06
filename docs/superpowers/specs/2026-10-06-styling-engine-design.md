@@ -10,7 +10,7 @@ The selected direction is a hybrid engine using WyW-in-JS for build-time evaluat
 
 ## Public surface
 
-Proposed exports are `css`, `cx`, `defineTokens`, `defineThemeContract`, `createTheme`, `recipe`, `slotRecipe` and `RecipeVariants` under a styling subpath. A separate Vite subpath exposes the compiler integration. Export names are part of this proposal, not existing APIs.
+Proposed styling exports are `css`, `cx`, `token`, `cva`, `sva` and `RecipeVariants`. Configuration helpers are build-only exports from a config subpath; browser styling exports contain css/cx, token, cva/sva and RecipeVariants. A separate Vite subpath exposes the compiler integration. The existing class-variance-authority dependency is unrelated to this new cva API; no automatic implementation reuse is implied. Export names are part of this proposal, not existing APIs.
 
 `css(styleObject)` returns an opaque class string after compilation. Style objects support typed CSS properties, token references, nested selectors and configured conditions. Numeric lengths follow existing Box conventions; unitless properties remain unitless. Token references are symbolic CSS-variable references, not theme values evaluated at runtime.
 
@@ -18,31 +18,80 @@ Proposed exports are `css`, `cx`, `defineTokens`, `defineThemeContract`, `create
 
 ## Tokens and themes
 
-`defineTokens` declares primitive token values. `defineThemeContract` declares the shape of semantic tokens independently from their values. `createTheme(contract, values)` produces a theme class and scoped CSS custom-property declarations.
+Use a Panda-like declarative configuration instead of the previously proposed defineThemeContract/createTheme API. Public configuration helpers are defineConfig and definePreset. The library supplies a Fluent preset; applications extend it without copying the full token catalog.
 
-Every theme must satisfy the full contract. Token aliases must resolve without cycles; unknown references and cyclic aliases are build errors. Names are deterministic and namespaced to avoid collisions between packages. Existing public variables such as `--space-4` retain their names through an explicit compatibility mapping.
+The configuration contains:
 
-Components use semantic tokens for theme-dependent colors. Themes switch through a container class and may be nested. The engine does not read browser preferences or select a theme implicitly. Theme switches update variables, not component class generation. Users can override documented variables through ordinary CSS without importing compiler code.
+- `theme.tokens`: primitive values grouped by category, with `{ value, description? }` leaves.
+- `theme.semanticTokens`: role-based values, optionally conditional with `base`, `_light` and `_dark` keys.
+- `theme.extend`: deep additions/overrides to the inherited theme.
+- `themes`: named token overrides for alternative brand palettes, independent from light/dark mode.
+- `conditions`: selector or at-rule definitions shared with css, Box and cva/sva.
+- `presets`: ordered build-time configuration inputs, with application configuration applied last.
 
-Example API:
+Direct token categories replace that inherited category; `extend` deep-merges leaves and preserves siblings. Merge order is presets in order, direct application replacements, then application extensions. Arrays replace rather than concatenate. Token aliases use `{colors.gray.50}` notation, including inside composite strings. Unknown references, incompatible leaf shapes and alias cycles are build errors.
+
+Example proposed configuration:
 
 ```ts
-const tokens = defineTokens({ spacing: { 4: '16px' } });
-const theme = defineThemeContract({ colors: { surface: null, text: null } });
-const lightTheme = createTheme(theme, {
-  colors: { surface: '#ffffff', text: '#171717' },
+export default defineConfig({
+  presets: [fluentPreset],
+  conditions: {
+    light: '[data-color-mode="light"] &',
+    dark: '[data-color-mode="dark"] &',
+  },
+  theme: {
+    extend: {
+      tokens: {
+        colors: {
+          brand: { value: '#0067c0' },
+        },
+        spacing: {
+          4: { value: '16px' },
+        },
+      },
+      semanticTokens: {
+        colors: {
+          surface: {
+            value: {
+              base: '{colors.white}',
+              _dark: '{colors.gray.950}',
+            },
+          },
+          accent: { value: '{colors.brand}' },
+        },
+      },
+    },
+  },
+  themes: {
+    green: {
+      tokens: {
+        colors: { brand: { value: '#237b46' } },
+      },
+    },
+  },
 });
 ```
 
+Color values are examples, not changes to the library's current palette. Styles reference token names in category-aware properties: `css({ backgroundColor: 'surface', color: 'accent', gap: '4' })`. Composite values accept explicit full-path aliases. Existing Box values such as `space-4` remain supported through compatibility aliases. Explicit raw CSS values remain supported, with a documented token-first resolution rule when a name is also a configured token. `token.var('colors.surface')` returns a variable reference outside style objects. There is no API promising the current computed theme value synchronously in JavaScript.
+
+Types are generated from the fully resolved preset/config, including custom tokens, conditions and theme names. Compiled library declarations must not depend on the consumer having that generated module. The consumer integration exposes generated bindings for its configuration and validates token references during compilation. Exact generated-file plumbing is an implementation-plan concern; this typed contract is required.
+
+Emit CSS variables scoped by `[data-fui-theme="green"]` for named palettes and `[data-color-mode="dark"]` for mode. The preset includes a default palette and mode declarations; themes are partial overrides of its resolved token shape, not independent complete contracts. A brand scope emits the full resolved values needed to avoid inheriting a different ancestor brand accidentally. Mode-dependent semantic aliases are redeclared on theme/mode scope roots so nested scopes resolve local primitive values. Test the theme and mode attribute on the same element as well as nested containers. Only parent/scope selector conditions and at-rules are valid semantic-token conditions; element states such as hover belong in styles.
+
+The compiler must implement scope selectors including the scope root itself, not merely descendants. The example condition notation is an authoring shorthand, not the final emitted variable selector. Mode and brand override precedence is deterministic and must preserve local scope inheritance; nested explicit mode/brand scopes must override outer values. This is a required prototype validation, not something left to incidental selector ordering.
+
+Names are deterministic and namespaced to avoid collisions between packages. Existing public variables such as `--space-4` retain their names through a compatibility mapping. Components use semantic tokens for theme-dependent colors. Theme and mode changes update attributes and variables, not component class generation. The engine never automatically reads browser preferences. Existing library theme selectors remain supported during migration. Applications can override documented variables through ordinary CSS without compiler code.
+
 ## Recipes
 
-`recipe` accepts `base`, `variants`, `compoundVariants` and `defaultVariants`. It returns a small runtime selector over precompiled classes. All explicitly declared variant branches and compound styles are emitted, including branches selected only by runtime props. There is no requirement to discover every recipe invocation in consumer code.
+`cva` accepts `base`, `variants`, `compoundVariants` and `defaultVariants`. It returns a small runtime selector over precompiled classes. All explicitly declared variant branches and compound styles are emitted, including branches selected only by runtime props. There is no requirement to discover every recipe invocation in consumer code.
 
 Variant keys and values infer TypeScript types. Boolean branches support `true` and `false`. An omitted or undefined variant uses its default; null explicitly suppresses the default. Unknown values are type errors and produce descriptive errors in development for untyped callers. Production ignores an unknown branch rather than generating CSS.
 
-Compound predicates match all their specified variants against resolved selections. A predicate may list several accepted values. Matching compounds apply in declaration order. Precedence is base, selected variants in definition order, then matching compounds. `cx(recipe(selection), css(overrides))` applies engine overrides last for equivalent property/condition declarations.
+Compound predicates match all their specified variants against resolved selections. A predicate may list several accepted values. Matching compounds apply in declaration order. Precedence is base, selected variants in definition order, then matching compounds. `cx(cvaDefinition(selection), css(overrides))` applies engine overrides last for equivalent property/condition declarations.
 
-`slotRecipe` shares these semantics but returns a map of class strings for declared slots. Base, variant and compound styles are keyed by slot. Unknown slots are errors. This supports Field, Dialog and other multipart components without separate styling engines.
+`sva` shares these semantics but returns a map of class strings for declared slots. Base, variant and compound styles are keyed by slot. Unknown slots are errors. This supports Field, Dialog and other multipart components without separate styling engines.
 
 Initial composition is explicit through `cx` and shared style objects. Recipe inheritance and an `extend` API are deferred until concrete requirements justify their merge semantics.
 
@@ -85,17 +134,17 @@ Applications using their own `css`, token definitions, themes, recipes or respon
 
 ## Scope and migration
 
-First delivery includes the shared schema, tokens/theme contracts, css/cx, recipe/slotRecipe, Vite integration and Box hybrid behavior. Migration demonstrates one component recipe and one multipart recipe; wholesale CSS Module replacement is a separate task.
+First delivery includes the shared schema, configuration-driven tokens/themes, css/cx, cva/sva, Vite integration and Box hybrid behavior. Migration demonstrates one component recipe and one multipart recipe; wholesale CSS Module replacement is a separate task.
 
 No runtime stylesheet injection, automatic theme detection, general wrapper-component inference, arbitrary dynamic responsive objects or universal CSS conflict solver is promised. Additional bundlers can be supported after Vite is validated.
 
 ## Validation
 
 - Compiler fixtures verify extracted CSS, diagnostics, aliases, spreads, normalization, conditions and deterministic output.
-- Type fixtures verify token references, complete theme values, variants and slots.
+- Type fixtures verify token references, preset merges, conditional semantic tokens, partial named-theme overrides, variants and slots.
 - Runtime tests verify recipe defaults/compounds, composition and existing Box signals/render/style behavior.
 - Packed consumer fixtures cover applications with and without the plugin, CSS imports, safe Node imports, external Preact and absence of compiler dependencies in browser bundles.
-- Browser checks cover nested light/dark themes, responsive layouts, dynamic dimensions and style overrides.
+- Browser checks cover nested light/dark modes and brand themes, responsive layouts, dynamic dimensions and style overrides.
 - Existing library checks remain required; migrating one component must preserve its accessibility and behavioral tests.
 
 Before implementation planning, review this spec, particularly plugin-free fallback behavior, API exports and composition semantics. The implementation plan must begin with a small WyW/Vite integration prototype and a stop condition for incompatible extraction or merge behavior.
@@ -106,3 +155,7 @@ Before implementation planning, review this spec, particularly plugin-free fallb
 - https://wyw-in-js.dev/how-it-works
 - https://panda-css.com/docs/styling/style-props
 - https://panda-css.com/docs/styling/dynamic-styling
+
+- https://panda-css.com/docs/theming/tokens
+- https://panda-css.com/docs/theming/presets
+- https://panda-css.com/docs/guides/multiple-themes
