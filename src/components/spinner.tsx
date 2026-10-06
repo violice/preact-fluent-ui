@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import styles from './spinner.module.css';
 
@@ -22,16 +22,13 @@ export const Spinner = /* @__PURE__ */ forwardRef<HTMLSpanElement, SpinnerProps>
     <span
       {...props}
       ref={ref}
-      class={mergeClasses(styles.spinner, resolveClass(classProp, className), classes?.root)}
+      class={cx(styles.spinner, resolveClass(classProp, className), classes?.root)}
       role={label ? 'status' : undefined}
       aria-label={label || undefined}
       aria-hidden={label ? undefined : true}
     >
-      <span
-        aria-hidden="true"
-        class={mergeClasses(styles.indicator, styles[size], classes?.indicator)}
-      />
-      {label && <span class={mergeClasses(styles.label, classes?.label)}>{label}</span>}
+      <span aria-hidden="true" class={cx(styles.indicator, styles[size], classes?.indicator)} />
+      {label && <span class={cx(styles.label, classes?.label)}>{label}</span>}
     </span>
   );
 });

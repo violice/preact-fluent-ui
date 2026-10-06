@@ -6,16 +6,16 @@ export interface DynamicStyleObject {
 }
 export interface CssFunction {
   (...styles: StyleObject[]): string;
-  props(style: DynamicStyleObject): StyleProps;
+  dynamic(style: DynamicStyleObject): StyleProps;
 }
 export const css: CssFunction = Object.assign(
   (..._styles: StyleObject[]): string => {
     throw new Error('css() requires the Fluent styling compiler; configure fluentStyles() in Vite');
   },
   {
-    props(_style: DynamicStyleObject): StyleProps {
+    dynamic(_style: DynamicStyleObject): StyleProps {
       throw new Error(
-        'css.props() requires the Fluent styling compiler; configure fluentStyles() in Vite',
+        'css.dynamic() requires the Fluent styling compiler; configure fluentStyles() in Vite',
       );
     },
   },

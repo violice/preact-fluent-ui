@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import { sidebarValue } from './sidebar-context';
 import type { SidebarLayout } from './sidebar';
@@ -23,7 +23,7 @@ export const AppShell = /* @__PURE__ */ forwardRef<HTMLDivElement, AppShellProps
       {...props}
       data-navigation-layout={sidebarValue(navigationLayout)}
       ref={ref}
-      class={mergeClasses(styles.shell, resolveClass(classProp, className))}
+      class={cx(styles.shell, resolveClass(classProp, className))}
     />
   );
 });
@@ -34,7 +34,7 @@ export const AppShellWorkspace = /* @__PURE__ */ forwardRef<HTMLElement, AppShel
         {...props}
         data-app-shell-workspace=""
         ref={ref}
-        class={mergeClasses(styles.workspace, resolveClass(classProp, className))}
+        class={cx(styles.workspace, resolveClass(classProp, className))}
       />
     );
   },
@@ -42,33 +42,21 @@ export const AppShellWorkspace = /* @__PURE__ */ forwardRef<HTMLElement, AppShel
 export const AppShellHeader = /* @__PURE__ */ forwardRef<HTMLDivElement, AppShellHeaderProps>(
   function AppShellHeader({ class: classProp, className, ...props }, ref) {
     return (
-      <div
-        {...props}
-        ref={ref}
-        class={mergeClasses(styles.header, resolveClass(classProp, className))}
-      />
+      <div {...props} ref={ref} class={cx(styles.header, resolveClass(classProp, className))} />
     );
   },
 );
 export const AppShellContent = /* @__PURE__ */ forwardRef<HTMLDivElement, AppShellContentProps>(
   function AppShellContent({ class: classProp, className, ...props }, ref) {
     return (
-      <div
-        {...props}
-        ref={ref}
-        class={mergeClasses(styles.content, resolveClass(classProp, className))}
-      />
+      <div {...props} ref={ref} class={cx(styles.content, resolveClass(classProp, className))} />
     );
   },
 );
 export const AppShellFooter = /* @__PURE__ */ forwardRef<HTMLDivElement, AppShellFooterProps>(
   function AppShellFooter({ class: classProp, className, ...props }, ref) {
     return (
-      <div
-        {...props}
-        ref={ref}
-        class={mergeClasses(styles.footer, resolveClass(classProp, className))}
-      />
+      <div {...props} ref={ref} class={cx(styles.footer, resolveClass(classProp, className))} />
     );
   },
 );

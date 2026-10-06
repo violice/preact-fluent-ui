@@ -21,7 +21,7 @@ export function compileDeclarations(declarations: Declaration[]): {
   }
   return {
     className: cx(...rules.keys()),
-    css: `@layer fui.utilities{${[...rules.values()].join('')}}`,
+    css: `@layer pfui.utilities{${[...rules.values()].join('')}}`,
   };
 }
 export function compileStyles(

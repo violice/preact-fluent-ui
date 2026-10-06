@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import { Spinner } from './spinner';
 import styles from './loading-state.module.css';
@@ -25,7 +25,7 @@ export const LoadingState = /* @__PURE__ */ forwardRef<HTMLDivElement, LoadingSt
       <div
         {...props}
         ref={ref}
-        class={mergeClasses(
+        class={cx(
           styles.loading,
           styles[appearance],
           resolveClass(classProp, className),
@@ -34,11 +34,9 @@ export const LoadingState = /* @__PURE__ */ forwardRef<HTMLDivElement, LoadingSt
         role="status"
         aria-label={label}
       >
-        <Spinner class={mergeClasses(styles.spinner, classes?.spinner)} />
-        <span class={mergeClasses(styles.label, classes?.label)}>{label}</span>
-        {children != null && (
-          <div class={mergeClasses(styles.content, classes?.content)}>{children}</div>
-        )}
+        <Spinner class={cx(styles.spinner, classes?.spinner)} />
+        <span class={cx(styles.label, classes?.label)}>{label}</span>
+        {children != null && <div class={cx(styles.content, classes?.content)}>{children}</div>}
       </div>
     );
   },

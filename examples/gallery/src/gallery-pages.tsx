@@ -199,7 +199,7 @@ function StylingExample() {
       </label>
       <section
         aria-label="Dynamic styles"
-        {...css.props({
+        {...css.dynamic({
           width,
           padding: '4',
           backgroundColor: 'surface',
@@ -370,10 +370,10 @@ const docs: ComponentDoc[] = [
     slug: 'styling-engine',
     purpose: 'Compile typed CSS objects and dynamic local variables without a layout wrapper.',
     example: StylingExample,
-    code: 'const layout = css({ display: "flex", gap: "4" });\n<section class={layout}>...</section>\n\n<div {...css.props({ width: measuredWidth })} />',
+    code: 'const layout = css({ display: "flex", gap: "4" });\n<section class={layout}>...</section>\n\n<div {...css.dynamic({ width: measuredWidth })} />',
     props: [
       ['css(styles)', 'string', 'Static styles become atomic classes.'],
-      ['css.props(styles)', '{ class, style }', 'Dynamic leaves become local CSS variables.'],
+      ['css.dynamic(styles)', '{ class, style }', 'Dynamic leaves become local CSS variables.'],
       [
         'cva / sva',
         'Recipe functions',

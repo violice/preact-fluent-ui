@@ -42,7 +42,7 @@ import { css } from './styled-system/css';
 </Card>
 ```
 
-Box has been removed. Use `css.props()` for dynamic values or signals and `css()` for static and responsive styles. See [the styling guide](styling.md) for setup and class/style composition.
+Box has been removed. Use `css.dynamic()` for dynamic values or signals and `css()` for static and responsive styles. See [the styling guide](styling.md) for setup and class/style composition.
 
 ## Typography and native HTML reset
 
@@ -98,7 +98,7 @@ Compose `AppShell`, `AppShellWorkspace`, `AppShellHeader`, `AppShellToolbar`, `A
 
 `SidebarItem render` replaces its root with a VNode or callback. `as` still selects native types and defaults. A custom Link must forward composed props, children and ref to its native root. Do not nest an anchor or button inside another interactive root. `useRender` composes refs; `mergeProps` combines props with consumer handlers first and stops earlier handlers after `preventDefault()`. See the [utility API](api.md#utilities).
 
-Version 0.5.0 added Text and CounterBadge, plus Card padding="none" and Table dividers="between" for edge-to-edge tables. The upcoming styling engine replaces Box with css()/css.props().
+Version 0.5.0 added Text and CounterBadge, plus Card padding="none" and Table dividers="between" for edge-to-edge tables. The upcoming styling engine replaces Box with css()/css.dynamic().
 
 Version 0.4.0 includes data components, loading feedback, Tooltip, TextPreview, CodeBlock and AppShellToolbar. Toolbar and ToolbarGroup replace the former DataToolbar names without compatibility aliases. AppShellToolbar belongs directly inside AppShellWorkspace alongside Header and Content.
 

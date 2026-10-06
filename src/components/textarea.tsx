@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import styles from './textarea.module.css';
 
@@ -12,7 +12,7 @@ export const Textarea = /* @__PURE__ */ forwardRef<HTMLTextAreaElement, Textarea
       <textarea
         {...props}
         ref={ref}
-        class={mergeClasses(styles.textarea, resolveClass(classProp, className))}
+        class={cx(styles.textarea, resolveClass(classProp, className))}
       />
     );
   },

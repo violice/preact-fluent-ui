@@ -9,10 +9,14 @@ export function cx(...values: ClassValue[]): string {
       value.forEach(visit);
       return;
     }
+    if (value !== null && typeof value === 'object' && 'value' in value) {
+      visit(value.value);
+      return;
+    }
     if (typeof value !== 'string') return;
     for (const name of value.split(/\s+/)) {
       if (!name) continue;
-      const match = /^fui_([a-z0-9]+)_([-a-zA-Z0-9]+)_([a-z0-9]+)$/.exec(name);
+      const match = /^pfui_([a-z0-9]+)_([-a-zA-Z0-9]+)_([a-z0-9]+)$/.exec(name);
       const key = match ? `${match[1]}:${match[2]}` : name;
       if (match) {
         for (const existing of classes.keys()) {

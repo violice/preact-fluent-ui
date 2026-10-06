@@ -1,7 +1,7 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import { Button } from './button';
 import { textStyle } from './text-style';
@@ -89,11 +89,7 @@ export const CodeBlock = /* @__PURE__ */ forwardRef<HTMLDivElement, CodeBlockPro
       }
     }
     return (
-      <div
-        {...props}
-        ref={ref}
-        class={mergeClasses(styles.block, resolveClass(classProp, className))}
-      >
+      <div {...props} ref={ref} class={cx(styles.block, resolveClass(classProp, className))}>
         {(language || copy) && (
           <div class={styles.toolbar}>
             {language && <span>{language.toUpperCase()}</span>}

@@ -1,6 +1,6 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import { Button } from './button';
 import styles from './pagination.module.css';
@@ -36,11 +36,7 @@ export const Pagination = /* @__PURE__ */ forwardRef<HTMLElement, PaginationProp
     const previousDisabled = disabled || displayedPage <= 1;
     const nextDisabled = disabled || displayedPage >= pageCount;
     return (
-      <nav
-        {...props}
-        ref={ref}
-        class={mergeClasses(styles.pagination, resolveClass(classProp, className))}
-      >
+      <nav {...props} ref={ref} class={cx(styles.pagination, resolveClass(classProp, className))}>
         <Button
           size="compact"
           disabled={previousDisabled}

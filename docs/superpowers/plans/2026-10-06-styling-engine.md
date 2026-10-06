@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build the approved WyW-based styling foundation with Panda-like tokens/themes, cva/sva and automatic dynamic css.props.
+**Goal:** Build the approved WyW-based styling foundation with Panda-like tokens/themes, cva/sva and automatic dynamic css.dynamic.
 
-**Architecture:** A shared schema and build-time processors emit atomic CSS and compact runtime selectors. The package ships explicit CSS and compiled components; an optional consumer Vite integration compiles user-authored styles and dynamic css.props. Existing CSS Modules coexist during migration.
+**Architecture:** A shared schema and build-time processors emit atomic CSS and compact runtime selectors. The package ships explicit CSS and compiled components; an optional consumer Vite integration compiles user-authored styles and dynamic css.dynamic. Existing CSS Modules coexist during migration.
 
 **Tech stack:** TypeScript, Preact, WyW-in-JS, Vite 8/Rolldown, Vitest, existing Node artifact checks.
 
@@ -15,7 +15,7 @@
 - API names: css, cx, token, cva, sva, RecipeVariant, RecipeVariantProps; configuration helpers: defineConfig, definePreset.
 - Preserve explicit theme/styles/reset/native-controls CSS exports, external Preact and safe Node imports.
 - No runtime stylesheet injection or automatic browser theme selection.
-- User revision: remove Box. Preserve dynamic values through css.props-generated local variables; no Box JSX extractor.
+- User revision: remove Box. Preserve dynamic values through css.dynamic-generated local variables; no Box JSX extractor.
 - Conditional semantic tokens accept scope selectors and at-rules, not element interaction states.
 - All declared cva/sva branches compile even when their selections are runtime values.
 - Compiler/config code must not enter browser bundles. No application migration, publication or push is part of this plan.
@@ -25,7 +25,7 @@
 
 ## Review focus
 
-- JSX spreads and explicit class/style props retain normal evaluation and precedence; css.props lowers only its explicit style object (Task 6).
+- JSX spreads and explicit class/style props retain normal evaluation and precedence; css.dynamic lowers only its explicit style object (Task 6).
 - A nested brand inherits the outer mode but must not accidentally inherit outer primitive aliases (Tasks 3 and 8).
 - A shorthand overridden by one longhand must retain other sides, including RTL logical properties (Tasks 2 and 8).
 - Different application configurations must not share stale class/token output through compiler caches (Tasks 5 and 7).
@@ -37,7 +37,7 @@ New `src/styling/` holds browser-safe types, class metadata/composition, selecto
 
 New `tests/styling-consumer/` holds build fixtures with a dedicated Node test runner, separate from jsdom tests. `src/styling/**/*.test.ts` contains focused unit tests; compiler tests select the Node environment explicitly. Compiler/config declarations and exports are split from browser entrypoints through multi-entry build output.
 
-Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.json`, `scripts/build-css.mjs`, `scripts/check-dist.mjs` and package fixture tooling only as their owning task requires. Remove Box in Task 6; migrate Button and Field in Task 8. Keep `src/utils/merge-classes.ts` compatible during early tasks; replace its implementation with an engine adapter in Task 9.
+Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.json`, `scripts/build-css.mjs`, `scripts/check-dist.mjs` and package fixture tooling only as their owning task requires. Remove Box in Task 6; migrate Button and Field in Task 8. Keep `src/utils/cx.ts` compatible during early tasks; replace its implementation with an engine adapter in Task 9.
 
 ## Task 1: Prove WyW integration with the current toolchain
 
@@ -57,7 +57,7 @@ Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.jso
 
 **Files:** Create `src/styling/{types.ts,properties.ts,normalize.ts,class-metadata.ts,cx.ts,index.ts}`, and `normalize.test.ts`, `cx.test.ts` alongside implementations.
 
-**Interfaces:** `normalizeStyles(style: StyleObject, context: StyleContext): NormalizedDeclaration[]`; `NormalizedDeclaration` records CSS property/value, canonical selector, condition and layer. `compileDeclarations(declarations): { className: string; css: string; metadata: ClassMetadata[] }` lives in `compiler/atomic.ts`. `cx(...values: ClassValue[]): string` merges known classes; ClassValue accepts strings, false, null, undefined and nested arrays. The legacy mergeClasses adapter resolves signals before calling cx; cx itself need not subscribe to signals. Metadata is emitted as module-local serialized data and registered without DOM access by `class-metadata.ts`.
+**Interfaces:** `normalizeStyles(style: StyleObject, context: StyleContext): NormalizedDeclaration[]`; `NormalizedDeclaration` records CSS property/value, canonical selector, condition and layer. `compileDeclarations(declarations): { className: string; css: string; metadata: ClassMetadata[] }` lives in `compiler/atomic.ts`. `cx(...values: ClassValue[]): string` merges known classes; ClassValue accepts strings, false, null, undefined and nested arrays. The legacy cx adapter resolves signals before calling cx; cx itself need not subscribe to signals. Metadata is emitted as module-local serialized data and registered without DOM access by `class-metadata.ts`.
 
 - [ ] Write tests asserting `padding: '16px'` plus `paddingLeft: '4px'` retains top/right/bottom; margin logical/physical combinations preserve CSS behavior in LTR and RTL; unitless flex/order are not suffixed; selector/condition mismatches do not cancel each other; foreign class strings survive unchanged; identical declarations deduplicate.
 - [ ] Run `npx vitest run src/styling/normalize.test.ts src/styling/cx.test.ts` and observe meaningful failures.
@@ -101,15 +101,15 @@ Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.jso
 - [ ] Configure library tests to compile style definitions and exercise both dev and production fixtures. Assert editing a token updates emitted CSS and types without requiring a clean manual rebuild. Prototype fixtures remain as regression tests against integration changes.
 - [ ] Run focused tests and `npm run build`; commit `feat: integrate styling compiler with Vite`.
 
-## Task 6: Dynamic css.props and Box removal (user revision)
+## Task 6: Dynamic css.dynamic and Box removal (user revision)
 
 **Files:** Create `src/styling/{style-props.ts,style-props.test.tsx}`, `src/styling/compiler/dynamic.ts`; modify css types, integration fixtures, library exports, gallery and consumer contracts. Remove Box source, CSS and tests.
 
-**Interfaces:** css.props(object) returns `{class, style}`. The early pass lowers dynamic leaves to variable references consumed by the common css processor; the browser helper resolves signals and numeric units. Import aliases and lexical shadows must be respected.
+**Interfaces:** css.dynamic(object) returns `{class, style}`. The early pass lowers dynamic leaves to variable references consumed by the common css processor; the browser helper resolves signals and numeric units. Import aliases and lexical shadows must be respected.
 
 - [ ] Test dynamic width with px, unitless opacity, signals, null, token values, nested responsive leaves and expression evaluation order.
 - [ ] Verify missing transformation fails before implementation, then implement binding-aware lowering with sourcemaps. Reject spreads/dynamic shapes/computed keys/methods rather than silently omitting them.
-- [ ] Remove Box exports/source/gallery/API contracts and replace its examples with css()/css.props() on semantic elements. Document the breaking change and ordinary JSX class/style merge precedence.
+- [ ] Remove Box exports/source/gallery/API contracts and replace its examples with css()/css.dynamic() on semantic elements. Document the breaking change and ordinary JSX class/style merge precedence.
 - [ ] Run integration, signal, gallery, type and package checks; commit `feat: replace Box with compiled dynamic style props`.
 
 ## Task 7: Package boundaries and packed consumers
@@ -118,7 +118,7 @@ Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.jso
 
 **Interfaces:** Exports `./styling` (browser-safe), `./config`, `./vite`; exported compiled Fluent preset from config entry. Existing CSS assets retain their public paths; generated component/utility CSS is included in styles.css and generated preset variables in theme.css. Consumer-generated CSS is a separate Vite-managed asset. Entry modules do not import CSS automatically.
 
-- [ ] Add packed tests for plain consumers with no WyW installed: library imports and shipped variants/themes work, existing CSS imports resolve, and dynamic css.props values render. Compiled consumer tests import generated bindings and exercise custom tokens, css/cva/sva, responsive css.props and alternate theme config.
+- [ ] Add packed tests for plain consumers with no WyW installed: library imports and shipped variants/themes work, existing CSS imports resolve, and dynamic css.dynamic values render. Compiled consumer tests import generated bindings and exercise custom tokens, css/cva/sva, responsive css.dynamic and alternate theme config.
 - [ ] Run `node --test tests/styling-consumer/run.test.mjs` and confirm missing exports fail.
 - [ ] Implement multi-entry ESM output and declarations; update artifact graphs to check every entry separately. Compiler dependencies may appear only in build-only entries. Assert compiler/config entries are not transitively reachable from root/styling browser entries, Preact stays external, and cold/DOM-trapped Node imports work.
 - [ ] Verify two packed consumer builds with distinct configs and generated directories produce independent output; stale generated types cannot silently accept removed tokens. Integrate the fixture runner into existing package validation without weakening existing consumers or peer-version coverage.
@@ -139,13 +139,13 @@ Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.jso
 
 ## Task 9: Remove standalone clsx and class-variance-authority
 
-**Files:** Modify `src/components/{info-bar.tsx,status-badge.tsx}`, create adjacent `info-bar.styles.ts` and `status-badge.styles.ts`; modify `src/utils/{merge-classes.ts,merge-classes.test.ts}`, `package.json`, lockfile, `scripts/{check-dist.mjs,test-package.mjs,generate-third-party-notices.mjs}`, `THIRD_PARTY_NOTICES.txt` and generated license files. Remove obsolete component CSS only after equivalent styles are migrated.
+**Files:** Modify `src/components/{info-bar.tsx,status-badge.tsx}`, create adjacent `info-bar.styles.ts` and `status-badge.styles.ts`; modify `src/utils/{cx.ts,cx.test.ts}`, `package.json`, lockfile, `scripts/{check-dist.mjs,test-package.mjs,generate-third-party-notices.mjs}`, `THIRD_PARTY_NOTICES.txt` and generated license files. Remove obsolete component CSS only after equivalent styles are migrated.
 
-**Interfaces:** Every production recipe uses the engine cva/sva. `mergeClasses(...classes: JSX.Signalish<string | undefined>[]): string` remains a compatibility adapter that resolves signal values and delegates to engine cx. Foreign CSS Module classes remain supported; their unknown declarations are not automatically merged. The engine runtime has no dependency on clsx or class-variance-authority.
+**Interfaces:** Every production recipe uses the engine cva/sva. `cx(...classes: JSX.Signalish<string | undefined>[]): string` remains a compatibility adapter that resolves signal values and delegates to engine cx. Foreign CSS Module classes remain supported; their unknown declarations are not automatically merged. The engine runtime has no dependency on clsx or class-variance-authority.
 
-- [ ] Inventory all remaining imports and add assertions that final module graphs and browser bundles contain neither helper. Preserve mergeClasses tests for signal values, empty input and foreign class strings. Add regression cases for InfoBar intent and StatusBadge variants before migration.
+- [ ] Inventory all remaining imports and add assertions that final module graphs and browser bundles contain neither helper. Preserve cx tests for signal values, empty input and foreign class strings. Add regression cases for InfoBar intent and StatusBadge variants before migration.
 - [ ] Run focused component/helper tests and artifact checks; existing behavior must pass while the new absence checks fail on the current dependencies.
-- [ ] Migrate InfoBar and StatusBadge recipes to engine cva with unchanged public props, visual defaults and accessibility. Replace clsx usage in mergeClasses with the signal-resolving cx adapter. Do not rewrite every existing class call site solely to remove the adapter.
+- [ ] Migrate InfoBar and StatusBadge recipes to engine cva with unchanged public props, visual defaults and accessibility. Replace clsx usage in cx with the signal-resolving cx adapter. Do not rewrite every existing class call site solely to remove the adapter.
 - [ ] Remove both direct dependencies through the package manager. Check transitive reachability with `npm ls clsx class-variance-authority --all`; expected no installed nodes. If new tooling reintroduces either transitively, choose a compatible dependency arrangement that satisfies removal rather than deleting lockfile entries manually.
 - [ ] Replace check-dist/test-package positive expectations for bundled helpers with negative expectations. Extend source-map/module allowlists for actual engine modules narrowly rather than accepting arbitrary sources. Regenerate notices: remove helper license artifacts only when no longer applicable and add real build/runtime notices according to the repository's existing license policy.
 - [ ] Run focused tests, `npm run check`, `npm run build`, `npm run test:package:all` and the styling consumer runner. Search production sources and emitted JS for helper imports and inspect module graphs for bundled helper code. Commit `refactor: replace clsx and CVA with styling engine`.
@@ -158,15 +158,15 @@ Modify `package.json`, `vite.config.ts`, `vitest.config.ts`, `tsconfig.build.jso
 
 ## Plan self-review
 
-Coverage: tokens/presets/themes/types → Task 3; cva/sva → Task 4; atomic composition → Task 2; WyW/Vite → Tasks 1 and 5; css.props/Box removal → Task 6; distribution → Task 7; migration/docs/browser verification → Task 8; full clsx/CVA removal and artifact checks → Task 9. All five Review Focus cases have explicit tests in their owning tasks. Shared signatures are defined once in Interfaces blocks. The Task 1 stop condition prevents speculative toolchain compatibility from becoming an assumption in later work.
+Coverage: tokens/presets/themes/types → Task 3; cva/sva → Task 4; atomic composition → Task 2; WyW/Vite → Tasks 1 and 5; css.dynamic/Box removal → Task 6; distribution → Task 7; migration/docs/browser verification → Task 8; full clsx/CVA removal and artifact checks → Task 9. All five Review Focus cases have explicit tests in their owning tasks. Shared signatures are defined once in Interfaces blocks. The Task 1 stop condition prevents speculative toolchain compatibility from becoming an assumption in later work.
 
 Execution is not started by writing this plan. Review the plan and select inline execution or task-by-task delegated execution before implementation.
 
-Implementation rulings: class names encode property/context identity without a runtime registry; mixed physical/logical spacing is rejected. User revisions supersede prior hybrid Box requirements and authorize css.props automatic local variables.
+Implementation rulings: class names encode property/context identity without a runtime registry; mixed physical/logical spacing is rejected. User revisions supersede prior hybrid Box requirements and authorize css.dynamic automatic local variables.
 
 
 ## Delivery status (2026-10-06)
 
-The user authorized continuing beyond the feasibility prototype, then replaced hybrid Box with css()/css.props(). Implementation is consolidated into the first engine delivery rather than the original per-task commit sequence. Tasks 2–9 have working implementations and integration checks; file boundaries were combined where they share one responsibility (one recipe processor/compiler, token/theme generation together). The acceptance report records validation and remaining limits; unchecked historical substeps are not an assertion of full Panda API parity.
+The user authorized continuing beyond the feasibility prototype, then replaced hybrid Box with css()/css.dynamic(). Implementation is consolidated into the first engine delivery rather than the original per-task commit sequence. Tasks 2–9 have working implementations and integration checks; file boundaries were combined where they share one responsibility (one recipe processor/compiler, token/theme generation together). The acceptance report records validation and remaining limits; unchecked historical substeps are not an assertion of full Panda API parity.
 
 See [acceptance report](../reports/2026-10-06-styling-acceptance.md). Class identity is encoded in names instead of runtime registration. Compiler-generated dynamic shorthands use independent longhand variables. Precise positional diagnostics, exhaustive CSS property/token typing and broader shorthand support remain follow-up work.

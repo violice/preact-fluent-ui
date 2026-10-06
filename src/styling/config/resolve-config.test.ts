@@ -25,8 +25,8 @@ it('deeply extends presets but replaces directly declared categories', () => {
 });
 it('resolves aliases and rejects unknown references and cycles', () => {
   const config = resolveConfig({ presets: [preset] });
-  expect(tokenReferences(config)['colors.accent']).toBe('var(--fui-colors-accent)');
-  expect(generateThemeCss(config)).toContain('--fui-colors-accent:var(--fui-colors-red)');
+  expect(tokenReferences(config)['colors.accent']).toBe('var(--pfui-colors-accent)');
+  expect(generateThemeCss(config)).toContain('--pfui-colors-accent:var(--pfui-colors-red)');
   expect(() =>
     resolveConfig({ theme: { tokens: { colors: { x: { value: '{colors.y}' } } } } }),
   ).toThrow(/colors.y/);
@@ -41,8 +41,8 @@ it('supports partial brand overrides and rejects unknown brand paths', () => {
     presets: [preset],
     themes: { green: { tokens: { colors: { red: { value: 'green' } } } } },
   });
-  expect(generateThemeCss(config)).toContain('[data-fui-theme="green"]');
-  expect(generateThemeCss(config)).toContain('--fui-colors-blue:blue');
+  expect(generateThemeCss(config)).toContain('[data-pfui-theme="green"]');
+  expect(generateThemeCss(config)).toContain('--pfui-colors-blue:blue');
   expect(() =>
     resolveConfig({
       presets: [preset],
@@ -62,8 +62,8 @@ it('emits mode scopes including same-element roots and nested brand values', () 
   });
   const css = generateThemeCss(config);
   expect(css).toContain('@scope ([data-color-mode="dark"]) to ([data-color-mode="light"])');
-  expect(css).toContain(':scope[data-fui-theme="green"]');
-  expect(css).toContain('--fui-colors-surface:var(--fui-colors-black)');
+  expect(css).toContain(':scope[data-pfui-theme="green"]');
+  expect(css).toContain('--pfui-colors-surface:var(--pfui-colors-black)');
 });
 
 it('uses scope roots for custom parent semantic conditions', () => {

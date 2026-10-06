@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import styles from './input.module.css';
 
@@ -17,7 +17,7 @@ export const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(fu
       {...props}
       ref={ref}
       type={type}
-      class={mergeClasses(styles.input, resolveClass(classProp, className))}
+      class={cx(styles.input, resolveClass(classProp, className))}
     />
   );
 });

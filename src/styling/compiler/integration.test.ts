@@ -49,7 +49,7 @@ it('compiles tokens and all cva/sva branches even when selected at runtime', asy
   const result = await compile(
     `import {css,cva,sva} from ${JSON.stringify(api)}; export const classes=css({color:'accent',_md:{gap:12}}); const button=cva({variants:{size:{sm:{height:24},lg:{height:48}}},defaultVariants:{size:'sm'}}); export const choose=(size)=>button({size}); const card=sva({slots:['root','label'],variants:{invalid:{true:{label:{color:'red'}}}}}); export const parts=()=>card({invalid:true});`,
   );
-  expect(result.css).toContain('var(--fui-colors-accent)');
+  expect(result.css).toContain('var(--pfui-colors-accent)');
   expect(result.css).toContain('height:48px');
   expect(result.css).toContain('@media');
   expect(result.module.choose('lg')).not.toBe(result.module.choose('sm'));
@@ -57,44 +57,44 @@ it('compiles tokens and all cva/sva branches even when selected at runtime', asy
 });
 it('generates local variables with units and evaluates dynamic expressions once', async () => {
   const result = await compile(
-    `import {css} from ${JSON.stringify(api)}; export let calls=0;export function layout(width){return css.props({width:(calls++,width),opacity:0.5,_md:{height:width+1},color:'accent'})}`,
+    `import {css} from ${JSON.stringify(api)}; export let calls=0;export function layout(width){return css.dynamic({width:(calls++,width),opacity:0.5,_md:{height:width+1},color:'accent'})}`,
   );
   const props = result.module.layout(80);
   expect(result.module.calls).toBe(1);
   expect(Object.values(props.style)).toContain('80px');
   expect(Object.values(props.style)).toContain('81px');
-  expect(result.css).toContain('width:var(--fui-local-');
+  expect(result.css).toContain('width:var(--pfui-local-');
   expect(result.css).toContain('opacity:0.5');
   expect(result.css).toContain('@media');
 });
-it('respects import aliases and lexical shadowing for css.props', async () => {
+it('respects import aliases and lexical shadowing for css.dynamic', async () => {
   const result = await compile(
-    `import {css as styles} from ${JSON.stringify(api)}; export function layout(width){return styles.props({width})} export function foreign(styles){return styles.props({width:1})}`,
+    `import {css as styles} from ${JSON.stringify(api)}; export function layout(width){return styles.dynamic({width})} export function foreign(styles){return styles.dynamic({width:1})}`,
   );
   expect(Object.values(result.module.layout(3).style)).toContain('3px');
-  expect(result.module.foreign({ props: (value: unknown) => value })).toEqual({ width: 1 });
+  expect(result.module.foreign({ dynamic: (value: unknown) => value })).toEqual({ width: 1 });
 });
 it('rejects spreads instead of silently losing dynamic style properties', async () => {
   await expect(
     compile(
-      `import {css} from ${JSON.stringify(api)}; export const layout=(values)=>css.props({...values});`,
+      `import {css} from ${JSON.stringify(api)}; export const layout=(values)=>css.dynamic({...values});`,
     ),
   ).rejects.toThrow(/spread|object/i);
 });
 
 it('preserves catch, loop and hoisted var shadows', async () => {
   const result = await compile(`import {css} from ${JSON.stringify(api)};
- export function caught(other){try {throw other} catch(css){return css.props({width:2})}}
- export function loop(values){for(const css of values){return css.props({width:3})}}
- export function hoisted(other){if(true){var css=other} return css.props({width:4})}`);
-  const other = { props: (value: unknown) => value };
+ export function caught(other){try {throw other} catch(css){return css.dynamic({width:2})}}
+ export function loop(values){for(const css of values){return css.dynamic({width:3})}}
+ export function hoisted(other){if(true){var css=other} return css.dynamic({width:4})}`);
+  const other = { dynamic: (value: unknown) => value };
   expect(result.module.caught(other)).toEqual({ width: 2 });
   expect(result.module.loop([other])).toEqual({ width: 3 });
   expect(result.module.hoisted(other)).toEqual({ width: 4 });
 });
 it('expands dynamic spacing into independently composable variables', async () => {
   const result = await compile(
-    `import {css,cx} from ${JSON.stringify(api)}; const left=css({paddingLeft:4}); export function layout(padding){const props=css.props({padding});return {...props,class:cx(props.class,left)}}`,
+    `import {css,cx} from ${JSON.stringify(api)}; const left=css({paddingLeft:4}); export function layout(padding){const props=css.dynamic({padding});return {...props,class:cx(props.class,left)}}`,
   );
   const props = result.module.layout('8px 12px');
   expect(Object.values(props.style)).toEqual(['8px', '12px', '8px', '12px']);
@@ -104,7 +104,7 @@ it('expands dynamic spacing into independently composable variables', async () =
 
 it('extracts relative imports from a custom generated directory', async () => {
   const result = await compile(
-    `import {css,cva} from './generated/css';export function layout(width){return css.props({width})};const recipe=cva({base:{color:'red'}});export const classes=recipe();`,
+    `import {css,cva} from './generated/css';export function layout(width){return css.dynamic({width})};const recipe=cva({base:{color:'red'}});export const classes=recipe();`,
     'generated',
   );
   expect(Object.values(result.module.layout(5).style)).toContain('5px');
@@ -112,15 +112,25 @@ it('extracts relative imports from a custom generated directory', async () => {
 });
 it('preserves switch lexical bindings', async () => {
   const result = await compile(
-    `import {css} from ${JSON.stringify(api)};export function select(n,other){switch(n){case 0:const css=other;return css.props({width:2})}}`,
+    `import {css} from ${JSON.stringify(api)};export function select(n,other){switch(n){case 0:const css=other;return css.dynamic({width:2})}}`,
   );
-  expect(result.module.select(0, { props: (value: unknown) => value })).toEqual({ width: 2 });
+  expect(result.module.select(0, { dynamic: (value: unknown) => value })).toEqual({ width: 2 });
 });
 
 it('evaluates switch discriminants outside the case lexical scope', async () => {
   const result = await compile(
-    `import {css} from ${JSON.stringify(api)};export function select(width,other){switch(css.props({width}).class){default:const css=other;return css.props({width:2})}}`,
+    `import {css} from ${JSON.stringify(api)};export function select(width,other){switch(css.dynamic({width}).class){default:const css=other;return css.dynamic({width:2})}}`,
   );
-  expect(result.module.select(5, { props: (value: unknown) => value })).toEqual({ width: 2 });
-  expect(result.css).toContain('width:var(--fui-local-');
+  expect(result.module.select(5, { dynamic: (value: unknown) => value })).toEqual({ width: 2 });
+  expect(result.css).toContain('width:var(--pfui-local-');
+});
+
+it('compiles css.dynamic with the pfui namespace', async () => {
+  const result = await compile(
+    `import {css} from ${JSON.stringify(api)};export function layout(width){return css.dynamic({width})}`,
+  );
+  const props = result.module.layout(80);
+  expect(props.class).toMatch(/^pfui_/);
+  expect(Object.keys(props.style)[0]).toMatch(/^--pfui-local-/);
+  expect(result.css).toContain('@layer pfui.utilities');
 });

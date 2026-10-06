@@ -14,5 +14,5 @@ export function declarationClass(
   selector = '&',
   conditions: readonly string[] = [],
 ): string {
-  return `fui_${styleHash(JSON.stringify([selector, conditions]))}_${property}_${styleHash(value)}`;
+  return `pfui_${styleHash(JSON.stringify([selector, conditions]))}_${property}_${styleHash(value)}`;
 }

@@ -3,7 +3,7 @@ export type StyleValue = string | number | null | undefined;
 export type StyleObject = {
   [Property: string]: StyleValue | StyleObject;
 };
-export type ClassValue = string | false | null | undefined | readonly ClassValue[];
+export type ClassValue = JSX.Signalish<string | undefined> | false | null | readonly ClassValue[];
 export interface Declaration {
   property: string;
   value: string;

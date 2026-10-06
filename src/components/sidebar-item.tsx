@@ -1,7 +1,7 @@
 import type { ComponentChildren, JSX, Ref, VNode } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useCallback, useContext, useRef, useState } from 'preact/hooks';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import { mergeProps } from '../utils/merge-props';
 import { useRender } from '../utils/use-render';
@@ -125,20 +125,20 @@ export const SidebarItem = /* @__PURE__ */ forwardRef<HTMLElement, SidebarItemPr
           'aria-current': as === 'a' && isActive ? 'page' : undefined,
           'aria-label': label ?? props['aria-label'],
           'data-has-icon': hasIcon,
-          class: mergeClasses(styles.item, resolveClass(classProp, className), classes?.root),
+          class: cx(styles.item, resolveClass(classProp, className), classes?.root),
           children: (
             <>
               {hasIcon && (
-                <span aria-hidden="true" class={mergeClasses(styles.icon, classes?.icon)}>
+                <span aria-hidden="true" class={cx(styles.icon, classes?.icon)}>
                   {icon}
                 </span>
               )}
               <span class={styles.itemText}>
-                <span class={mergeClasses(styles.itemContent, classes?.content)}>{children}</span>
+                <span class={cx(styles.itemContent, classes?.content)}>{children}</span>
                 {description && (
                   <span
                     aria-hidden={layout === 'rail' || undefined}
-                    class={mergeClasses(styles.description, classes?.description)}
+                    class={cx(styles.description, classes?.description)}
                   >
                     {description}
                   </span>

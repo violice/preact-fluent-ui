@@ -1,6 +1,6 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import styles from './sidebar.module.css';
 export type SidebarBrandProps = Omit<JSX.HTMLAttributes<HTMLDivElement>, 'title'> & {
@@ -22,17 +22,17 @@ export const SidebarBrand = /* @__PURE__ */ forwardRef<HTMLDivElement, SidebarBr
         {...props}
         ref={ref}
         data-has-logo={hasLogo}
-        class={mergeClasses(styles.brand, resolveClass(classProp, className), classes?.root)}
+        class={cx(styles.brand, resolveClass(classProp, className), classes?.root)}
       >
         {hasLogo && (
-          <span aria-hidden="true" class={mergeClasses(styles.brandLogo, classes?.logo)}>
+          <span aria-hidden="true" class={cx(styles.brandLogo, classes?.logo)}>
             {logo}
           </span>
         )}
-        <div class={mergeClasses(styles.brandContent, classes?.content)}>
-          <div class={mergeClasses(styles.brandTitle, classes?.title)}>{title}</div>
+        <div class={cx(styles.brandContent, classes?.content)}>
+          <div class={cx(styles.brandTitle, classes?.title)}>{title}</div>
           {description && (
-            <div class={mergeClasses(styles.description, classes?.description)}>{description}</div>
+            <div class={cx(styles.description, classes?.description)}>{description}</div>
           )}
         </div>
       </div>

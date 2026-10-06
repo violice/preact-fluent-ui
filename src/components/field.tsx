@@ -1,7 +1,7 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useId } from 'preact/hooks';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import { fieldClasses } from './field.styles';
 
@@ -65,9 +65,9 @@ export const Field = /* @__PURE__ */ forwardRef<HTMLDivElement, FieldProps>(func
     <div
       {...props}
       ref={ref}
-      class={mergeClasses(styles.root, resolveClass(classProp, className), classes?.root)}
+      class={cx(styles.root, resolveClass(classProp, className), classes?.root)}
     >
-      <label htmlFor={id} class={mergeClasses(styles.label, classes?.label)}>
+      <label htmlFor={id} class={cx(styles.label, classes?.label)}>
         {label}
         {required && (
           <span aria-hidden="true" class={styles.required}>
@@ -77,12 +77,12 @@ export const Field = /* @__PURE__ */ forwardRef<HTMLDivElement, FieldProps>(func
       </label>
       {children(control)}
       {hasHint && (
-        <div id={`${id}-hint`} class={mergeClasses(styles.hint, classes?.hint)}>
+        <div id={`${id}-hint`} class={cx(styles.hint, classes?.hint)}>
           {hint}
         </div>
       )}
       {hasValidation && (
-        <div id={`${id}-validation`} class={mergeClasses(styles.validation, classes?.validation)}>
+        <div id={`${id}-validation`} class={cx(styles.validation, classes?.validation)}>
           {validationMessage}
         </div>
       )}

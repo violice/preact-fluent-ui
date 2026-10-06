@@ -218,7 +218,7 @@ async function inspectLibrary(directory, files) {
         `Library must not embed Preact: ${source}`,
       );
       assert(
-        /^\.\.\/(?:src\/(?:utils\/(?:merge-classes|resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|styles\.ts|module\.css)|(?:tooltip-(?:position|theme)|text-style)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css)|styling\/(?:cx|conflicts|identity|normalize|recipe-runtime|style-props|css|cva|sva|token|index)\.ts|styling\/config\/(?:fluent-preset|define-config|resolve-config|index)\.ts|styling\/compiler\/(?:vite|processor|atomic|tokens|dynamic|recipes)\.ts))$/.test(
+        /^\.\.\/(?:src\/(?:utils\/(?:resolve-class|merge-props|use-render)\.ts|components\/(?:[^/]+\.(?:tsx|styles\.ts|module\.css)|(?:tooltip-(?:position|theme)|text-style)\.ts)|icons\/[^/]+\.(?:ts|tsx|module\.css)|styling\/(?:cx|conflicts|identity|normalize|recipe-runtime|style-props|css|cva|sva|token|index)\.ts|styling\/config\/(?:fluent-preset|define-config|resolve-config|index)\.ts|styling\/compiler\/(?:vite|processor|atomic|tokens|dynamic|recipes)\.ts))$/.test(
           normalized,
         ) && !/\.test\./.test(normalized),
         `Unrelated source content in published map: ${source}`,
@@ -354,7 +354,7 @@ async function inspectConsumer(directory, mode) {
       .flatMap((module) => module.renderedExports);
     assert.deepEqual(
       renderedExports.toSorted(),
-      ['Button', 'Spinner', 'mergeClasses', 'resolveClass'],
+      ['Button', 'Spinner', 'cx', 'resolveClass'],
       'Only Button, its loading Spinner and shared class helpers may remain rendered library exports',
     );
   } else {

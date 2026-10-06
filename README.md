@@ -35,7 +35,7 @@ JavaScript imports do not load CSS. `theme.css` provides root tokens and the sys
 
 ## Styling engine
 
-Use `css()` for compiled classes, `css.props()` for dynamic values and `cva()` / `sva()` for recipes. Box has been removed; apply styles to a native element or an existing component. See [the styling guide](docs/styling.md) for compiler setup, tokens and scoped themes. Components ship precompiled CSS and do not require the compiler.
+Use `css()` for compiled classes, `css.dynamic()` for dynamic values and `cva()` / `sva()` for recipes. Box has been removed; apply styles to a native element or an existing component. See [the styling guide](docs/styling.md) for compiler setup, tokens and scoped themes. Components ship precompiled CSS and do not require the compiler.
 
 ## Limitations
 

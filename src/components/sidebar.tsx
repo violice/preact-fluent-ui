@@ -8,7 +8,7 @@ export { SidebarItem } from './sidebar-item';
 export type { SidebarItemProps } from './sidebar-item';
 export { SidebarBrand } from './sidebar-brand';
 export type { SidebarBrandProps } from './sidebar-brand';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import styles from './sidebar.module.css';
 
@@ -39,7 +39,7 @@ export const Sidebar = /* @__PURE__ */ forwardRef<HTMLElement, SidebarProps>(fun
         data-scrollable={sidebarValue(scrollable)}
         {...props}
         ref={ref}
-        class={mergeClasses(styles.sidebar, resolveClass(classProp, className))}
+        class={cx(styles.sidebar, resolveClass(classProp, className))}
       />
     </SidebarContext.Provider>
   );
@@ -47,11 +47,7 @@ export const Sidebar = /* @__PURE__ */ forwardRef<HTMLElement, SidebarProps>(fun
 export const SidebarHeader = /* @__PURE__ */ forwardRef<HTMLDivElement, SidebarHeaderProps>(
   function SidebarHeader({ class: classProp, className, ...props }, ref) {
     return (
-      <div
-        {...props}
-        ref={ref}
-        class={mergeClasses(styles.header, resolveClass(classProp, className))}
-      />
+      <div {...props} ref={ref} class={cx(styles.header, resolveClass(classProp, className))} />
     );
   },
 );
@@ -59,22 +55,12 @@ export const SidebarNav: FunctionComponent<SidebarNavProps> = /* @__PURE__ */ fo
   HTMLElement,
   SidebarNavProps
 >(function SidebarNav({ class: classProp, className, ...props }, ref) {
-  return (
-    <nav
-      {...props}
-      ref={ref}
-      class={mergeClasses(styles.nav, resolveClass(classProp, className))}
-    />
-  );
+  return <nav {...props} ref={ref} class={cx(styles.nav, resolveClass(classProp, className))} />;
 });
 export const SidebarFooter = /* @__PURE__ */ forwardRef<HTMLDivElement, SidebarFooterProps>(
   function SidebarFooter({ class: classProp, className, ...props }, ref) {
     return (
-      <div
-        {...props}
-        ref={ref}
-        class={mergeClasses(styles.footer, resolveClass(classProp, className))}
-      />
+      <div {...props} ref={ref} class={cx(styles.footer, resolveClass(classProp, className))} />
     );
   },
 );
@@ -88,14 +74,14 @@ export const SidebarGroup = /* @__PURE__ */ forwardRef<HTMLDivElement, SidebarGr
         ref={ref}
         role={props.role ?? (hasLabel ? 'group' : undefined)}
         aria-labelledby={hasLabel ? id : props['aria-labelledby']}
-        class={mergeClasses(styles.group, resolveClass(classProp, className), classes?.root)}
+        class={cx(styles.group, resolveClass(classProp, className), classes?.root)}
       >
         {hasLabel && (
-          <div id={id} class={mergeClasses(styles.label, classes?.label)}>
+          <div id={id} class={cx(styles.label, classes?.label)}>
             {label}
           </div>
         )}
-        <div class={mergeClasses(styles.content, classes?.content)}>{children}</div>
+        <div class={cx(styles.content, classes?.content)}>{children}</div>
       </div>
     );
   },

@@ -22,7 +22,7 @@ export function transformDynamic(
   isSource: (source: string) => boolean,
   context: StyleContext = {},
 ): { code: string; map: ReturnType<MagicString['generateMap']> } | null {
-  if (!code.includes('.props')) return null;
+  if (!code.includes('.dynamic')) return null;
   const parsed = parseSync(id, code);
   if (parsed.errors.length) throw new Error(parsed.errors[0].message);
   const bindings = new Map<string, string>();
@@ -128,14 +128,14 @@ export function transformDynamic(
       !node.callee.computed &&
       node.callee.object.type === 'Identifier' &&
       node.callee.property.type === 'Identifier' &&
-      node.callee.property.name === 'props'
+      node.callee.property.name === 'dynamic'
     ) {
       const local = node.callee.object.name;
       const source = bindings.get(local);
       if (source && !scope.has(local)) {
         const argument = node.arguments[0];
         if (node.arguments.length !== 1 || argument.type !== 'ObjectExpression')
-          throw new Error(`${id}: css.props requires one explicit object without spreads`);
+          throw new Error(`${id}: css.dynamic requires one explicit object without spreads`);
         const entries: string[] = [];
         function style(object: ObjectExpression, path: string[]): string {
           return `{${object.properties
@@ -147,7 +147,7 @@ export function transformDynamic(
                 property.method
               )
                 throw new Error(
-                  `${id}: css.props does not support spreads, computed keys or methods`,
+                  `${id}: css.dynamic does not support spreads, computed keys or methods`,
                 );
               const key =
                 property.key.type === 'Identifier'
@@ -155,7 +155,7 @@ export function transformDynamic(
                   : property.key.type === 'Literal'
                     ? String(property.key.value)
                     : '';
-              if (!key) throw new Error(`${id}: invalid css.props property`);
+              if (!key) throw new Error(`${id}: invalid css.dynamic property`);
               if (property.value.type === 'ObjectExpression')
                 return `${JSON.stringify(key)}:${style(property.value, [...path, key])}`;
               const raw = code.slice(property.value.start, property.value.end);
@@ -165,7 +165,7 @@ export function transformDynamic(
                   property.value.argument.type === 'Literal')
               )
                 return `${JSON.stringify(key)}:${raw}`;
-              const variable = `--fui-local-${styleHash(`${id}:${node.start}:${[...path, key].join('.')}`)}`;
+              const variable = `--pfui-local-${styleHash(`${id}:${node.start}:${[...path, key].join('.')}`)}`;
               entries.push(`[${JSON.stringify(variable)},(${raw}),${JSON.stringify(key)}]`);
               const expanded = expandStyle(key, `var(${variable})`);
               return expanded
@@ -180,7 +180,7 @@ export function transformDynamic(
         const styles = style(argument, []);
         let helper = imports.get(source);
         if (!helper) {
-          helper = `__fuiProps_${styleHash(source + id)}`;
+          helper = `__pfuiDynamic_${styleHash(source + id)}`;
           while (code.includes(helper)) helper += '_';
           imports.set(source, helper);
         }

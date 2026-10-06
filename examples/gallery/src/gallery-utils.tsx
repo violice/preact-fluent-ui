@@ -12,7 +12,7 @@ import {
   Text,
   Checkbox,
   InfoBar,
-  mergeClasses,
+  cx,
   mergeProps,
   resolveClass,
   useRender,
@@ -83,7 +83,7 @@ function ClassesDemo({ resolve = false }: { resolve?: boolean }) {
   const classValue = useSignal<string | undefined>(undefined);
   const selected = resolve
     ? resolveClass(classValue, styles.signalAccent)
-    : mergeClasses('local-base', classValue);
+    : cx('local-base', classValue);
   return (
     <div class={styles.stack}>
       <Checkbox
@@ -136,11 +136,11 @@ const utilityParameters: Record<string, ApiRow[]> = {
       'Prop objects in precedence order. Nullish sources are ignored. Classes accumulate, styles merge and handlers compose right to left.',
     ],
   ],
-  mergeClasses: [
+  cx: [
     [
       '...classes',
-      'JSX.Signalish<string | undefined>[]',
-      'Strings or Signalish values read at call time. Empty values are skipped.',
+      'ClassValue[]',
+      'Strings, signals and nested arrays read at call time. Empty values are skipped.',
     ],
   ],
   resolveClass: [
@@ -159,7 +159,7 @@ const utilityParameters: Record<string, ApiRow[]> = {
 const utilityReturns: Record<string, [type: string, description: string]> = {
   useRender: ['VNode', 'The native or custom root element without an extra wrapper.'],
   mergeProps: ['P', 'A new merged prop object. Inputs are unchanged; refs use right precedence.'],
-  mergeClasses: ['string', 'Joined class names, or an empty string when none remain.'],
+  cx: ['string', 'Joined class names, or an empty string when none remain.'],
   resolveClass: ['string | undefined', 'The resolved primary or fallback class value.'],
 };
 const utilityDocs = [
@@ -187,15 +187,15 @@ const utilityDocs = [
       'Ordinary props use right precedence. Each source resolves class before className, then classes accumulate. Object styles merge by key; string styles replace the previous style, and an object after a string starts a new object. Handlers run right to left until defaultPrevented is true. Refs use right precedence here; useRender composes them.',
   },
   {
-    title: 'mergeClasses',
-    slug: 'merge-classes',
-    purpose: 'Join string and Signalish class values.',
-    signature: 'mergeClasses(...classes: JSX.Signalish<string | undefined>[]): string',
+    title: 'cx',
+    slug: 'cx',
+    purpose: 'Compose classes and read signal values.',
+    signature: 'cx(...classes: ClassValue[]): string',
     demo: ClassesDemo,
     note: 'Toggle the signal to add a class to the local button.',
-    code: `function Example() {\n  const extra = useSignal<string | undefined>('accent');\n  return <Button class={mergeClasses('base', extra)}>Example</Button>;\n}`,
+    code: `function Example() {\n  const extra = useSignal<string | undefined>('accent');\n  return <Button class={cx('base', extra)}>Example</Button>;\n}`,
     limits:
-      'Reads each Signalish value when called and skips empty values. Call during component rendering or inside a computed signal to track changes. It does not resolve conflicting CSS rules or deduplicate classes.',
+      'Reads each Signalish value when called and skips empty values. Call during component rendering or inside a computed signal to track changes. Deduplicates foreign classes and resolves equivalent engine declarations in argument order. Foreign CSS declarations remain outside conflict resolution.',
   },
   {
     title: 'resolveClass',

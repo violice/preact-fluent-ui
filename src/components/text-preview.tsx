@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import { textStyle } from './text-style';
 import styles from './text-content.module.css';
@@ -24,7 +24,7 @@ export const TextPreview = /* @__PURE__ */ forwardRef<HTMLPreElement, TextPrevie
         ref={ref}
         tabIndex={tabIndex}
         style={textStyle(style, wrap)}
-        class={mergeClasses(styles.preview, styles.text, resolveClass(classProp, className))}
+        class={cx(styles.preview, styles.text, resolveClass(classProp, className))}
       >
         {text}
       </pre>

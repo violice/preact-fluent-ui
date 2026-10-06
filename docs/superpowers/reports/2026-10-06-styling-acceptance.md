@@ -1,15 +1,15 @@
 # Styling engine first delivery
 
-Branch: `feat/styling-engine-prototype`. User revisions replace Box with css()/css.props() and require complete removal of standalone clsx/CVA. No push, publication or consumer application migration.
+Branch: `feat/styling-engine-prototype`. User revisions replace Box with css()/css.dynamic() and require complete removal of standalone clsx/CVA. No push, publication or consumer application migration.
 
 ## Implemented
 
 - `css()` emits deterministic atomic class strings through a custom WyW processor; `cx()` composes equivalent property/selector/condition identities while retaining foreign classes.
-- `css.props()` lowers explicit objects before extraction. Static declarations remain CSS; dynamic strings, numbers and signals become local variables in `{ class, style }`. Expressions evaluate once in source order. Supported dynamic shorthands expand into separate longhand variables. Null/undefined omit variables. Nested selectors/conditions work; spreads, computed keys and dynamic object shapes reject.
+- `css.dynamic()` lowers explicit objects before extraction. Static declarations remain CSS; dynamic strings, numbers and signals become local variables in `{ class, style }`. Expressions evaluate once in source order. Supported dynamic shorthands expand into separate longhand variables. Null/undefined omit variables. Nested selectors/conditions work; spreads, computed keys and dynamic object shapes reject.
 - `cva()` and `sva()` extract every variant and compound branch. Runtime selectors preserve defaults, null suppression, boolean selection and ordered compounds. `RecipeVariant` and `RecipeVariantProps` infer required/optional selections.
 - Config supports presets, category replacement, deep extension, alias validation, conditional semantic tokens and partial named palettes. Generated bindings expose typed token paths. Native `@scope` handles nested palettes, independent modes and custom parent semantic conditions. Unrelated conditional values remain inherited.
 - Optional build-only `./vite` and `./config` entries are separated from browser `./styling` and component entries. Existing CSS assets remain explicit imports. Config changes regenerate bindings through a dev-server restart.
-- Button, Field, InfoBar and StatusBadge use the engine recipes. Their public props/accessibility behavior is retained. Box source, exports, contracts and current examples are removed. Legacy class joining delegates to cx; clsx and class-variance-authority are absent from dependencies and bundles.
+- Button, Field, InfoBar and StatusBadge use the engine recipes. Their public props/accessibility behavior is retained. Box source, exports, contracts and current examples are removed. Production class composition calls cx directly; clsx and class-variance-authority are absent from dependencies and bundles.
 
 ## Evidence
 
@@ -23,7 +23,7 @@ Real T3 collaborative browser checks:
 
 - Mode/palette fixture computed colors: dark `rgb(17,17,17)`, green in dark `rgb(17,34,51)`, light inside green `rgb(221,255,221)`, blue inside light `rgb(221,221,255)`, dark inside blue `rgb(17,34,68)`, same-element dark/green `rgb(17,34,51)`.
 - Custom parent semantic condition: default root `rgb(17,17,17)`; descendant, nested and same-element green roots `rgb(17,34,51)`. Unrelated dark semantic background remained blue.
-- Gallery css.props range changed computed width from `220px` to `300px` and updated only its local width variable. A temporary source change of gap from token 4 to 6 applied `16px → 24px` through HMR while width remained `300px`, confirming delivery and state preservation. Source was restored.
+- Gallery css.dynamic range changed computed width from `220px` to `300px` and updated only its local width variable. A temporary source change of gap from token 4 to 6 applied `16px → 24px` through HMR while width remained `300px`, confirming delivery and state preservation. Source was restored.
 - Migrated Button variants produced distinct expected default/primary/subtle/disabled computed backgrounds. Existing behavioral tests cover loading/disabled guards and Field ARIA/IDs/slots.
 
 ## Limits and follow-up
@@ -35,3 +35,10 @@ Mixed logical/physical spacing in the same selector/condition is rejected instea
 Native CSS `@scope` support is required for independent nested theme modes. Portals inherit their destination’s theme; no ThemeProvider or portal synchronization is added. Plain components require no compiler. Untransformed compile-time calls throw.
 
 Diagnostic filenames and sourcemaps are available; exact line/column accuracy remains unverified. There is no comprehensive before/after visual baseline, and native Windows forced-colors acceptance remains pending. Browser keyboard automation was unavailable for the final manual interaction attempt; keyboard behavior is covered by existing automated component tests, not claimed as additional browser evidence.
+
+
+## Follow-up API revision
+
+The namespace is now `pfui`, and dynamic styles use `css.dynamic()`. InfoBar is a single sva with root/title/content slots. mergeClasses is removed, including its public export and gallery page; cx handles signals directly and is exported at root/styling with ClassValue.
+
+Fresh validation after the revision: build, check with 388 tests, 2 release tests, packed consumers for both Preact versions plus the compiled styling consumer, gallery build with 41 pages, and gallery artifact tests. New tests observed fail before implementation for reactive cx and css.dynamic extraction with pfui identifiers. Packed type checks reject css.props, and the root artifact check rejects mergeClasses. Focused independent review found no material regression.

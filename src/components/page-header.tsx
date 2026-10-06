@@ -1,6 +1,6 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import styles from './page-header.module.css';
 
@@ -29,19 +29,15 @@ export const PageHeader = /* @__PURE__ */ forwardRef<HTMLElement, PageHeaderProp
         <header
           {...props}
           ref={ref}
-          class={mergeClasses(styles.header, resolveClass(classProp, className), classes?.root)}
+          class={cx(styles.header, resolveClass(classProp, className), classes?.root)}
         >
-          <div class={mergeClasses(classes?.content)}>
-            <h1 class={mergeClasses(classes?.title)}>{title}</h1>
-            <p class={mergeClasses(classes?.description)}>{description}</p>
+          <div class={cx(classes?.content)}>
+            <h1 class={cx(classes?.title)}>{title}</h1>
+            <p class={cx(classes?.description)}>{description}</p>
           </div>
-          {actions != null && (
-            <div class={mergeClasses(styles.actions, classes?.actions)}>{actions}</div>
-          )}
+          {actions != null && <div class={cx(styles.actions, classes?.actions)}>{actions}</div>}
         </header>
-        {notices != null && (
-          <div class={mergeClasses(styles.notices, classes?.notices)}>{notices}</div>
-        )}
+        {notices != null && <div class={cx(styles.notices, classes?.notices)}>{notices}</div>}
       </>
     );
   },

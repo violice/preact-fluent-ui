@@ -2,9 +2,13 @@
 
 ## Unreleased
 
+- Rename the styling namespace to pfui and the dynamic API to css.dynamic().
+- Remove mergeClasses in favor of signal-aware cx; expose cx from both root and styling entries.
+- Use sva for InfoBar root/title/content slots.
+
 - Add the WyW-based styling engine: css/cx, cva/sva, compound variants, typed token references, configuration and scoped themes.
-- Add css.props() to extract static CSS and assign dynamic values or signals to local CSS variables.
-- Remove Box. Use native elements or existing components with css()/css.props().
+- Add css.dynamic() to extract static CSS and assign dynamic values or signals to local CSS variables.
+- Remove Box. Use native elements or existing components with css()/css.dynamic().
 - Replace bundled clsx and class-variance-authority with the library’s own engine; migrate Button, Field, InfoBar and StatusBadge recipes.
 
 ## 0.5.0 (2026-10-06)
@@ -49,7 +53,7 @@
 ## 0.3.0 (2026-10-05)
 
 - Make application styles the Sidebar default and add expanded/rail/horizontal layouts, scrollable navigation, SidebarBrand and button/custom rendered SidebarItem roots.
-- Add five composable AppShell parts and public useRender, mergeProps, mergeClasses and resolveClass utilities.
+- Add five composable AppShell parts and public useRender, mergeProps, cx and resolveClass utilities.
 - Organize the gallery into 26 canonical documentation pages with grouped component API references, alphabetical Utils navigation, local utility demonstrations and isolated application shell previews.
 - Document render forwarding, refs, style and handler composition, shell layout variables and local archive installation.
 - Fix SidebarItem title and description alignment beside centered icons.

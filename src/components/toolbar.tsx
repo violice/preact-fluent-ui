@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import styles from './toolbar.module.css';
 
@@ -13,11 +13,7 @@ export const Toolbar = /* @__PURE__ */ forwardRef<HTMLDivElement, ToolbarProps>(
   ref,
 ) {
   return (
-    <div
-      {...props}
-      ref={ref}
-      class={mergeClasses(styles.toolbar, resolveClass(classProp, className))}
-    />
+    <div {...props} ref={ref} class={cx(styles.toolbar, resolveClass(classProp, className))} />
   );
 });
 export const ToolbarGroup = /* @__PURE__ */ forwardRef<HTMLDivElement, ToolbarGroupProps>(
@@ -26,7 +22,7 @@ export const ToolbarGroup = /* @__PURE__ */ forwardRef<HTMLDivElement, ToolbarGr
       <div
         {...props}
         ref={ref}
-        class={mergeClasses(
+        class={cx(
           styles.group,
           align === 'end' ? styles.end : undefined,
           resolveClass(classProp, className),

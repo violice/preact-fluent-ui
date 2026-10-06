@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import styles from './card.module.css';
 
 export type CardProps = JSX.HTMLAttributes<HTMLElement> & {
@@ -15,7 +15,7 @@ export const Card = /* @__PURE__ */ forwardRef<HTMLElement, CardProps>(function 
     <section
       {...props}
       ref={ref}
-      class={mergeClasses(
+      class={cx(
         styles.card,
         padding === 'none' ? styles.unpadded : undefined,
         classProp,

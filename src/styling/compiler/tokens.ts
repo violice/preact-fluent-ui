@@ -2,7 +2,7 @@ import { flattenTokens, themeWithOverrides } from '../config/resolve-config.ts';
 import type { ResolvedConfig, TokenLeaf } from '../config/types.ts';
 export function variableName(path: string): string {
   if (/^spacing\.(1|2|3|4|5|6|8)$/.test(path)) return `--space-${path.split('.')[1]}`;
-  return `--fui-${path.replaceAll('.', '-')}`;
+  return `--pfui-${path.replaceAll('.', '-')}`;
 }
 export function tokenReferences(config: ResolvedConfig): Record<string, string> {
   return Object.fromEntries(
@@ -34,18 +34,18 @@ export function generateThemeCss(config: ResolvedConfig): string {
   let css = '';
   for (const [name, theme] of variants) {
     const leaves = { ...flattenTokens(theme.tokens), ...flattenTokens(theme.semanticTokens) };
-    const root = name ? `[data-fui-theme="${name}"]` : ':root';
+    const root = name ? `[data-pfui-theme="${name}"]` : ':root';
     css += `${root}{${declarations(leaves)}}`;
     for (const [mode, opposite] of [
       ['dark', 'light'],
       ['light', 'dark'],
     ]) {
       const selector = name
-        ? `:scope[data-fui-theme="${name}"], [data-fui-theme="${name}"]`
+        ? `:scope[data-pfui-theme="${name}"], [data-pfui-theme="${name}"]`
         : ':scope';
       css += `@scope ([data-color-mode="${mode}"]) to ([data-color-mode="${opposite}"]){${selector}{${declarations(leaves, `_${mode}`)}}}`;
       if (name)
-        css += `@scope ([data-fui-theme="${name}"]) to ([data-fui-theme]:not([data-fui-theme="${name}"])){@scope ([data-color-mode="${mode}"]) to ([data-color-mode="${opposite}"]){:scope{${declarations(leaves, `_${mode}`)}}}}`;
+        css += `@scope ([data-pfui-theme="${name}"]) to ([data-pfui-theme]:not([data-pfui-theme="${name}"])){@scope ([data-color-mode="${mode}"]) to ([data-color-mode="${opposite}"]){:scope{${declarations(leaves, `_${mode}`)}}}}`;
     }
     for (const condition of new Set(
       Object.values(leaves)
@@ -64,11 +64,11 @@ export function generateThemeCss(config: ResolvedConfig): string {
       else {
         const boundary = scope.slice(0, -2).trim();
         const selector = name
-          ? `:scope[data-fui-theme="${name}"], [data-fui-theme="${name}"]`
+          ? `:scope[data-pfui-theme="${name}"], [data-pfui-theme="${name}"]`
           : ':scope';
         css += `@scope (${boundary}){${selector}{${values}}}`;
         if (name)
-          css += `@scope ([data-fui-theme="${name}"]) to ([data-fui-theme]:not([data-fui-theme="${name}"])){@scope (${boundary}){:scope{${values}}}}`;
+          css += `@scope ([data-pfui-theme="${name}"]) to ([data-pfui-theme]:not([data-pfui-theme="${name}"])){@scope (${boundary}){:scope{${values}}}}`;
       }
     }
   }

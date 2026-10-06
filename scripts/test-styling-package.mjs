@@ -41,7 +41,7 @@ try {
  const base=css({color:'accent',gap:8});
  const button=cva({variants:{size:{sm:{height:24},lg:{height:48}}},defaultVariants:{size:'sm'}});
  const slots=sva({slots:['root','label'],variants:{invalid:{true:{label:{color:'red'}}}}});
- export function render(width:number){const props=css.props({width,padding:width/2});return {...props,class:cx(base,props.class,button({size:'lg'})),slots:slots({invalid:true})}}`,
+ export function render(width:number){const props=css.dynamic({width,padding:width/2});return {...props,class:cx(base,props.class,button({size:'lg'})),slots:slots({invalid:true})}}`,
   );
   await writeFile(
     join(temporary, 'fluent.config.ts'),
@@ -57,7 +57,7 @@ try {
   const props = built.render(80);
   assert(Object.values(props.style).includes('80px'));
   assert(Object.values(props.style).includes('40px'));
-  assert.equal(built.color, 'var(--fui-colors-accent)');
+  assert.equal(built.color, 'var(--pfui-colors-accent)');
   assert(props.slots.label);
   const css = await readFile(
     join(temporary, 'dist/fluent-styling.css').replace('fluent-styling.css', 'style.css'),
@@ -67,11 +67,11 @@ try {
     const file = (await readdir(join(temporary, 'dist'))).find((file) => file.endsWith('.css'));
     return readFile(join(temporary, 'dist', file), 'utf8');
   });
-  assert(css.includes('width:var(--fui-local-'));
+  assert(css.includes('width:var(--pfui-local-'));
   assert(css.includes('height:48px'));
   await writeFile(
     join(temporary, 'contracts.ts'),
-    `import {cva,sva,type RecipeVariant,type RecipeVariantProps} from '@violice/preact-fluent-ui/styling';
+    `import {css,cva,sva,type RecipeVariant,type RecipeVariantProps} from '@violice/preact-fluent-ui/styling';
  import {token} from './styled-system/css';
  const recipe=cva({variants:{size:{sm:{height:24},lg:{height:48}},disabled:{true:{opacity:0.5}}}});
  const variant:RecipeVariant<typeof recipe>={size:'sm',disabled:false};
@@ -83,6 +83,8 @@ try {
  const slots=sva({slots:['root','label'],base:{root:{color:'red'}}});slots().label;
  // @ts-expect-error unknown slot
  slots().missing;
+ // @ts-expect-error removed API
+ css.props({width:1});
  void variant;void props;`,
   );
   run(
@@ -105,17 +107,17 @@ try {
   const js = await readFile(join(temporary, 'dist/entry.js'), 'utf8');
   assert(!/wyw-in-js|oxc-parser|magic-string|node:fs/.test(js));
   const firstTheme = await readFile(join(temporary, 'styled-system/theme.css'), 'utf8');
-  assert(firstTheme.includes('--fui-colors-accent:red'));
+  assert(firstTheme.includes('--pfui-colors-accent:red'));
   await writeFile(
     join(temporary, 'fluent.config.ts'),
     `export default {theme:{tokens:{colors:{accent:{value:'blue'}}}}};`,
   );
   run(process.execPath, ['build.mjs'], temporary);
   const secondTheme = await readFile(join(temporary, 'styled-system/theme.css'), 'utf8');
-  assert(secondTheme.includes('--fui-colors-accent:blue'));
-  assert(!secondTheme.includes('--fui-colors-accent:red'));
+  assert(secondTheme.includes('--pfui-colors-accent:blue'));
+  assert(!secondTheme.includes('--pfui-colors-accent:red'));
   console.log(
-    'Packed styling consumer: extraction, css.props, recipes, generated token types and browser isolation passed.',
+    'Packed styling consumer: extraction, css.dynamic, recipes, generated token types and browser isolation passed.',
   );
 } finally {
   await rm(temporary, { recursive: true, force: true });

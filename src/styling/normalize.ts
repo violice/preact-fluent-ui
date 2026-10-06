@@ -103,7 +103,7 @@ export function expandStyle(property: string, value: string): [string, string][]
   }
   if (
     property === 'background' &&
-    !value.startsWith('var(--fui-local-') &&
+    !value.startsWith('var(--pfui-local-') &&
     /^(var\(|#|[a-zA-Z]+$)/.test(value)
   )
     return [['backgroundColor', value]];

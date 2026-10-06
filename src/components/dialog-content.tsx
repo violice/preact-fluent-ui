@@ -1,6 +1,6 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import styles from './dialog-content.module.css';
 
@@ -29,13 +29,13 @@ export const DialogHeader = /* @__PURE__ */ forwardRef<HTMLElement, DialogHeader
       <header
         {...props}
         ref={ref}
-        class={mergeClasses(styles.header, resolveClass(classProp, className), classes?.root)}
+        class={cx(styles.header, resolveClass(classProp, className), classes?.root)}
       >
-        <h2 id={id} class={mergeClasses(styles.title, classes?.title)}>
+        <h2 id={id} class={cx(styles.title, classes?.title)}>
           {title}
         </h2>
         {description != null && (
-          <p class={mergeClasses(styles.description, classes?.description)}>{description}</p>
+          <p class={cx(styles.description, classes?.description)}>{description}</p>
         )}
       </header>
     );
@@ -44,14 +44,12 @@ export const DialogHeader = /* @__PURE__ */ forwardRef<HTMLElement, DialogHeader
 
 export const DialogBody = /* @__PURE__ */ forwardRef<HTMLDivElement, DialogBodyProps>(
   function DialogBody({ class: classProp, className, ...props }, ref) {
-    return <div {...props} ref={ref} class={mergeClasses(styles.body, classProp, className)} />;
+    return <div {...props} ref={ref} class={cx(styles.body, classProp, className)} />;
   },
 );
 
 export const DialogFooter = /* @__PURE__ */ forwardRef<HTMLElement, DialogFooterProps>(
   function DialogFooter({ class: classProp, className, ...props }, ref) {
-    return (
-      <footer {...props} ref={ref} class={mergeClasses(styles.actions, classProp, className)} />
-    );
+    return <footer {...props} ref={ref} class={cx(styles.actions, classProp, className)} />;
   },
 );

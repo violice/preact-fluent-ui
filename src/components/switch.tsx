@@ -1,6 +1,6 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import styles from './switch.module.css';
 
@@ -19,18 +19,18 @@ export const Switch = /* @__PURE__ */ forwardRef<HTMLInputElement, SwitchProps>(
   ref,
 ) {
   return (
-    <label class={mergeClasses(styles.wrapper, classes?.wrapper)} hidden={props.hidden}>
+    <label class={cx(styles.wrapper, classes?.wrapper)} hidden={props.hidden}>
       <input
         {...props}
         type="checkbox"
         role="switch"
         ref={ref}
-        class={mergeClasses(styles.input, resolveClass(classProp, className), classes?.root)}
+        class={cx(styles.input, resolveClass(classProp, className), classes?.root)}
       />
-      <span class={mergeClasses(styles.track, classes?.track)} aria-hidden="true">
-        <span class={mergeClasses(styles.thumb, classes?.thumb)} aria-hidden="true" />
+      <span class={cx(styles.track, classes?.track)} aria-hidden="true">
+        <span class={cx(styles.thumb, classes?.thumb)} aria-hidden="true" />
       </span>
-      <span class={mergeClasses(styles.label, classes?.label)}>{label}</span>
+      <span class={cx(styles.label, classes?.label)}>{label}</span>
     </label>
   );
 });

@@ -1,7 +1,7 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useCallback, useLayoutEffect, useRef } from 'preact/hooks';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import styles from './checkbox.module.css';
 
@@ -33,15 +33,15 @@ export const Checkbox = /* @__PURE__ */ forwardRef<HTMLInputElement, CheckboxPro
     }, [props.checked, indeterminate]);
 
     return (
-      <label class={mergeClasses(styles.wrapper, classes?.wrapper)} hidden={props.hidden}>
+      <label class={cx(styles.wrapper, classes?.wrapper)} hidden={props.hidden}>
         <input
           {...props}
           type="checkbox"
           ref={setRef}
-          class={mergeClasses(styles.input, resolveClass(classProp, className), classes?.root)}
+          class={cx(styles.input, resolveClass(classProp, className), classes?.root)}
         />
-        <span class={mergeClasses(styles.indicator, classes?.indicator)} aria-hidden="true" />
-        <span class={mergeClasses(styles.label, classes?.label)}>{label}</span>
+        <span class={cx(styles.indicator, classes?.indicator)} aria-hidden="true" />
+        <span class={cx(styles.label, classes?.label)}>{label}</span>
       </label>
     );
   },

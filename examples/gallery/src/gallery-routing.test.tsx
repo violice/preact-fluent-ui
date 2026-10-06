@@ -318,7 +318,7 @@ it('exposes all new utility and shell pages in base-aware navigation', async () 
     within(nav.lastElementChild as HTMLElement)
       .getAllByRole('link')
       .map((link) => link.textContent),
-  ).toEqual(['mergeClasses', 'mergeProps', 'resolveClass', 'useRender']);
+  ).toEqual(['cx', 'mergeProps', 'resolveClass', 'useRender']);
   for (const [slug, title] of [
     ['app-shell', 'AppShell'],
     ['sidebar', 'Sidebar'],
@@ -510,7 +510,7 @@ it('documents composite families on one canonical page with an API table for eac
   }
 });
 
-it.each(['use-render', 'merge-props', 'merge-classes', 'resolve-class'])(
+it.each(['use-render', 'merge-props', 'cx', 'resolve-class'])(
   'documents parameters and returns alongside the %s signature',
   (slug) => {
     history.replaceState(null, '', `/utils/${slug}`);

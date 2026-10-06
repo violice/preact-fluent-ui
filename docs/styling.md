@@ -52,20 +52,20 @@ import './styled-system/theme.css';
 const panel = css({ display: 'grid', gap: '4', color: 'action', _md: { gap: '6' } });
 
 export function Panel({ width }: { width: number }) {
-  return <section {...css.props({ width, padding: width / 10 })} class={cx(panel, css({ borderRadius: 'lg' }))} />;
+  return <section {...css.dynamic({ width, padding: width / 10 })} class={cx(panel, css({ borderRadius: 'lg' }))} />;
 }
 ```
 
 Ordinary JSX prop order applies: the explicit `class` above replaces the spread’s class. To retain both, compose them explicitly:
 
 ```tsx
-const dynamic = css.props({ width, padding: width / 10 });
+const dynamic = css.dynamic({ width, padding: width / 10 });
 return <section {...dynamic} class={cx(panel, dynamic.class)} />;
 ```
 
-`css()` returns a class string. Its style objects must be evaluable at build time. `css.props()` returns `{ class, style }`: static declarations become extracted CSS, while each dynamic scalar becomes a local custom property. Expressions run once, in source order. Numbers receive units for lengths; unitless properties retain numbers. Strings can name category tokens or contain `{full.token.path}` aliases. `token.var('colors.action')` supplies an explicit variable reference.
+`css()` returns a class string. Its style objects must be evaluable at build time. `css.dynamic()` returns `{ class, style }`: static declarations become extracted CSS, while each dynamic scalar becomes a local custom property. Expressions run once, in source order. Numbers receive units for lengths; unitless properties retain numbers. Strings can name category tokens or contain `{full.token.path}` aliases. `token.var('colors.action')` supplies an explicit variable reference.
 
-Dynamic inputs may be strings, numbers, null/undefined or Preact signals. Read signals through `css.props()` inside a component render to subscribe to updates. Null removes the inline variable. Nested selectors and configured conditions require explicit objects; spreads, computed keys and dynamic nested objects are rejected. No runtime stylesheet insertion is used.
+Dynamic inputs may be strings, numbers, null/undefined or Preact signals. Read signals through `css.dynamic()` inside a component render to subscribe to updates. Null removes the inline variable. Nested selectors and configured conditions require explicit objects; spreads, computed keys and dynamic nested objects are rejected. No runtime stylesheet insertion is used.
 
 `cx()` retains foreign classes and selects the last engine declaration for the same property, selector and condition. Supported shorthands expand into independently composable declarations. Overlapping unexpanded shorthands and longhands are rejected; use explicit longhands for those combinations. Mixing logical and physical spacing in the same context is rejected because direction and writing mode make their overlap ambiguous.
 
@@ -99,6 +99,6 @@ All declared branches are extracted even when selection occurs at runtime. Undef
 
 ## Theme scopes
 
-Use `data-fui-theme="green"` for a named palette and `data-color-mode="light"` or `"dark"` for explicit mode. Both attributes can sit on the same root or on separate nested elements; nested scopes inherit the current palette and can change mode independently. A nested named theme replaces its palette with the resolved named theme. Generated mode boundaries use native CSS `@scope`, so the target browser must support it. Portals must receive the desired theme attributes on their destination container.
+Use `data-pfui-theme="green"` for a named palette and `data-color-mode="light"` or `"dark"` for explicit mode. Both attributes can sit on the same root or on separate nested elements; nested scopes inherit the current palette and can change mode independently. A nested named theme replaces its palette with the resolved named theme. Generated mode boundaries use native CSS `@scope`, so the target browser must support it. Portals must receive the desired theme attributes on their destination container.
 
 This is the first implementation. CSS types permit arbitrary property strings; they do not yet constrain each property to its token category. Only Vite integration is provided. Positional source-map accuracy and native Windows forced-colors behavior still need separate verification.

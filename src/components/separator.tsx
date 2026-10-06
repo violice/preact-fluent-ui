@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import styles from './separator.module.css';
 
@@ -27,11 +27,7 @@ export const Separator = /* @__PURE__ */ forwardRef<HTMLDivElement, SeparatorPro
         role={decorative ? 'none' : 'separator'}
         aria-hidden={decorative ? true : undefined}
         aria-orientation={decorative ? undefined : orientation}
-        class={mergeClasses(
-          styles.separator,
-          styles[orientation],
-          resolveClass(classProp, className),
-        )}
+        class={cx(styles.separator, styles[orientation], resolveClass(classProp, className))}
       />
     );
   },

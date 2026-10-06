@@ -41,7 +41,7 @@ Button, Card, StatusBadge, Icon, DialogBody, and DialogFooter merge `class` and 
 
 ## Layout
 
-Box was removed in favor of `css()` and `css.props()` from the styling subpath or generated bindings. Native elements and existing components keep their own props and refs. See [the styling guide](styling.md) for compiler setup, recipes, token types and dynamic variables.
+Box was removed in favor of `css()` and `css.dynamic()` from the styling subpath or generated bindings. Native elements and existing components keep their own props and refs. See [the styling guide](styling.md) for compiler setup, recipes, token types and dynamic variables.
 
 ## Typography
 
@@ -278,7 +278,7 @@ See the [composition example](../README.md#sidebar-composition). The library imp
 All utilities import from the main package entry. Production code has no Signals, React, Base UI or router dependency.
 
 ```ts
-mergeClasses(...classes: JSX.Signalish<string | undefined>[]): string
+cx(...classes: ClassValue[]): string
 resolveClass(classProp: JSX.Signalish<string | undefined>, className: JSX.Signalish<string | undefined>): string | undefined
 mergeProps<P extends object>(...sources: (Partial<P> | null | undefined)[]): P
 useRender<Tag extends keyof JSX.IntrinsicElements, S extends object = Record<string, never>>(options: UseRenderOptions<Tag, S>): VNode
@@ -290,7 +290,7 @@ VNode templates merge after component props. Explicit template children replace 
 
 mergeProps merges ordinary props left to right. Each source selects class before className, then the selected classes accumulate. Object styles merge by key; string styles replace previous styles and an object following a string starts a new style object. Event handlers run right to left, stopping earlier handlers when the event is defaultPrevented. Ref uses ordinary right precedence in mergeProps; useRender handles composition separately. Null and undefined sources are skipped.
 
-mergeClasses reads string or Signalish values and joins nonempty classes. resolveClass reads both values and selects class unless it is null or undefined. An empty string suppresses className fallback. Neither helper resolves CSS conflicts or creates a computed signal; call them during a tracked render or computed calculation for signal updates.
+cx accepts strings, signals, false/null/undefined and nested arrays. It deduplicates foreign classes and resolves equivalent engine declarations in argument order. resolveClass reads both values and selects class unless it is null or undefined. An empty string suppresses className fallback. Neither helper creates a computed signal; call them during a tracked render or computed calculation for signal updates.
 
 The existing shell and utility API is published. Version 0.4.0 adds AppShellToolbar as a direct Workspace child and replaces DataToolbar/DataToolbarGroup with Toolbar/ToolbarGroup. Install version 0.4.0 or newer from npm to use these additions.
 

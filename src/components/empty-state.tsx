@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import { Icon, type IconName } from '../icons/icon';
 import styles from './empty-state.module.css';
@@ -34,12 +34,12 @@ export const EmptyState = /* @__PURE__ */ forwardRef<HTMLElement, EmptyStateProp
       <section
         {...props}
         ref={ref}
-        class={mergeClasses(styles.empty, resolveClass(classProp, className), classes?.root)}
+        class={cx(styles.empty, resolveClass(classProp, className), classes?.root)}
         role={role}
       >
-        <Icon name={icon} size={24} class={mergeClasses(classes?.icon)} />
-        <h2 class={mergeClasses(classes?.title)}>{title}</h2>
-        <div class={mergeClasses(styles.content, classes?.content)}>{children}</div>
+        <Icon name={icon} size={24} class={cx(classes?.icon)} />
+        <h2 class={cx(classes?.title)}>{title}</h2>
+        <div class={cx(styles.content, classes?.content)}>{children}</div>
       </section>
     );
   },

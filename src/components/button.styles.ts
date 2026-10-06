@@ -11,11 +11,11 @@ export const buttonClasses = cva({
     gap: 'var(--space-2)',
     minHeight: '36px',
     padding: '7px 14px',
-    border: '1px solid var(--fui-colors-control-border)',
-    borderBottomColor: 'var(--fui-colors-control-bottom)',
+    border: '1px solid var(--pfui-colors-control-border)',
+    borderBottomColor: 'var(--pfui-colors-control-bottom)',
     borderRadius: 'var(--radius-sm)',
-    color: 'var(--fui-colors-text)',
-    background: 'var(--fui-colors-control)',
+    color: 'var(--pfui-colors-text)',
+    background: 'var(--pfui-colors-control)',
     fontSize: 'var(--type-body)',
     lineHeight: '20px',
     fontWeight: 'var(--weight-semibold)',
@@ -26,29 +26,29 @@ export const buttonClasses = cva({
     boxShadow: 'var(--shadow-control)',
     transition:
       'background-color 100ms ease,border-color 100ms ease,color 100ms ease,box-shadow 100ms ease',
-    '&:hover:not(:disabled):not([data-fui-loading])': {
-      background: 'var(--fui-colors-control-hover)',
+    '&:hover:not(:disabled):not([data-pfui-loading])': {
+      background: 'var(--pfui-colors-control-hover)',
     },
-    '&:active:not(:disabled):not([data-fui-loading])': {
-      background: 'var(--fui-colors-control-pressed)',
-      borderBottomColor: 'var(--fui-colors-control-border)',
+    '&:active:not(:disabled):not([data-pfui-loading])': {
+      background: 'var(--pfui-colors-control-pressed)',
+      borderBottomColor: 'var(--pfui-colors-control-border)',
       boxShadow: 'none',
     },
     '&:disabled': {
-      color: 'var(--fui-colors-disabled)',
-      background: 'var(--fui-colors-surface-muted)',
-      borderColor: 'var(--fui-colors-border)',
+      color: 'var(--pfui-colors-disabled)',
+      background: 'var(--pfui-colors-surface-muted)',
+      borderColor: 'var(--pfui-colors-border)',
       boxShadow: 'none',
       cursor: 'not-allowed',
     },
     '@media (forced-colors: active)': {
       '&:disabled': { color: 'GrayText', background: 'Canvas', borderColor: 'GrayText' },
-      '&:hover:not(:disabled):not([data-fui-loading])': {
+      '&:hover:not(:disabled):not([data-pfui-loading])': {
         outline: '1px solid Highlight',
         outlineOffset: '-3px',
       },
     },
-    '&:focus-visible': { outline: '2px solid var(--fui-colors-focus)', outlineOffset: '2px' },
+    '&:focus-visible': { outline: '2px solid var(--pfui-colors-focus)', outlineOffset: '2px' },
     '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
     '&[hidden]': { display: 'none' },
   },
@@ -56,23 +56,23 @@ export const buttonClasses = cva({
     variant: {
       default: {},
       primary: {
-        color: 'var(--fui-colors-on-primary)',
-        background: 'var(--fui-colors-primary)',
-        borderColor: 'var(--fui-colors-primary)',
-        borderBottomColor: 'var(--fui-colors-primary-pressed)',
+        color: 'var(--pfui-colors-on-primary)',
+        background: 'var(--pfui-colors-primary)',
+        borderColor: 'var(--pfui-colors-primary)',
+        borderBottomColor: 'var(--pfui-colors-primary-pressed)',
         boxShadow: 'var(--shadow-primary)',
-        '&:hover:not(:disabled):not([data-fui-loading])': {
-          background: 'var(--fui-colors-primary-hover)',
-          borderColor: 'var(--fui-colors-primary-hover)',
+        '&:hover:not(:disabled):not([data-pfui-loading])': {
+          background: 'var(--pfui-colors-primary-hover)',
+          borderColor: 'var(--pfui-colors-primary-hover)',
         },
-        '&:active:not(:disabled):not([data-fui-loading])': {
-          background: 'var(--fui-colors-primary-pressed)',
-          borderColor: 'var(--fui-colors-primary-pressed)',
+        '&:active:not(:disabled):not([data-pfui-loading])': {
+          background: 'var(--pfui-colors-primary-pressed)',
+          borderColor: 'var(--pfui-colors-primary-pressed)',
         },
         '&:disabled': {
-          color: 'var(--fui-colors-disabled)',
-          background: 'var(--fui-colors-surface-muted)',
-          borderColor: 'var(--fui-colors-border)',
+          color: 'var(--pfui-colors-disabled)',
+          background: 'var(--pfui-colors-surface-muted)',
+          borderColor: 'var(--pfui-colors-border)',
           boxShadow: 'none',
         },
         '@media (forced-colors: active)': {
@@ -82,13 +82,13 @@ export const buttonClasses = cva({
             background: 'Highlight',
             borderColor: 'Highlight',
           },
-          '&:hover:not(:disabled):not([data-fui-loading])': {
+          '&:hover:not(:disabled):not([data-pfui-loading])': {
             forcedColorAdjust: 'none',
             color: 'HighlightText',
             background: 'Highlight',
             borderColor: 'Highlight',
           },
-          '&:active:not(:disabled):not([data-fui-loading])': {
+          '&:active:not(:disabled):not([data-pfui-loading])': {
             forcedColorAdjust: 'none',
             color: 'HighlightText',
             background: 'Highlight',
@@ -97,27 +97,27 @@ export const buttonClasses = cva({
         },
       },
       subtle: {
-        color: 'var(--fui-colors-text)',
+        color: 'var(--pfui-colors-text)',
         background: 'transparent',
         borderColor: 'transparent',
         boxShadow: 'none',
-        '&:hover:not(:disabled):not([data-fui-loading])': {
-          background: 'var(--fui-colors-surface-hover)',
+        '&:hover:not(:disabled):not([data-pfui-loading])': {
+          background: 'var(--pfui-colors-surface-hover)',
         },
-        '&:active:not(:disabled):not([data-fui-loading])': {
-          background: 'var(--fui-colors-surface-pressed)',
+        '&:active:not(:disabled):not([data-pfui-loading])': {
+          background: 'var(--pfui-colors-surface-pressed)',
         },
         '@media (forced-colors: active)': { '&:not(:disabled)': { borderColor: 'ButtonText' } },
       },
       danger: {
-        color: 'var(--fui-colors-danger)',
-        '&:hover:not(:disabled):not([data-fui-loading])': {
-          color: 'var(--fui-colors-danger)',
-          background: 'var(--fui-colors-danger-bg)',
-          borderColor: 'var(--fui-colors-danger)',
+        color: 'var(--pfui-colors-danger)',
+        '&:hover:not(:disabled):not([data-pfui-loading])': {
+          color: 'var(--pfui-colors-danger)',
+          background: 'var(--pfui-colors-danger-bg)',
+          borderColor: 'var(--pfui-colors-danger)',
         },
-        '&:active:not(:disabled):not([data-fui-loading])': {
-          background: 'var(--fui-colors-surface-pressed)',
+        '&:active:not(:disabled):not([data-pfui-loading])': {
+          background: 'var(--pfui-colors-surface-pressed)',
         },
       },
     },

@@ -1,7 +1,7 @@
 import type { ComponentChildren, JSX, RefObject } from 'preact';
 import { createPortal, forwardRef } from 'preact/compat';
 import { useImperativeHandle, useLayoutEffect, useRef } from 'preact/hooks';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import styles from './modal.module.css';
 
@@ -201,7 +201,7 @@ export const Modal = /* @__PURE__ */ forwardRef<HTMLDivElement, ModalProps>(func
   return createPortal(
     <div
       ref={backdropRef}
-      class={mergeClasses(styles.backdrop, classes?.backdrop)}
+      class={cx(styles.backdrop, classes?.backdrop)}
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) event.preventDefault();
       }}
@@ -212,7 +212,7 @@ export const Modal = /* @__PURE__ */ forwardRef<HTMLDivElement, ModalProps>(func
       <div
         {...props}
         ref={dialogRef}
-        class={mergeClasses(styles.dialog, resolveClass(classProp, className), classes?.root)}
+        class={cx(styles.dialog, resolveClass(classProp, className), classes?.root)}
         role="dialog"
         aria-modal="true"
         aria-labelledby={labelledBy}

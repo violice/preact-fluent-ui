@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import { Icon } from '../icons/icon';
 import styles from './select.module.css';
@@ -14,15 +14,15 @@ export const Select = /* @__PURE__ */ forwardRef<HTMLSelectElement, SelectProps>
   ref,
 ) {
   return (
-    <span class={mergeClasses(styles.control, classes?.wrapper)}>
+    <span class={cx(styles.control, classes?.wrapper)}>
       <select
         {...props}
         ref={ref}
-        class={mergeClasses(styles.select, resolveClass(classProp, className), classes?.root)}
+        class={cx(styles.select, resolveClass(classProp, className), classes?.root)}
       >
         {children}
       </select>
-      <Icon name="chevron-down" size={16} class={mergeClasses(styles.chevron, classes?.icon)} />
+      <Icon name="chevron-down" size={16} class={cx(styles.chevron, classes?.icon)} />
     </span>
   );
 });

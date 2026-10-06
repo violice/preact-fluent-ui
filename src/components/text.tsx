@@ -1,6 +1,6 @@
 import type { JSX, RefCallback } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { mergeClasses } from '../utils/merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 import { useRender } from '../utils/use-render';
 import type { RenderProp } from '../utils/use-render';
@@ -57,7 +57,7 @@ export const Text = /* @__PURE__ */ forwardRef<HTMLElement, TextProps>(function 
     state: { preset: resolvedPreset, color: resolvedColor },
     props: {
       ...props,
-      class: mergeClasses(
+      class: cx(
         styles.text,
         styles[resolvedPreset],
         resolvedColor === 'inherit' ? undefined : styles[resolvedColor],

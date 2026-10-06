@@ -1,7 +1,7 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { infoBarClasses, titleClass, contentClass } from './info-bar.styles';
-import { mergeClasses } from '../utils/merge-classes';
+import { infoBarClasses } from './info-bar.styles';
+import { cx } from '../styling/cx';
 import { resolveClass } from '../utils/resolve-class';
 
 export type InfoBarProps = JSX.HTMLAttributes<HTMLDivElement> & {
@@ -18,21 +18,16 @@ export const InfoBar = /* @__PURE__ */ forwardRef<HTMLDivElement, InfoBarProps>(
   { tone = 'info', title, children, classes, class: classProp, className, role, ...props },
   ref,
 ) {
+  const styles = infoBarClasses({ tone });
   return (
     <div
       {...props}
       ref={ref}
       role={role ?? (tone === 'error' ? 'alert' : 'status')}
-      class={mergeClasses(
-        infoBarClasses({ tone }),
-        resolveClass(classProp, className),
-        classes?.root,
-      )}
+      class={cx(styles.root, resolveClass(classProp, className), classes?.root)}
     >
-      {title && <strong class={mergeClasses(titleClass, classes?.title)}>{title}</strong>}
-      {children != null && (
-        <div class={mergeClasses(contentClass, classes?.content)}>{children}</div>
-      )}
+      {title && <strong class={cx(styles.title, classes?.title)}>{title}</strong>}
+      {children != null && <div class={cx(styles.content, classes?.content)}>{children}</div>}
     </div>
   );
 });

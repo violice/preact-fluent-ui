@@ -100,7 +100,8 @@ export type {
   SidebarBrandProps,
   SidebarLayout,
 } from './components/sidebar';
-export { mergeClasses } from './utils/merge-classes';
+export { cx } from './styling/cx';
+export type { ClassValue } from './styling/types';
 export { resolveClass } from './utils/resolve-class';
 export { mergeProps } from './utils/merge-props';
 

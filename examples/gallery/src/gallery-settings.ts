@@ -49,7 +49,7 @@ export function settingsUrl(url: URL, settings: GallerySettings): URL {
 // Read tokens from the actual showcased package, including on the published gallery.
 export function themeTokenBlocks(css: string) {
   const blocks = [...css.matchAll(/:root\s*\{([^{}]*)\}/g)]
-    .filter((match) => !/--fui-[\w-]+\s*:/.test(match[1]))
+    .filter((match) => !/--pfui-[\w-]+\s*:/.test(match[1]))
     .map((match) => match[1].trim().replace(/;*$/, ';'));
   if (blocks.length !== 3) throw new Error('Expected light, dark and forced-colors theme tokens');
   return blocks;

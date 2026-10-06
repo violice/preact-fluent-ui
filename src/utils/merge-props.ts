@@ -1,5 +1,5 @@
 import type { JSX } from 'preact';
-import { mergeClasses } from './merge-classes';
+import { cx } from '../styling/cx';
 import { resolveClass } from './resolve-class';
 
 type Handler = (...args: unknown[]) => unknown;
@@ -48,7 +48,7 @@ export function mergeProps<P extends object>(...sources: (Partial<P> | null | un
       }
     }
     if ('class' in props || 'className' in props) {
-      result.class = mergeClasses(
+      result.class = cx(
         result.class as string | undefined,
         resolveClass(
           props.class as JSX.Signalish<string | undefined>,
