@@ -1,8 +1,8 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
-import styles from './switch.styles';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
+import { switchStyles } from './switch.styles';
 
 export type SwitchProps = Omit<
   JSX.InputHTMLAttributes<HTMLInputElement>,
@@ -19,18 +19,18 @@ export const Switch = /* @__PURE__ */ forwardRef<HTMLInputElement, SwitchProps>(
   ref,
 ) {
   return (
-    <label class={cx(styles.wrapper, classes?.wrapper)} hidden={props.hidden}>
+    <label class={cx(switchStyles.wrapper, classes?.wrapper)} hidden={props.hidden}>
       <input
         {...props}
         type="checkbox"
         role="switch"
         ref={ref}
-        class={cx(styles.input, resolveClass(classProp, className), classes?.root)}
+        class={cx(switchStyles.input, resolveClass(classProp, className), classes?.root)}
       />
-      <span class={cx(styles.track, classes?.track)} aria-hidden="true">
-        <span class={cx(styles.thumb, classes?.thumb)} aria-hidden="true" />
+      <span class={cx(switchStyles.track, classes?.track)} aria-hidden="true">
+        <span class={cx(switchStyles.thumb, classes?.thumb)} aria-hidden="true" />
       </span>
-      <span class={cx(styles.label, classes?.label)}>{label}</span>
+      <span class={cx(switchStyles.label, classes?.label)}>{label}</span>
     </label>
   );
 });

@@ -3,7 +3,7 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** Implement the approved src organization review without changing public behavior.
-**Architecture:** Explicit component exports; styling runtime/shared/config/compiler/adapters boundaries; separate preset data and generated runtime token bindings; local behavior hooks.
+**Architecture:** Explicit component exports; styles runtime/shared/config/compiler/adapters boundaries; separate preset data and generated runtime token bindings; local behavior hooks.
 **Tech Stack:** Preact, TypeScript, Vite, Vitest, Node.
 **Spec:** docs/superpowers/specs/2026-10-07-src-reorganization-design.md
 
@@ -28,13 +28,13 @@
 - [x] Route root component exports through family indexes; move multipart tests to __tests__.
 - [x] Run component tests and typecheck.
 
-## Task 2: styling boundaries and preset
+## Task 2: styles boundaries and preset
 
 - [x] Move runtime/shared/adapters files and rewrite import paths, build entries and declaration exports.
 - [x] Split normalize CSS values from compiler selector traversal.
 - [x] Split concrete tokens, semantic tokens and legacy aliases from fluent preset assembly.
 - [x] Generate default runtime token references from preset, retaining the existing public key categories.
-- [x] Add/run binding freshness and unknown-token behavior tests; run styling tests and build.
+- [x] Add/run binding freshness and unknown-token behavior tests; run styles tests and build.
 
 ## Task 3: component behavior
 
@@ -44,6 +44,6 @@
 
 ## Task 4: verification and review
 
-- [x] Run full check, build and packed component/styling consumers.
+- [x] Run full check, build and packed component/styles consumers.
 - [x] Request an independent review of changes since ef1da63, address material findings.
 - [x] Commit the verified refactor and store project context.

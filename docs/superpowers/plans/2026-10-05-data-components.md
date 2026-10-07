@@ -25,7 +25,7 @@
 - Pagination receives a stale page after results shrink: display a valid page without emitting an unsolicited callback.
 - Tables contain row headers and spanning cells: native scope, headers, colSpan, and rowSpan remain intact.
 - Controls and metadata contain long values or RTL text: preserve reading order and avoid page-level horizontal overflow.
-- Native hidden, class, and ref attributes are used: styling must not override hidden and refs must target the documented elements.
+- Native hidden, class, and ref attributes are used: styles must not override hidden and refs must target the documented elements.
 - Separators appear among keyboard controls: decorative elements remain unannounced and unfocusable; semantic orientation is accurate.
 
 ## File map
@@ -101,7 +101,7 @@ Defaults are horizontal and true. Ref is HTMLDivElement.
 
 - [x] Write tests asserting default role='none'/aria-hidden='true', semantic role='separator' and both aria-orientation values, semantic labels, native ref/class/style/hidden forwarding, and no default tabindex. Assert semantic mode does not retain decorative aria-hidden.
 - [x] Run `npx vitest run src/components/separator.test.tsx`; confirm failure.
-- [x] Implement derived semantic attributes and exports. Use theme border color and one-pixel logical sizing. Vertical stretches in flex layout; allow consumer sizing. Do not add margins or focus handling; include forced-colors styling.
+- [x] Implement derived semantic attributes and exports. Use theme border color and one-pixel logical sizing. Vertical stretches in flex layout; allow consumer sizing. Do not add margins or focus handling; include forced-colors styles.
 - [x] Run focused tests and `npm run typecheck`; expect success. Verify vertical sizing and forced colors during Task 6.
 - [x] Commit with `feat: add decorative and semantic separators`.
 

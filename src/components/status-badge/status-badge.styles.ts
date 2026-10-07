@@ -1,9 +1,9 @@
-import { cva } from '../../styling';
+import { cva } from '../../styles';
 export const badgeClasses = cva({
   base: {
     boxSizing: 'border-box',
     overflowWrap: 'anywhere',
-    fontFamily: 'var(--font-body)',
+    fontFamily: 'var(--pfui-fonts-body)',
     fontSynthesis: 'none',
     display: 'inline-flex',
     alignItems: 'center',
@@ -11,10 +11,10 @@ export const badgeClasses = cva({
     maxWidth: '100%',
     minHeight: '24px',
     padding: '3px 8px',
-    border: '1px solid var(--color-border)',
+    border: '1px solid var(--pfui-colors-border)',
     borderRadius: '20px',
-    color: 'var(--color-text-muted)',
-    background: 'var(--color-surface-muted)',
+    color: 'var(--pfui-colors-text-muted)',
+    background: 'var(--pfui-colors-surface-muted)',
     fontSize: '12px',
     fontWeight: '500',
     lineHeight: '16px',
@@ -34,18 +34,18 @@ export const badgeClasses = cva({
     tone: {
       neutral: {},
       success: {
-        color: 'var(--color-success)',
-        background: 'var(--color-success-bg)',
+        color: 'var(--pfui-colors-success)',
+        background: 'var(--pfui-colors-success-bg)',
         borderColor: 'transparent',
       },
       warning: {
-        color: 'var(--color-warning)',
-        background: 'var(--color-warning-bg)',
+        color: 'var(--pfui-colors-warning)',
+        background: 'var(--pfui-colors-warning-bg)',
         borderColor: 'transparent',
       },
       error: {
-        color: 'var(--color-danger)',
-        background: 'var(--color-danger-bg)',
+        color: 'var(--pfui-colors-danger)',
+        background: 'var(--pfui-colors-danger-bg)',
         borderColor: 'transparent',
       },
     },

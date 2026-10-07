@@ -1,8 +1,8 @@
-import { cva } from '../../styling';
+import { cva } from '../../styles';
 export const textClasses = cva({
   base: {
     margin: '0',
-    fontFamily: 'var(--font-body)',
+    fontFamily: 'var(--pfui-fonts-body)',
     fontSynthesis: 'none',
     overflowWrap: 'anywhere',
   },
@@ -61,13 +61,13 @@ export const textClasses = cva({
     },
     color: {
       default: {
-        color: 'var(--color-text)',
+        color: 'var(--pfui-colors-text)',
       },
       muted: {
-        color: 'var(--color-text-muted)',
+        color: 'var(--pfui-colors-text-muted)',
       },
       subtle: {
-        color: 'var(--color-text-subtle)',
+        color: 'var(--pfui-colors-text-subtle)',
       },
       inherit: {},
     },

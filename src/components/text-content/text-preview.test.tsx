@@ -1,7 +1,7 @@
 import { createRef } from 'preact';
 import { cleanup, render } from '@testing-library/preact';
 import { afterEach, expect, it } from 'vitest';
-import * as library from '../../index';
+import * as library from '../index';
 
 afterEach(cleanup);
 it('exposes a selectable text preview preserving literal source and native accessibility', () => {

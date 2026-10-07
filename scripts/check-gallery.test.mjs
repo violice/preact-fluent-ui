@@ -14,8 +14,8 @@ for (const [name, mutate, diagnostic] of [
   ],
   ['missing text page', (dir) => rm(join(dir, 'components/text/index.html')), 'ENOENT'],
   [
-    'missing styling engine page',
-    (dir) => rm(join(dir, 'components/styling-engine/index.html')),
+    'missing styles engine page',
+    (dir) => rm(join(dir, 'components/styles-engine/index.html')),
     'ENOENT',
   ],
   ['missing tooltip page', (dir) => rm(join(dir, 'components/tooltip/index.html')), 'ENOENT'],

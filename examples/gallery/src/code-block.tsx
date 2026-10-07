@@ -3,7 +3,10 @@ import { createHighlighter } from '@tanstack/highlight/core';
 import { tsx } from '@tanstack/highlight/languages/tsx';
 import { css } from '@tanstack/highlight/languages/css';
 import { shell } from '@tanstack/highlight/languages/shell';
-import { CodeBlock as LibraryCodeBlock, type CodeBlockTokenKind } from '../../../dist/index.js';
+import {
+  CodeBlock as LibraryCodeBlock,
+  type CodeBlockTokenKind,
+} from '../../../dist/components.js';
 import styles from './code-block.module.css';
 
 const highlighter = createHighlighter({ languages: [tsx, css, shell] });

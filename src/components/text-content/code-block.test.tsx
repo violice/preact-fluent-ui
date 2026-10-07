@@ -2,7 +2,7 @@ import { createRef } from 'preact';
 import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
-import * as library from '../../index';
+import * as library from '../index';
 
 afterEach(() => {
   cleanup();

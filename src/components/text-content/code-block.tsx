@@ -1,11 +1,11 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
 import { Button } from '../button/button';
 import { textStyle } from './text-style';
-import styles, { codeTokenClasses } from './code-block.styles';
+import { codeBlockStyles, codeTokenClasses } from './code-block.styles';
 
 export type CodeBlockTokenKind =
   | 'keyword'
@@ -89,9 +89,13 @@ export const CodeBlock = /* @__PURE__ */ forwardRef<HTMLDivElement, CodeBlockPro
       }
     }
     return (
-      <div {...props} ref={ref} class={cx(styles.block, resolveClass(classProp, className))}>
+      <div
+        {...props}
+        ref={ref}
+        class={cx(codeBlockStyles.block, resolveClass(classProp, className))}
+      >
         {(language || copy) && (
-          <div class={styles.toolbar}>
+          <div class={codeBlockStyles.toolbar}>
             {language && <span>{language.toUpperCase()}</span>}
             {copy && (
               <>
@@ -102,7 +106,7 @@ export const CodeBlock = /* @__PURE__ */ forwardRef<HTMLDivElement, CodeBlockPro
                       ? (labels?.failure ?? 'Could not copy. Select the code to copy it manually.')
                       : ''}
                 </span>
-                <Button class={styles.copy} size="compact" onClick={copyCode}>
+                <Button class={codeBlockStyles.copy} size="compact" onClick={copyCode}>
                   {labels?.copy ?? 'Copy code'}
                 </Button>
               </>
@@ -110,7 +114,7 @@ export const CodeBlock = /* @__PURE__ */ forwardRef<HTMLDivElement, CodeBlockPro
           </div>
         )}
         <pre
-          class={styles.text}
+          class={codeBlockStyles.text}
           tabIndex={0}
           aria-label={codeLabel}
           style={textStyle(preStyle, wrap)}

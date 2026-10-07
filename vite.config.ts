@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import preact from '@preact/preset-vite';
 import { defineConfig } from 'vite';
 import type { Plugin } from 'vite';
-import { fluentStyles } from './src/styling/adapters/vite.ts';
+import { fluentStyles } from './src/styles/adapters/vite.ts';
 
 function libraryModules(): Plugin {
   return {
@@ -37,7 +37,7 @@ function libraryModules(): Plugin {
       await mkdir(artifactDirectory, { recursive: true });
       await writeFile(
         new URL('library-modules.json', artifactDirectory),
-        JSON.stringify({ ...entries.index, entries }, null, 2) + '\n',
+        JSON.stringify({ ...entries.components, entries }, null, 2) + '\n',
       );
     },
   };
@@ -45,7 +45,7 @@ function libraryModules(): Plugin {
 
 export default defineConfig({
   plugins: [
-    fluentStyles({ outdir: '.artifacts/styled-system' }),
+    fluentStyles({ components: false, outdir: '.artifacts/styled-system' }),
     preact({ devToolsEnabled: false, prefreshEnabled: false }),
     libraryModules(),
   ],
@@ -53,16 +53,17 @@ export default defineConfig({
     lib: {
       entry: Object.fromEntries(
         Object.entries({
-          index: './src/index.ts',
-          styling: './src/styling/index.ts',
-          config: './src/styling/config/index.ts',
-          vite: './src/styling/adapters/vite.ts',
-          processor: './src/styling/adapters/processor.ts',
+          components: './src/components/index.ts',
+          utils: './src/utils/index.ts',
+          styles: './src/styles/index.ts',
+          config: './src/styles/config/index.ts',
+          vite: './src/styles/adapters/vite.ts',
+          processor: './src/styles/adapters/processor.ts',
         }).map(([name, path]) => [name, fileURLToPath(new URL(path, import.meta.url))]),
       ),
       formats: ['es'],
       fileName: (_format, entry) => `${entry}.js`,
-      cssFileName: 'styles',
+      cssFileName: 'components',
     },
     sourcemap: true,
     rolldownOptions: {

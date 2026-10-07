@@ -1,7 +1,7 @@
 import { createRef } from 'preact';
 import { cleanup, render, screen } from '@testing-library/preact';
 import { afterEach, expect, it } from 'vitest';
-import { Separator } from '../../index';
+import { Separator } from '../index';
 
 afterEach(cleanup);
 
@@ -33,7 +33,7 @@ it('exposes semantic orientation and names without decorative hiding', () => {
   expect(vertical.hasAttribute('decorative')).toBe(false);
 });
 
-it('updates decorative semantics while forwarding native styling and refs', () => {
+it('updates decorative semantics while forwarding native styles and refs', () => {
   const ref = createRef<HTMLDivElement>();
   const { rerender, unmount } = render(<Separator ref={ref} decorative={false} />);
   rerender(

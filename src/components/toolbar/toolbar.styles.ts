@@ -1,16 +1,16 @@
-import { css, cva } from '../../styling';
+import { css, cva } from '../../styles';
 export const toolbarClass = css({
   display: 'flex',
   flexWrap: 'wrap',
   alignItems: 'center',
   minWidth: '0',
   maxWidth: '100%',
-  gap: 'var(--space-3)',
+  gap: 'var(--pfui-spacing-3)',
   overflowWrap: 'anywhere',
-  fontFamily: 'var(--font-body)',
-  fontSize: 'var(--type-body)',
+  fontFamily: 'var(--pfui-fonts-body)',
+  fontSize: 'var(--pfui-fontSizes-body)',
   lineHeight: '20px',
-  color: 'var(--color-text)',
+  color: 'var(--pfui-colors-text)',
   '&[hidden]': {
     display: 'none',
   },
@@ -22,7 +22,7 @@ export const toolbarGroupClass = cva({
     alignItems: 'center',
     minWidth: '0',
     maxWidth: '100%',
-    gap: 'var(--space-3)',
+    gap: 'var(--pfui-spacing-3)',
     overflowWrap: 'anywhere',
     '& > *': {
       minWidth: '0',

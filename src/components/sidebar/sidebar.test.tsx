@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 const sidebarSource = readFileSync('src/components/sidebar/sidebar.styles.ts', 'utf8');
 import { recipeCss } from '../../../tests/component-styles';
 const sidebarCss = recipeCss(sidebarSource);
-import sidebarClasses from './sidebar.styles';
+import { sidebarStyles } from './sidebar.styles';
 import type { JSX } from 'preact';
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/preact';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -158,7 +158,7 @@ it('reads signal-like values on rerender, adds slots and consumes component prop
 it('preserves native hidden without the optional document reset on every sidebar part', () => {
   for (const part of ['sidebar', 'header', 'nav', 'group', 'item', 'footer'] as const) {
     expect(
-      sidebarClasses[part].split(' ').some((name) => sidebarCss.includes(`.${name}[hidden]`)),
+      sidebarStyles[part].split(' ').some((name) => sidebarCss.includes(`.${name}[hidden]`)),
     ).toBe(true);
   }
   const style = document.createElement('style');
@@ -169,7 +169,7 @@ it('preserves native hidden without the optional document reset on every sidebar
       const hiddenRule = Array.from(style.sheet!.cssRules).find(
         (rule) =>
           rule instanceof CSSStyleRule &&
-          sidebarClasses[part]
+          sidebarStyles[part]
             .split(' ')
             .some((name) => rule.selectorText.includes(`.${name}[hidden]`)),
       ) as CSSStyleRule | undefined;
@@ -345,7 +345,7 @@ it('keeps rail fallback labels and brand roots visible or natively hidden', () =
   );
   expect(ref.current?.hidden).toBe(true);
   expect(
-    sidebarClasses.brand.split(' ').some((name) => sidebarCss.includes(`.${name}[hidden]`)),
+    sidebarStyles.brand.split(' ').some((name) => sidebarCss.includes(`.${name}[hidden]`)),
   ).toBe(true);
   expect(screen.getByRole('link', { name: 'Home' }).getAttribute('data-has-icon')).toBe('false');
   rerender(
@@ -551,7 +551,7 @@ it('respects application cancellation of Escape while a hovered hint is open', (
   expect(document.body.querySelector('[data-sidebar-hint]')).not.toBeNull();
 });
 
-it('uses application styling without an appearance attribute and preserves native aside props', () => {
+it('uses application styles without an appearance attribute and preserves native aside props', () => {
   const ref = createRef<HTMLElement>();
   render(<Sidebar ref={ref} aria-label="Workspace" title="Navigation" tabIndex={-1} />);
   const aside = screen.getByRole('complementary', { name: 'Workspace' });

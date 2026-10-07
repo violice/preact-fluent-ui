@@ -41,13 +41,13 @@ All components read signal-like values through resolveClass before choosing `cla
 
 ## Layout
 
-Box was removed in favor of `css()` and `css.dynamic()` from the styling subpath or generated bindings. Native elements and existing components keep their own props and refs. See [the styling guide](styling.md) for compiler setup, recipes, token types and dynamic variables.
+Box was removed in favor of `css()` and `css.dynamic()` from the styles subpath or generated bindings. Native elements and existing components keep their own props and refs. See [the styles guide](styles.md) for compiler setup, recipes, token types and dynamic variables.
 
 ## Typography
 
 `Text` separates visual typography from HTML semantics. Its ten presets follow
 [Fluent 2 Text](https://fluent2.microsoft.design/components/web/react/core/text/usage)
-and use the theme's `--font-body` font family.
+and use the theme's `--pfui-fonts-body` font family.
 
 | Preset | Size | Line height | Weight |
 | --- | --- | --- | --- |
@@ -73,7 +73,7 @@ Presets do not create heading semantics. The root retains its native block or
 inline display; Text resets its margin and wraps long words. Color is independent
 of the preset. `TextColor` supports `inherit`, `default`, `muted` and `subtle`.
 The default `inherit` adds no color declaration, preserving the existing cascade.
-The other values use `--color-text`, `--color-text-muted` and `--color-text-subtle`
+The other values use `--pfui-colors-text`, `--pfui-colors-text-muted` and `--pfui-colors-text-subtle`
 respectively, including locally scoped theme tokens. Arbitrary CSS colors can
 still be supplied through the native `style` prop. No focus behavior
 or live region is added. A render VNode composes native props, classes and refs;
@@ -186,7 +186,7 @@ Field labels exactly one control through a render prop. `FieldControlProps` cont
 Field renders label, hint and validation message. Hint and message ids append `-hint` and `-validation` to the control id. Only rendered blocks appear in aria-describedby, hint first. Null, undefined, false and empty strings omit a block; numeric zero renders. Only error sets aria-invalid. Required adds a decorative star and forwards native required. Field does not validate values, disable controls, or assign alert/live semantics. The application chooses validation timing and error announcements.
 
 ```tsx
-import { Field, Input } from '@violice/preact-fluent-ui';
+import { Field, Input } from '@violice/preact-fluent-ui/components';
 
 <Field label="Port" controlId="connection-port" hint="1 to 65535" required>
   {(control) => <Input {...control} type="number" name="port" min={1} max={65535}
@@ -238,7 +238,7 @@ Dialog tokens live at `:root` because the portal renders into body. A theme on a
 
 All three button labels are mandatory so the app chooses the language. ConfirmDialog generates its heading id through Preact useId. Keep it in one persistent application root. Independent Preact roots can generate the same id; use Modal with manually unique heading ids if you need cross-root coordination. Busy disables both actions and blocks Escape/backdrop. ConfirmDisabled disables only confirmation; cancel and dismissal remain available. Danger uses the danger Button variant. The caller starts and completes asynchronous work and decides when to close.
 
-## Styling multipart components
+## Styles multipart components
 
 Slots target existing owned elements; children supplied by the caller are not slots. PageHeader.root styles the header, and notices styles its following sibling. EmptyState.icon styles the decorative SVG. Modal.root and ConfirmDialog.root style the dialog, while backdrop styles the portal backdrop. ConfirmDialog.header/title/body/footer/cancelButton/confirmButton reach the corresponding header, h2, body div, footer and native buttons. Optional content does not render merely because its slot has a class. All slots accept signal-like values and preserve internal classes.
 
@@ -267,7 +267,7 @@ See the [composition example](../README.md#sidebar-composition). The library imp
 
 ## Application shell
 
-`AppShellProps` extends div native props with `navigationLayout?: JSX.Signalish<SidebarLayout>`, default `expanded`. Match it to Sidebar's `layout?: JSX.Signalish<SidebarLayout>`. Sidebar also accepts `scrollable?: JSX.Signalish<boolean>`, default false. Sidebar uses application navigation styling. Vertical items fill their row, including buttons in the footer; horizontal items retain intrinsic width. Scrollable navigation keeps header and footer visible.
+`AppShellProps` extends div native props with `navigationLayout?: JSX.Signalish<SidebarLayout>`, default `expanded`. Match it to Sidebar's `layout?: JSX.Signalish<SidebarLayout>`. Sidebar also accepts `scrollable?: JSX.Signalish<boolean>`, default false. Sidebar uses application navigation styles. Vertical items fill their row, including buttons in the footer; horizontal items retain intrinsic width. Scrollable navigation keeps header and footer visible.
 
 `SidebarBrandProps` extends native div props, replacing native title with required `title: string`. It accepts `description?: string`, `logo?: ComponentChildren` and class slots root/logo/content/title/description. The logo is decorative. Rail layout hides visual text while keeping names; set SidebarItem `label` for complex children. Rail labels appear in a portal on hover or keyboard focus and Escape dismisses them until hover and focus leave.
 

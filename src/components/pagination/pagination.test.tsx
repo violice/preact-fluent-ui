@@ -2,7 +2,7 @@ import { createRef } from 'preact';
 import { cleanup, render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
-import { Pagination } from '../../index';
+import { Pagination } from '../index';
 
 afterEach(cleanup);
 const labels = { previousLabel: 'Назад', nextLabel: 'Далее', 'aria-label': 'Страницы' };

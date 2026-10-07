@@ -1,4 +1,4 @@
-import { sva } from '../../styling';
+import { sva } from '../../styles';
 export const checkboxClasses = sva({
   slots: ['wrapper', 'input', 'indicator', 'label'],
   base: {
@@ -9,8 +9,8 @@ export const checkboxClasses = sva({
       columnGap: '8px',
       minWidth: '0',
       minHeight: '32px',
-      font: 'var(--type-body) / 20px var(--font-body)',
-      color: 'var(--color-text)',
+      font: 'var(--pfui-fontSizes-body) / 20px var(--pfui-fonts-body)',
+      color: 'var(--pfui-colors-text)',
       cursor: 'pointer',
       '&[hidden]': {
         display: 'none',
@@ -24,54 +24,54 @@ export const checkboxClasses = sva({
       height: '18px',
       margin: '0',
       padding: '0',
-      border: '1px solid var(--color-control-border)',
-      borderRadius: 'var(--radius-sm)',
-      background: 'var(--color-control)',
+      border: '1px solid var(--pfui-colors-control-border)',
+      borderRadius: 'var(--pfui-radii-sm)',
+      background: 'var(--pfui-colors-control)',
       cursor: 'inherit',
       '&:hover:where(:not(:disabled))': {
-        background: 'var(--color-control-hover)',
-        borderColor: 'var(--color-text-subtle)',
+        background: 'var(--pfui-colors-control-hover)',
+        borderColor: 'var(--pfui-colors-text-subtle)',
       },
       '&:checked': {
-        background: 'var(--color-accent)',
-        borderColor: 'var(--color-accent)',
+        background: 'var(--pfui-colors-accent)',
+        borderColor: 'var(--pfui-colors-accent)',
       },
       '&:indeterminate': {
-        background: 'var(--color-accent)',
-        borderColor: 'var(--color-accent)',
+        background: 'var(--pfui-colors-accent)',
+        borderColor: 'var(--pfui-colors-accent)',
       },
       '&:focus-visible': {
-        outline: '2px solid var(--color-focus)',
+        outline: '2px solid var(--pfui-colors-focus)',
         outlineOffset: '2px',
       },
       "&[aria-invalid='true']": {
-        borderColor: 'var(--color-danger)',
+        borderColor: 'var(--pfui-colors-danger)',
       },
       '&:checked + $indicator': {
-        borderLeft: '2px solid var(--color-on-accent)',
-        borderBottom: '2px solid var(--color-on-accent)',
+        borderLeft: '2px solid var(--pfui-colors-on-accent)',
+        borderBottom: '2px solid var(--pfui-colors-on-accent)',
         transform: 'translateY(-1px) rotate(-45deg)',
       },
       '&:indeterminate + $indicator': {
         height: '2px',
         border: '0',
-        background: 'var(--color-on-accent)',
+        background: 'var(--pfui-colors-on-accent)',
         transform: 'none',
       },
       '&:disabled': {
-        borderColor: 'var(--color-disabled)',
-        background: 'var(--color-surface-muted)',
+        borderColor: 'var(--pfui-colors-disabled)',
+        background: 'var(--pfui-colors-surface-muted)',
         cursor: 'not-allowed',
       },
       '&:disabled ~ $label': {
-        color: 'var(--color-disabled)',
+        color: 'var(--pfui-colors-disabled)',
         cursor: 'not-allowed',
       },
       '&:disabled + $indicator': {
-        borderColor: 'var(--color-disabled)',
+        borderColor: 'var(--pfui-colors-disabled)',
       },
       '&:disabled:indeterminate + $indicator': {
-        background: 'var(--color-disabled)',
+        background: 'var(--pfui-colors-disabled)',
       },
       '&[hidden]': {
         display: 'none',
@@ -140,4 +140,4 @@ export const checkboxClasses = sva({
     },
   },
 });
-export default checkboxClasses();
+export const checkboxStyles = checkboxClasses();

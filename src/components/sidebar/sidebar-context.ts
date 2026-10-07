@@ -1,10 +1,10 @@
 import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
-import defaultStyles from './sidebar.styles';
+import { sidebarStyles } from './sidebar.styles';
 export type SidebarLayout = 'expanded' | 'rail' | 'horizontal';
 export const SidebarContext = /* @__PURE__ */ createContext({
   layout: 'expanded' as SidebarLayout,
-  styles: defaultStyles,
+  styles: sidebarStyles,
 });
 export function useSidebarStyles() {
   return useContext(SidebarContext).styles;

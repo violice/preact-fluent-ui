@@ -1,6 +1,6 @@
 import { signal } from '@preact/signals';
 import { describe, expect, it } from 'vitest';
-import { mergeProps } from '../index';
+import { mergeProps } from './index';
 
 describe('mergeProps', () => {
   it('applies ordinary right precedence without mutating sources', () => {

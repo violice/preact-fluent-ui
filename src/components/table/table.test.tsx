@@ -11,7 +11,7 @@ import {
   TableHeaderCell,
   TableCell,
   TableCaption,
-} from '../../index';
+} from '../index';
 
 afterEach(cleanup);
 
@@ -156,7 +156,7 @@ it('preserves contextual header padding rules in production CSS for each density
   const { readFileSync } = await import('node:fs');
   const { flattenLayers } = await import('../../../tests/component-styles');
   const style = document.createElement('style');
-  style.textContent = flattenLayers(readFileSync('dist/styles.css', 'utf8'));
+  style.textContent = flattenLayers(readFileSync('dist/components.css', 'utf8'));
   document.head.append(style);
   try {
     const view = (density: 'regular' | 'compact') => (

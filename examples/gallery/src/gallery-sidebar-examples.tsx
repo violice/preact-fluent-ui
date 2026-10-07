@@ -14,8 +14,8 @@ import {
   SidebarItem,
   SidebarNav,
   StatusBadge,
-} from '../../../dist/index.js';
-import type { SidebarLayout } from '../../../dist/index.js';
+} from '../../../dist/components.js';
+import type { SidebarLayout } from '../../../dist/components.js';
 import styles from './gallery.module.css';
 
 function LocalSidebarItems({
@@ -124,7 +124,7 @@ function SidebarExample() {
     </div>
   );
 }
-const sidebarCode = `import { Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem, SidebarFooter } from '@violice/preact-fluent-ui';
+const sidebarCode = `import { Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem, SidebarFooter } from '@violice/preact-fluent-ui/components';
 
 <Sidebar layout={layout} scrollable>
   <SidebarHeader>Connection manager</SidebarHeader>

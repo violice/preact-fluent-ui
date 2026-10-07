@@ -9,25 +9,25 @@
     "url": "git+https://github.com/violice/preact-fluent-ui.git"
   },
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./theme.css": "./dist/theme.css",
-    "./styles.css": "./dist/styles.css",
-    "./reset.css": "./dist/reset.css",
-    "./native-controls.css": "./dist/native-controls.css",
-    "./styling": {
-      "types": "./dist/styling/index.d.ts",
-      "import": "./dist/styling.js"
+    "./styles": {
+      "types": "./dist/styles/index.d.ts",
+      "import": "./dist/styles.js"
     },
     "./config": {
-      "types": "./dist/styling/config/index.d.ts",
+      "types": "./dist/styles/config/index.d.ts",
       "import": "./dist/config.js"
     },
     "./vite": {
-      "types": "./dist/styling/adapters/vite.d.ts",
+      "types": "./dist/styles/adapters/vite.d.ts",
       "import": "./dist/vite.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils.js"
     }
   },
   "sideEffects": [
@@ -61,7 +61,7 @@
     "check:gallery": "node scripts/check-gallery.mjs",
     "test:gallery-artifact": "node --test scripts/check-gallery.test.mjs",
     "test:gallery-preview": "node --test scripts/gallery-preview.test.mjs",
-    "test:styling-package": "node scripts/test-styling-package.mjs"
+    "test:styles-package": "node scripts/test-styles-package.mjs"
   },
   "peerDependencies": {
     "preact": "^10.27.0",

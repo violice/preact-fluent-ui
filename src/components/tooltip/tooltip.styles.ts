@@ -1,4 +1,4 @@
-import { css } from '../../styling';
+import { css } from '../../styles';
 export const tooltipClass = css({
   boxSizing: 'border-box',
   position: 'fixed',
@@ -6,12 +6,12 @@ export const tooltipClass = css({
   width: 'max-content',
   maxWidth: 'min(280px, calc(100vw - 16px))',
   padding: '6px 8px',
-  border: '1px solid var(--color-border-strong)',
+  border: '1px solid var(--pfui-colors-border-strong)',
   borderRadius: '4px',
-  background: 'var(--color-surface-raised)',
-  color: 'var(--color-text)',
+  background: 'var(--pfui-colors-surface-raised)',
+  color: 'var(--pfui-colors-text)',
   boxShadow: '0 2px 8px rgb(0 0 0 / 14%)',
-  font: '12px / 16px var(--font-body)',
+  font: '12px / 16px var(--pfui-fonts-body)',
   overflowWrap: 'anywhere',
   pointerEvents: 'auto',
   '@media (forced-colors: active)': {

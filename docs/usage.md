@@ -10,10 +10,10 @@ Put overrides after the library styles. Define light values at `:root`, dark val
 
 All components with a DOM root accept native props and forward their DOM ref. Components resolve `class` first and use `className` only when its current value is null or undefined. An empty `class` suppresses the fallback. Signal values are read before this choice; cx composes the selected value with internal classes. Input and Textarea have no `classes` prop. Only multipart components expose `classes`, with `root` and named internal slots; `classes.root` is additive. PageHeader exposes root/content/title/description/actions/notices; EmptyState root/icon/title/content; InfoBar root/title/content; DialogHeader root/title/description; Modal root/backdrop; ConfirmDialog root/backdrop/header/title/body/footer/cancelButton/confirmButton. Select accepts `classes.wrapper` for its span and `classes.icon` for its decorative icon. Icon is always decorative: give an icon-only Button an `aria-label` such as `<Button size="icon" aria-label="Refresh"><Icon name="refresh" /></Button>`.
 
-Field links one control to a label, hint and validation message. Input and Textarea keep native text editing; Checkbox and Switch keep native checked state and form submission. Values and validation belong to your app. All five controls work with theme.css and styles.css alone.
+Field links one control to a label, hint and validation message. Input and Textarea keep native text editing; Checkbox and Switch keep native checked state and form submission. Values and validation belong to your app. All five controls use the generated styles.css.
 
 ```tsx
-import { Field, Input } from '@violice/preact-fluent-ui';
+import { Field, Input } from '@violice/preact-fluent-ui/components';
 
 export function PortField() {
   return (
@@ -33,7 +33,7 @@ Render only one active Modal. Give Modal `labelledBy` the unique id used by its 
 Use compiled classes on native elements or existing components:
 
 ```tsx
-import { Card, Text } from '@violice/preact-fluent-ui';
+import { Card, Text } from '@violice/preact-fluent-ui/components';
 import { css } from './styled-system/css';
 
 <Card class={css({ display: 'grid', gap: 'space-4' })}>
@@ -42,14 +42,14 @@ import { css } from './styled-system/css';
 </Card>
 ```
 
-Box has been removed. Use `css.dynamic()` for dynamic values or signals and `css()` for static and responsive styles. See [the styling guide](styling.md) for setup and class/style composition.
+Box has been removed. Use `css.dynamic()` for dynamic values or signals and `css()` for static and responsive styles. See [the styles guide](styles.md) for setup and class/style composition.
 
 ## Typography and native HTML reset
 
 Use `Text` for typography with explicit HTML semantics:
 
 ```tsx
-import { Text } from '@violice/preact-fluent-ui';
+import { Text } from '@violice/preact-fluent-ui/components';
 
 <Text preset="subtitle2" render={<h2 />}>Saved routes</Text>
 <Text color="muted" render={<p />}>Connection details</Text>
@@ -61,7 +61,7 @@ to `inherit`, preserving the surrounding styles. Use `default`, `muted` or
 `subtle` for theme text colors independently of the preset. Both props accept signals.
 Render callbacks
 must forward the supplied props and ref, for example `render={(props) => <p {...props} />}`.
-The optional `reset.css` resets native `h1`–`h6` and `p` margins and font styles
+The optional `reset` configuration resets native `h1`–`h6` and `p` margins and font styles
 to inherited values. Add Text presets or application styles wherever visual
 hierarchy is needed. See the [typography API](api.md#typography) for all presets.
 
@@ -71,7 +71,7 @@ Compose navigation from Sidebar, SidebarHeader, SidebarNav, SidebarGroup, Sideba
 
 ```tsx
 import { Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem,
-  SidebarFooter, Button, Icon } from '@violice/preact-fluent-ui';
+  SidebarFooter, Button, Icon } from '@violice/preact-fluent-ui/components';
 
 <Sidebar class="app-sidebar">
   <SidebarHeader>Connection manager</SidebarHeader>
@@ -98,7 +98,7 @@ Compose `AppShell`, `AppShellWorkspace`, `AppShellHeader`, `AppShellToolbar`, `A
 
 `SidebarItem render` replaces its root with a VNode or callback. `as` still selects native types and defaults. A custom Link must forward composed props, children and ref to its native root. Do not nest an anchor or button inside another interactive root. `useRender` composes refs; `mergeProps` combines props with consumer handlers first and stops earlier handlers after `preventDefault()`. See the [utility API](api.md#utilities).
 
-Version 0.5.0 added Text and CounterBadge, plus Card padding="none" and Table dividers="between" for edge-to-edge tables. The upcoming styling engine replaces Box with css()/css.dynamic().
+Version 0.5.0 added Text and CounterBadge, plus Card padding="none" and Table dividers="between" for edge-to-edge tables. The upcoming styles engine replaces Box with css()/css.dynamic().
 
 Version 0.4.0 includes data components, loading feedback, Tooltip, TextPreview, CodeBlock and AppShellToolbar. Toolbar and ToolbarGroup replace the former DataToolbar names without compatibility aliases. AppShellToolbar belongs directly inside AppShellWorkspace alongside Header and Content.
 
@@ -122,6 +122,6 @@ to preserve the displayed source. The library escapes all text and performs no
 parsing, retokenization, or mismatch fallback. Supported kinds are `keyword`,
 `string`, `comment`, `function`, `type`, `property`, `number`, `literal`, `tag`,
 `attribute`, `operator`, `punctuation`, and `command`. Omitted or unrecognized kinds
-render plain text. Override syntax colors with `--code-color-<kind>` variables.
+render plain text. Override syntax colors with `--pfui-codeColors-<kind>` variables.
 Forced colors render token spans in `CanvasText`. Both components add native
 `class` or `className` to library classes; `class` takes precedence when both exist.

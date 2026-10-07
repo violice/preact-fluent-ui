@@ -1,57 +1,57 @@
 /* Xbox DNS colors. Load after the library CSS. */
 :root {
-  --color-canvas: #eef1ee;
-  --color-border: #e2e7df;
-  --color-text-muted: #576153;
-  --color-text-subtle: #65705f;
-  --color-accent: #107c10;
-  --color-accent-hover: #0d6b0d;
-  --color-accent-pressed: #095509;
-  --color-on-accent: #ffffff;
-  --color-accent-subtle: #e8f4e4;
-  --color-primary: var(--color-accent);
-  --color-primary-hover: var(--color-accent-hover);
-  --color-primary-pressed: var(--color-accent-pressed);
-  --color-on-primary: #ffffff;
-  --color-info-bg: #f0f6ed;
+  --pfui-colors-canvas: #eef1ee;
+  --pfui-colors-border: #e2e7df;
+  --pfui-colors-text-muted: #576153;
+  --pfui-colors-text-subtle: #65705f;
+  --pfui-colors-accent: #107c10;
+  --pfui-colors-accent-hover: #0d6b0d;
+  --pfui-colors-accent-pressed: #095509;
+  --pfui-colors-on-accent: #ffffff;
+  --pfui-colors-accent-subtle: #e8f4e4;
+  --pfui-colors-primary: var(--pfui-colors-accent);
+  --pfui-colors-primary-hover: var(--pfui-colors-accent-hover);
+  --pfui-colors-primary-pressed: var(--pfui-colors-accent-pressed);
+  --pfui-colors-on-primary: #ffffff;
+  --pfui-colors-info-bg: #f0f6ed;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-canvas: #1c201c;
-    --color-card: #2d332e;
-    --color-border: #3b3d44;
-    --color-text-muted: #bec2cb;
-    --color-text-subtle: #a0a6b2;
-    --color-accent: #91d981;
-    --color-accent-hover: #ace79e;
-    --color-accent-pressed: #79c869;
-    --color-on-accent: #142d10;
-    --color-accent-subtle: #2d422b;
-    --color-primary: #3d6b47;
-    --color-primary-hover: #497a54;
-    --color-primary-pressed: #345c3d;
-    --color-on-primary: #ffffff;
-    --color-focus: #e1f5db;
-    --color-info-bg: #2c392c;
+    --pfui-colors-canvas: #1c201c;
+    --pfui-colors-card: #2d332e;
+    --pfui-colors-border: #3b3d44;
+    --pfui-colors-text-muted: #bec2cb;
+    --pfui-colors-text-subtle: #a0a6b2;
+    --pfui-colors-accent: #91d981;
+    --pfui-colors-accent-hover: #ace79e;
+    --pfui-colors-accent-pressed: #79c869;
+    --pfui-colors-on-accent: #142d10;
+    --pfui-colors-accent-subtle: #2d422b;
+    --pfui-colors-primary: #3d6b47;
+    --pfui-colors-primary-hover: #497a54;
+    --pfui-colors-primary-pressed: #345c3d;
+    --pfui-colors-on-primary: #ffffff;
+    --pfui-colors-focus: #e1f5db;
+    --pfui-colors-info-bg: #2c392c;
   }
 }
 @media (forced-colors: active) {
   :root {
-    --color-canvas: Canvas;
-    --color-card: Canvas;
-    --color-border: CanvasText;
-    --color-text-muted: CanvasText;
-    --color-text-subtle: CanvasText;
-    --color-accent: Highlight;
-    --color-accent-hover: Highlight;
-    --color-accent-pressed: Highlight;
-    --color-on-accent: HighlightText;
-    --color-accent-subtle: Canvas;
-    --color-primary: Highlight;
-    --color-primary-hover: Highlight;
-    --color-primary-pressed: Highlight;
-    --color-on-primary: HighlightText;
-    --color-focus: Highlight;
-    --color-info-bg: Canvas;
+    --pfui-colors-canvas: Canvas;
+    --pfui-colors-card: Canvas;
+    --pfui-colors-border: CanvasText;
+    --pfui-colors-text-muted: CanvasText;
+    --pfui-colors-text-subtle: CanvasText;
+    --pfui-colors-accent: Highlight;
+    --pfui-colors-accent-hover: Highlight;
+    --pfui-colors-accent-pressed: Highlight;
+    --pfui-colors-on-accent: HighlightText;
+    --pfui-colors-accent-subtle: Canvas;
+    --pfui-colors-primary: Highlight;
+    --pfui-colors-primary-hover: Highlight;
+    --pfui-colors-primary-pressed: Highlight;
+    --pfui-colors-on-primary: HighlightText;
+    --pfui-colors-focus: Highlight;
+    --pfui-colors-info-bg: Canvas;
   }
 }

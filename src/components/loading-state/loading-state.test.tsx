@@ -1,7 +1,7 @@
 import { createRef } from 'preact';
 import { cleanup, render, screen } from '@testing-library/preact';
 import { afterEach, expect, it } from 'vitest';
-import { LoadingState, type LoadingStateProps } from '../../index';
+import { LoadingState, type LoadingStateProps } from '../index';
 
 afterEach(cleanup);
 

@@ -128,4 +128,4 @@ forced-colors или реальный screen reader, явно перечисли
 работ и проверками. Компоненты и зависимости пока не изменять.
 
 
-The approved gallery refinement brief in `.superpowers/sdd/gallery-refinements/brief.md` supersedes this document's Start group, collapsed code and appearance disclosure. Overview contains Getting Started and About, followed by Guides and Components. Theming and Styling are separate guides. Source remains visible, and a native sidebar action opens appearance settings in the library Modal while the store stays mounted in the shell.
+The approved gallery refinement brief in `.superpowers/sdd/gallery-refinements/brief.md` supersedes this document's Start group, collapsed code and appearance disclosure. Overview contains Getting Started and About, followed by Guides and Components. Theming and Styles are separate guides. Source remains visible, and a native sidebar action opens appearance settings in the library Modal while the store stays mounted in the shell.

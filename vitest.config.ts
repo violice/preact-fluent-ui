@@ -1,10 +1,13 @@
 import { defineConfig } from 'vitest/config';
 import preact from '@preact/preset-vite';
-import { fluentStyles } from './src/styling/adapters/vite.ts';
+import { fluentStyles } from './src/styles/adapters/vite.ts';
 
 export default defineConfig({
   plugins: [
-    fluentStyles({ outdir: '.artifacts/styled-system', sources: ['../../../dist/styling.js'] }),
+    fluentStyles({
+      outdir: '.artifacts/styled-system',
+      sources: ['../../../.artifacts/gallery-styled-system/css'],
+    }),
     preact({ devToolsEnabled: false, prefreshEnabled: false }),
   ],
   test: {

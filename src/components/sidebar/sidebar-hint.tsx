@@ -3,7 +3,7 @@ import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { RefObject } from 'preact';
 import { sidebarHintPosition } from './sidebar.styles';
 import { useSidebarStyles } from './sidebar-context';
-import { cx } from '../../styling/runtime/cx';
+import { cx } from '../../styles';
 export function SidebarHint({
   trigger,
   text,

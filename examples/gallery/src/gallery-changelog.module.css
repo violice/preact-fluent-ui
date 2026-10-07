@@ -22,8 +22,8 @@
 .prose blockquote {
   margin-inline: 0;
   padding-inline-start: 1em;
-  border-inline-start: 3px solid var(--color-border);
-  color: var(--color-text-muted);
+  border-inline-start: 3px solid var(--pfui-colors-border);
+  color: var(--pfui-colors-text-muted);
 }
 .prose :is(pre, figure) {
   min-width: 0;
@@ -34,6 +34,6 @@
   overflow-wrap: normal;
 }
 .prose a {
-  color: var(--color-accent);
+  color: var(--pfui-colors-accent);
   text-decoration: underline;
 }

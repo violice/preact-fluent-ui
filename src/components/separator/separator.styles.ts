@@ -1,9 +1,9 @@
-import { cva } from '../../styling';
+import { cva } from '../../styles';
 export const separatorClasses = cva({
   base: {
     boxSizing: 'border-box',
     flexShrink: '0',
-    border: '0 solid var(--color-border)',
+    border: '0 solid var(--pfui-colors-border)',
     '&[hidden]': {
       display: 'none',
     },

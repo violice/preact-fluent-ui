@@ -96,4 +96,4 @@
 - [x] Record significant outcomes in ICM. Commit only within session authorization; do not push, publish or migrate applications as part of this plan.
 
 
-The gallery refinement brief in `.superpowers/sdd/gallery-refinements/brief.md` supersedes the original Start group and appearance disclosure. Current groups are Overview, Guides and Components; settings open in the library Modal, and source examples remain visible. The registry has 30 documentation routes including the added Styling guide.
+The gallery refinement brief in `.superpowers/sdd/gallery-refinements/brief.md` supersedes the original Start group and appearance disclosure. Current groups are Overview, Guides and Components; settings open in the library Modal, and source examples remain visible. The registry has 30 documentation routes including the added Styles guide.

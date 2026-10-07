@@ -6,7 +6,7 @@ import { isAbsolute } from 'node:path';
 
 const root = new URL('../', import.meta.url);
 const manifest = JSON.parse(await readFile(new URL('package.json', root), 'utf8'));
-const requiredCss = ['theme.css', 'styles.css', 'reset.css', 'native-controls.css'];
+const requiredCss = ['components.css'];
 const targets = new Set();
 
 for (const entry of Object.values(manifest.exports)) {
@@ -20,11 +20,15 @@ for (const target of targets) {
   assert((await stat(new URL(target, root))).isFile(), `Missing export target: ${target}`);
 }
 for (const name of requiredCss) {
-  assert.equal(manifest.exports[`./${name}`], `./dist/${name}`, `Missing CSS export: ${name}`);
+  assert.equal(
+    manifest.exports[`./${name}`],
+    undefined,
+    `Internal CSS must not be exported: ${name}`,
+  );
   assert((await stat(new URL(`dist/${name}`, root))).size > 0, `Empty CSS: ${name}`);
 }
 
-const jsUrl = new URL('dist/index.js', root);
+const jsUrl = new URL('dist/components.js', root);
 const js = await readFile(jsUrl, 'utf8');
 assert(
   !/\b(?:import|export)\s*(?:[^;'"\n]*?\bfrom\s*)?['"][^'"]+\.css(?:\?[^'"]*)?['"]|\bimport\s*\(\s*['"][^'"]+\.css(?:\?[^'"]*)?['"]/.test(
@@ -32,8 +36,8 @@ assert(
   ),
   'Built JS must not import CSS',
 );
-assert(js.includes('sourceMappingURL=index.js.map'), 'Built JS must reference its sourcemap');
-const sourcemap = JSON.parse(await readFile(new URL('dist/index.js.map', root), 'utf8'));
+assert(js.includes('sourceMappingURL=components.js.map'), 'Built JS must reference its sourcemap');
+const sourcemap = JSON.parse(await readFile(new URL('dist/components.js.map', root), 'utf8'));
 assert.equal(sourcemap.version, 3, 'Expected a v3 sourcemap');
 assert(
   sourcemap.sources.length > 0 && sourcemap.sourcesContent.length > 0,
@@ -49,7 +53,7 @@ for (const [index, source] of sourcemap.sources.entries()) {
   );
   assert(!/(?:^|\/)preact(?:\/|$)/.test(normalized), `Embedded Preact source: ${source}`);
   assert(
-    /^\.\.\/(?:src\/(?:utils\/(?:resolve-class|merge-props|use-render)\.ts|components\/(?:app-shell|button|card|checkbox|counter-badge|data-list|dialog|disclosure|empty-state|field|info-bar|input|loading-state|page-header|pagination|select|separator|sidebar|spinner|status-badge|switch|table|text|text-content|textarea|toolbar|tooltip)\/[^/]+\.(?:tsx|styles\.ts|ts)|icons\/[^/]+\.(?:ts|tsx)|styling\/(?:index\.ts|(?:runtime|shared)\/[^/]+\.ts)))$/.test(
+    /^\.\.\/(?:src\/(?:utils\/(?:index|resolve-class|merge-props|use-render)\.ts|components\/index\.ts|components\/(?:app-shell|button|card|checkbox|counter-badge|data-list|dialog|disclosure|empty-state|field|icon|info-bar|input|loading-state|page-header|pagination|select|separator|sidebar|spinner|status-badge|switch|table|text|text-content|textarea|toolbar|tooltip)\/[^/]+\.(?:tsx|styles\.ts|ts)|styles\/(?:index\.ts|(?:runtime|shared)\/[^/]+\.ts)))$/.test(
       normalized,
     ) && !/\.test\./.test(normalized),
     `Unrelated sourcemap source: ${source}`,
@@ -83,7 +87,7 @@ assert(
   `Unexpected runtime imports: ${graph.externalImports.join(', ')}`,
 );
 
-for (const entry of ['index', 'styling']) {
+for (const entry of ['components', 'utils', 'styles']) {
   const browser = graph.entries[entry];
   assert(browser, `Missing browser graph: ${entry}`);
   assert(
@@ -105,7 +109,7 @@ const declarationFiles = (await readdir(new URL('dist/', root), { recursive: tru
 );
 for (const file of declarationFiles) {
   const declarations = await readFile(new URL(`dist/${file}`, root), 'utf8');
-  const buildOnly = file.startsWith('styling/compiler/') || file.startsWith('styling/adapters/');
+  const buildOnly = file.startsWith('styles/compiler/') || file.startsWith('styles/adapters/');
   assert(
     !/\.css|vitest|class-variance-authority|clsx/.test(declarations) &&
       (buildOnly || !/\bfrom ['"]vite['"]/.test(declarations)),
@@ -126,10 +130,21 @@ for (const file of declarationFiles) {
 
 const exportProbe = `
   const library = await import(${JSON.stringify(jsUrl.href)});
+  const utils = await import(${JSON.stringify(new URL('dist/utils.js', root).href)});
+  const styles = await import(${JSON.stringify(new URL('dist/styles.js', root).href)});
+  for (const name of ['mergeProps', 'resolveClass', 'useRender']) {
+    if (typeof utils[name] !== 'function') throw new Error(name + ' utility is missing');
+    if (name in library) throw new Error('Utility leaked into components: ' + name);
+  }
+  for (const name of ['css', 'cx', 'cva', 'sva']) {
+    if (typeof styles[name] !== 'function') throw new Error(name + ' styles export is missing');
+    if (name in library) throw new Error('Styles export leaked into components: ' + name);
+  }
+  if (typeof styles.token.var !== 'function') throw new Error('token.var is missing');
   for (const name of ['DataToolbar', 'DataToolbarGroup', 'AppToolbar', 'Box', 'mergeClasses']) {
     if (name in library) throw new Error('Removed export present: ' + name);
   }
-  for (const name of ['TextPreview', 'CodeBlock', 'Disclosure', 'DisclosureSummary', 'DisclosureContent', 'Spinner', 'LoadingState', 'Tooltip', 'Table', 'TableContainer', 'TableHeader', 'TableBody', 'TableFooter', 'TableRow', 'TableHeaderCell', 'TableCell', 'TableCaption', 'Pagination', 'AppShellToolbar', 'Toolbar', 'ToolbarGroup', 'DataList', 'DataListItem', 'DataListLabel', 'DataListValue', 'Separator', 'Switch', 'Checkbox', 'Field', 'Input', 'Textarea', 'Button', 'Card', 'InfoBar', 'CounterBadge', 'Text', 'StatusBadge', 'Select', 'PageHeader', 'EmptyState', 'Icon', 'Modal', 'ConfirmDialog', 'DialogHeader', 'DialogBody', 'DialogFooter', 'Sidebar', 'SidebarHeader', 'SidebarNav', 'SidebarGroup', 'SidebarItem', 'SidebarFooter', 'SidebarBrand', 'AppShell', 'AppShellWorkspace', 'AppShellHeader', 'AppShellContent', 'AppShellFooter', 'cx', 'resolveClass', 'mergeProps', 'useRender']) {
+  for (const name of ['TextPreview', 'CodeBlock', 'Disclosure', 'DisclosureSummary', 'DisclosureContent', 'Spinner', 'LoadingState', 'Tooltip', 'Table', 'TableContainer', 'TableHeader', 'TableBody', 'TableFooter', 'TableRow', 'TableHeaderCell', 'TableCell', 'TableCaption', 'Pagination', 'AppShellToolbar', 'Toolbar', 'ToolbarGroup', 'DataList', 'DataListItem', 'DataListLabel', 'DataListValue', 'Separator', 'Switch', 'Checkbox', 'Field', 'Input', 'Textarea', 'Button', 'Card', 'InfoBar', 'CounterBadge', 'Text', 'StatusBadge', 'Select', 'PageHeader', 'EmptyState', 'Icon', 'Modal', 'ConfirmDialog', 'DialogHeader', 'DialogBody', 'DialogFooter', 'Sidebar', 'SidebarHeader', 'SidebarNav', 'SidebarGroup', 'SidebarItem', 'SidebarFooter', 'SidebarBrand', 'AppShell', 'AppShellWorkspace', 'AppShellHeader', 'AppShellContent', 'AppShellFooter']) {
     if (typeof library[name] !== 'function') throw new Error(name + ' export is missing');
   }
 `;
@@ -191,13 +206,14 @@ for (const file of packedFiles) {
 }
 for (const file of [
   ...requiredPackageFiles,
+  ...requiredCss.map((file) => `dist/${file}`),
   ...[...targets].map((target) => target.slice(2)),
-  'dist/index.js.map',
+  'dist/components.js.map',
   ...declarationFiles.map((file) => `dist/${file}`),
 ]) {
   assert(packedFiles.has(file), `Required file missing from npm pack: ${file}`);
 }
 
 console.log(
-  `Verified ${targets.size} export targets, four CSS files, sourcemap, own styling helpers, external Preact, DOM-free import, declarations, notices, and npm pack contents.`,
+  `Verified ${targets.size} export targets, component CSS, sourcemap, own styles helpers, external Preact, DOM-free import, declarations, notices, and npm pack contents.`,
 );

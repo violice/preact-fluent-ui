@@ -1,4 +1,4 @@
-import { sva } from '../../styling';
+import { sva } from '../../styles';
 export const spinnerClasses = sva({
   slots: ['spinner', 'indicator', 'label'],
   base: {
@@ -7,9 +7,9 @@ export const spinnerClasses = sva({
       alignItems: 'center',
       gap: '8px',
       minInlineSize: '0',
-      fontFamily: 'var(--font-body)',
+      fontFamily: 'var(--pfui-fonts-body)',
       fontSynthesis: 'none',
-      fontSize: 'var(--type-body)',
+      fontSize: 'var(--pfui-fontSizes-body)',
       lineHeight: '20px',
       verticalAlign: 'middle',
       '&[hidden]': {
@@ -20,7 +20,7 @@ export const spinnerClasses = sva({
       boxSizing: 'border-box',
       display: 'inline-block',
       flex: 'none',
-      border: '2px solid var(--color-border)',
+      border: '2px solid var(--pfui-colors-border)',
       borderBlockStartColor: 'currentColor',
       borderRadius: '50%',
       animation: 'pfui-spin 0.8s linear infinite',

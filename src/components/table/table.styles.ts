@@ -1,15 +1,15 @@
-import { sva, cva } from '../../styling';
+import { sva, cva } from '../../styles';
 export const tableClasses = sva({
   slots: ['table', 'container', 'header', 'heading', 'cell', 'body', 'row', 'footer', 'caption'],
   base: {
     table: {
       width: '100%',
       borderCollapse: 'collapse',
-      fontFamily: 'var(--font-body)',
+      fontFamily: 'var(--pfui-fonts-body)',
       fontSynthesis: 'none',
-      fontSize: 'var(--type-body)',
+      fontSize: 'var(--pfui-fontSizes-body)',
       lineHeight: '20px',
-      color: 'var(--color-text)',
+      color: 'var(--pfui-colors-text)',
       textAlign: 'start',
       '&[hidden]': {
         display: 'none',
@@ -24,14 +24,14 @@ export const tableClasses = sva({
       },
     },
     header: {
-      background: 'var(--color-surface-muted)',
+      background: 'var(--pfui-colors-surface-muted)',
       '&[hidden]': {
         display: 'none',
       },
     },
     heading: {
       padding: '14px 16px',
-      borderBlockEnd: '1px solid var(--color-border)',
+      borderBlockEnd: '1px solid var(--pfui-colors-border)',
       verticalAlign: 'middle',
       fontWeight: '600',
       '&[hidden]': {
@@ -39,13 +39,13 @@ export const tableClasses = sva({
       },
       'thead > tr > &': {
         paddingBlock: '12px',
-        color: 'var(--color-text-muted)',
+        color: 'var(--pfui-colors-text-muted)',
         fontSize: '12px',
       },
     },
     cell: {
       padding: '14px 16px',
-      borderBlockEnd: '1px solid var(--color-border)',
+      borderBlockEnd: '1px solid var(--pfui-colors-border)',
       verticalAlign: 'middle',
       '&[hidden]': {
         display: 'none',
@@ -61,11 +61,11 @@ export const tableClasses = sva({
         display: 'none',
       },
       ':where(tbody) > &:hover': {
-        background: 'var(--color-surface-hover)',
+        background: 'var(--pfui-colors-surface-hover)',
       },
     },
     footer: {
-      background: 'var(--color-surface-muted)',
+      background: 'var(--pfui-colors-surface-muted)',
       '&[hidden]': {
         display: 'none',
       },
@@ -98,7 +98,7 @@ export const tableClasses = sva({
         table: {
           '& > :where(thead, tbody, tfoot) > :where(tr) > :where(th, td)': {
             borderBlockEnd: '0',
-            borderBlockStart: '1px solid var(--color-border)',
+            borderBlockStart: '1px solid var(--pfui-colors-border)',
           },
           '& > :where(thead:not([hidden])) > :where(tr:nth-child(1 of tr:not([hidden]))) > :where(th, td)':
             {
@@ -121,7 +121,7 @@ export const tableClasses = sva({
     dividers: 'all',
   },
 });
-export default tableClasses();
+export const tableStyles = tableClasses();
 export const tableAlignClasses = cva({
   variants: {
     align: {

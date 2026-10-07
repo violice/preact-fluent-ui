@@ -1,21 +1,21 @@
-import { cva } from '../../styling';
+import { cva } from '../../styles';
 export const cardClasses = cva({
   base: {
     boxSizing: 'border-box',
     overflowWrap: 'anywhere',
-    fontFamily: 'var(--font-body)',
+    fontFamily: 'var(--pfui-fonts-body)',
     fontSynthesis: 'none',
-    fontSize: 'var(--type-body)',
+    fontSize: 'var(--pfui-fontSizes-body)',
     lineHeight: '20px',
     minWidth: '0',
-    padding: 'var(--space-5)',
-    border: '1px solid var(--color-border)',
-    borderRadius: 'var(--radius-md)',
-    color: 'var(--color-text)',
-    background: 'var(--color-card)',
-    boxShadow: 'var(--shadow-card)',
+    padding: 'var(--pfui-spacing-5)',
+    border: '1px solid var(--pfui-colors-border)',
+    borderRadius: 'var(--pfui-radii-md)',
+    color: 'var(--pfui-colors-text)',
+    background: 'var(--pfui-colors-card)',
+    boxShadow: 'var(--pfui-shadows-card)',
     '@media (max-width: 600px)': {
-      padding: 'var(--space-4)',
+      padding: 'var(--pfui-spacing-4)',
     },
   },
   variants: {

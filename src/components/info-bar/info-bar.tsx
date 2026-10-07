@@ -1,8 +1,8 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { infoBarClasses } from './info-bar.styles';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
 
 export type InfoBarProps = JSX.HTMLAttributes<HTMLDivElement> & {
   classes?: {

@@ -1,6 +1,6 @@
 import { signal } from '@preact/signals';
 import { describe, expect, it } from 'vitest';
-import { resolveClass } from '../index';
+import { resolveClass } from './index';
 
 describe('resolveClass', () => {
   it('preserves an explicitly empty primary class', () => {

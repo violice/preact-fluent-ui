@@ -1,4 +1,4 @@
-import { sva } from '../../styling';
+import { sva } from '../../styles';
 export const switchClasses = sva({
   slots: ['wrapper', 'input', 'track', 'thumb', 'label'],
   base: {
@@ -9,8 +9,8 @@ export const switchClasses = sva({
       columnGap: '8px',
       minWidth: '0',
       minHeight: '32px',
-      font: 'var(--type-body) / 20px var(--font-body)',
-      color: 'var(--color-text)',
+      font: 'var(--pfui-fontSizes-body) / 20px var(--pfui-fonts-body)',
+      color: 'var(--pfui-colors-text)',
       cursor: 'pointer',
       '&[hidden]': {
         display: 'none',
@@ -24,39 +24,39 @@ export const switchClasses = sva({
       height: '20px',
       margin: '0',
       padding: '0',
-      border: '1px solid var(--color-control-border)',
+      border: '1px solid var(--pfui-colors-control-border)',
       borderRadius: '10px',
-      background: 'var(--color-control)',
+      background: 'var(--pfui-colors-control)',
       cursor: 'inherit',
       '&:hover:where(:not(:disabled))': {
-        background: 'var(--color-control-hover)',
-        borderColor: 'var(--color-text-subtle)',
+        background: 'var(--pfui-colors-control-hover)',
+        borderColor: 'var(--pfui-colors-text-subtle)',
       },
       '&:checked': {
-        background: 'var(--color-accent)',
-        borderColor: 'var(--color-accent)',
+        background: 'var(--pfui-colors-accent)',
+        borderColor: 'var(--pfui-colors-accent)',
       },
       '&:focus-visible': {
-        outline: '2px solid var(--color-focus)',
+        outline: '2px solid var(--pfui-colors-focus)',
         outlineOffset: '2px',
       },
       "&[aria-invalid='true']": {
-        borderColor: 'var(--color-danger)',
+        borderColor: 'var(--pfui-colors-danger)',
       },
       '&:checked + $track $thumb': {
         insetInlineStart: '19px',
-        background: 'var(--color-on-accent)',
+        background: 'var(--pfui-colors-on-accent)',
       },
       '&:disabled': {
-        borderColor: 'var(--color-disabled)',
-        background: 'var(--color-surface-muted)',
+        borderColor: 'var(--pfui-colors-disabled)',
+        background: 'var(--pfui-colors-surface-muted)',
         cursor: 'not-allowed',
       },
       '&:disabled + $track $thumb': {
-        background: 'var(--color-disabled)',
+        background: 'var(--pfui-colors-disabled)',
       },
       '&:disabled ~ $label': {
-        color: 'var(--color-disabled)',
+        color: 'var(--pfui-colors-disabled)',
         cursor: 'not-allowed',
       },
       '&[hidden]': {
@@ -113,7 +113,7 @@ export const switchClasses = sva({
       width: '14px',
       height: '14px',
       borderRadius: '50%',
-      background: 'var(--color-text-subtle)',
+      background: 'var(--pfui-colors-text-subtle)',
       transition: 'inset-inline-start 120ms ease',
       '@media (prefers-reduced-motion: reduce)': {
         transition: 'none',
@@ -130,4 +130,4 @@ export const switchClasses = sva({
     },
   },
 });
-export default switchClasses();
+export const switchStyles = switchClasses();

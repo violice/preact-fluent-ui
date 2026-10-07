@@ -2,7 +2,7 @@ import { createRef } from 'preact';
 import { signal } from '@preact/signals';
 import { act, cleanup, render, screen } from '@testing-library/preact';
 import { afterEach, expect, it } from 'vitest';
-import { Text } from '../../index';
+import { Text } from '../index';
 
 afterEach(cleanup);
 

@@ -1,4 +1,4 @@
-import { sva } from '../../styling';
+import { sva } from '../../styles';
 export const paginationClasses = sva({
   slots: ['pagination', 'indicator'],
   base: {
@@ -6,12 +6,12 @@ export const paginationClasses = sva({
       display: 'flex',
       flexWrap: 'wrap',
       alignItems: 'center',
-      gap: 'var(--space-2)',
+      gap: 'var(--pfui-spacing-2)',
       minWidth: '0',
-      fontFamily: 'var(--font-body)',
-      fontSize: 'var(--type-body)',
+      fontFamily: 'var(--pfui-fonts-body)',
+      fontSize: 'var(--pfui-fontSizes-body)',
       lineHeight: '20px',
-      color: 'var(--color-text)',
+      color: 'var(--pfui-colors-text)',
       '&[hidden]': {
         display: 'none',
       },
@@ -22,4 +22,4 @@ export const paginationClasses = sva({
     },
   },
 });
-export default paginationClasses();
+export const paginationStyles = paginationClasses();

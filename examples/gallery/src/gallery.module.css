@@ -20,7 +20,7 @@
 }
 .heading {
   margin: 0 0 16px;
-  font-size: var(--type-subtitle);
+  font-size: var(--pfui-fontSizes-subtitle);
 }
 .row {
   display: flex;
@@ -92,17 +92,17 @@
   min-width: 0;
   height: 36px;
   padding: 4px;
-  border: 1px solid var(--color-control-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-control);
+  border: 1px solid var(--pfui-colors-control-border);
+  border-radius: var(--pfui-radii-sm);
+  background: var(--pfui-colors-control);
 }
 .settingsColors input:focus-visible {
-  outline: 2px solid var(--color-focus);
+  outline: 2px solid var(--pfui-colors-focus);
   outline-offset: 2px;
 }
 .appearanceControls .settingsNote {
   margin: 0;
-  color: var(--color-text-muted);
+  color: var(--pfui-colors-text-muted);
   line-height: 1.5;
 }
 .settingsFooter {
@@ -119,7 +119,7 @@
   text-decoration: none;
 }
 .brandLink:focus-visible {
-  outline: 2px solid var(--color-focus);
+  outline: 2px solid var(--pfui-colors-focus);
   outline-offset: 2px;
 }
 .workspace {
@@ -135,14 +135,14 @@
   left: 8px;
   transform: translateY(-150%);
   padding: 12px;
-  background: var(--color-card);
-  color: var(--color-text);
+  background: var(--pfui-colors-card);
+  color: var(--pfui-colors-text);
 }
 .skipLink:focus {
   transform: translateY(0);
 }
 .gallery h1:focus {
-  outline: 2px solid var(--color-focus);
+  outline: 2px solid var(--pfui-colors-focus);
   outline-offset: 6px;
 }
 .propsTable {
@@ -155,7 +155,7 @@
 .sidebarExample {
   max-width: 300px;
   min-height: 260px;
-  border: 1px solid var(--color-control-border);
+  border: 1px solid var(--pfui-colors-control-border);
 }
 .sidebarExample[data-layout='horizontal'] {
   max-width: none;
@@ -167,7 +167,7 @@
   display: none;
 }
 .signalAccent {
-  outline: 3px solid var(--color-accent);
+  outline: 3px solid var(--pfui-colors-accent);
   outline-offset: 3px;
 }
 @media (max-width: 800px) {
@@ -195,9 +195,9 @@
   justify-items: start;
   min-width: 0;
   padding: 20px;
-  border: 1px solid var(--color-control-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-card);
+  border: 1px solid var(--pfui-colors-control-border);
+  border-radius: var(--pfui-radii-sm);
+  background: var(--pfui-colors-card);
 }
 .preview > div,
 .preview > form {
@@ -205,13 +205,13 @@
   max-width: 100%;
 }
 .documentationLink {
-  color: var(--color-primary);
+  color: var(--pfui-colors-primary);
 }
 .documentationLink:hover {
   text-decoration: underline;
 }
 .documentationLink:focus-visible {
-  outline: 2px solid var(--color-focus);
+  outline: 2px solid var(--pfui-colors-focus);
   outline-offset: 3px;
 }
 
@@ -261,8 +261,8 @@
   width: 100%;
   min-width: 0;
   height: 560px;
-  border: 1px solid var(--color-control-border);
-  border-radius: var(--radius-sm);
+  border: 1px solid var(--pfui-colors-control-border);
+  border-radius: var(--pfui-radii-sm);
 }
 
 pre.longText {

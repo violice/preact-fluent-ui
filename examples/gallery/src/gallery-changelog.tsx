@@ -1,7 +1,7 @@
 import { parseMarkdown } from '@tanstack/markdown/parser';
 import type { BlockNode, InlineNode, MarkdownDocument } from '@tanstack/markdown';
 import { Fragment, h, type ComponentChildren } from 'preact';
-import { CodeBlock as PlainCodeBlock, Text } from '../../../dist/index.js';
+import { CodeBlock as PlainCodeBlock, Text } from '../../../dist/components.js';
 import { CodeBlock } from './code-block';
 import changelog from '../../../CHANGELOG.md?raw';
 import styles from './gallery-changelog.module.css';

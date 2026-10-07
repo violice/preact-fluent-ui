@@ -1,9 +1,9 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
-import { Icon, type IconName } from '../../icons/icon';
-import styles from './empty-state.styles';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
+import { Icon, type IconName } from '../icon/icon';
+import { emptyStateStyles } from './empty-state.styles';
 
 export type EmptyStateProps = Omit<JSX.HTMLAttributes<HTMLElement>, 'title'> & {
   classes?: {
@@ -34,12 +34,12 @@ export const EmptyState = /* @__PURE__ */ forwardRef<HTMLElement, EmptyStateProp
       <section
         {...props}
         ref={ref}
-        class={cx(styles.empty, resolveClass(classProp, className), classes?.root)}
+        class={cx(emptyStateStyles.empty, resolveClass(classProp, className), classes?.root)}
         role={role}
       >
         <Icon name={icon} size={24} class={classes?.icon} />
-        <h2 class={cx(styles.title, classes?.title)}>{title}</h2>
-        <div class={cx(styles.content, classes?.content)}>{children}</div>
+        <h2 class={cx(emptyStateStyles.title, classes?.title)}>{title}</h2>
+        <div class={cx(emptyStateStyles.content, classes?.content)}>{children}</div>
       </section>
     );
   },

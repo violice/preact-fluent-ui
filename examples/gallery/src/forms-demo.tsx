@@ -8,7 +8,7 @@ import {
   Select,
   Switch,
   Textarea,
-} from '../../../dist/index.js';
+} from '../../../dist/components.js';
 import styles from './gallery.module.css';
 
 export function ConnectionForm() {

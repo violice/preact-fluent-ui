@@ -1,15 +1,15 @@
-import { css, cva } from '../../styling';
+import { css, cva } from '../../styles';
 export const dataListClass = cva({
   base: {
     display: 'grid',
-    gap: 'var(--space-4)',
+    gap: 'var(--pfui-spacing-4)',
     minWidth: '0',
     margin: '0',
-    fontFamily: 'var(--font-body)',
+    fontFamily: 'var(--pfui-fonts-body)',
     fontSynthesis: 'none',
-    fontSize: 'var(--type-body)',
+    fontSize: 'var(--pfui-fontSizes-body)',
     lineHeight: '20px',
-    color: 'var(--color-text)',
+    color: 'var(--pfui-colors-text)',
     '&[hidden]': {
       display: 'none',
     },
@@ -35,7 +35,7 @@ export const dataListItemClass = css({
   display: 'grid',
   gridColumn: '1 / -1',
   gridTemplateColumns: 'subgrid',
-  gap: 'var(--space-2) var(--space-4)',
+  gap: 'var(--pfui-spacing-2) var(--pfui-spacing-4)',
   minWidth: '0',
   '&[hidden]': {
     display: 'none',
@@ -45,7 +45,7 @@ export const dataListLabelClass = css({
   minWidth: '0',
   margin: '0',
   overflowWrap: 'anywhere',
-  color: 'var(--color-text-muted)',
+  color: 'var(--pfui-colors-text-muted)',
   '&[hidden]': {
     display: 'none',
   },

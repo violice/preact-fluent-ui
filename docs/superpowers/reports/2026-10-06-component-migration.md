@@ -12,7 +12,7 @@ Independent review found two important regressions, both fixed:
 Validation completed:
 
 - Full check: typecheck, lint, formatting, 402 tests, release checks and licenses.
-- Library build and artifact checks; packed consumers against locked and minimum Preact; Button-only tree shaking and compiled styling consumer.
+- Library build and artifact checks; packed consumers against locked and minimum Preact; Button-only tree shaking and compiled styles consumer.
 - Gallery build: 41 pages and 404; 11 gallery artifact tests.
 - Browser comparison: 2,976 computed property values across Table, Checkbox, Sidebar, Spinner, Card, Disclosure, Text and LoadingState. Differences were renamed animation identifiers and restored Button semibold text/related widths after correcting reset precedence. Other sampled values matched.
 - Additional browser probes covered unpadded Card at 560px, compact Table cells and final divider, Checkbox sibling-state styles, Spinner duration and Tooltip local theme colors/geometry.

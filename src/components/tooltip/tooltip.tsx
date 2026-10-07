@@ -1,8 +1,8 @@
 import type { JSX, VNode } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useId, useRef } from 'preact/hooks';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
 import { useRender } from '../../utils/use-render';
 import type { TooltipPlacement } from './tooltip-position';
 import { tooltipClass } from './tooltip.styles';

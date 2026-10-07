@@ -1,4 +1,4 @@
-import { sva } from '../../styling';
+import { sva } from '../../styles';
 export const loadingStateClasses = sva({
   slots: ['loading', 'label', 'content', 'spinner'],
   base: {
@@ -6,13 +6,13 @@ export const loadingStateClasses = sva({
       boxSizing: 'border-box',
       minInlineSize: '0',
       overflowWrap: 'anywhere',
-      fontFamily: 'var(--font-body)',
+      fontFamily: 'var(--pfui-fonts-body)',
       fontSynthesis: 'none',
-      fontSize: 'var(--type-body)',
+      fontSize: 'var(--pfui-fontSizes-body)',
       lineHeight: '20px',
       display: 'grid',
       gap: '12px',
-      color: 'var(--color-text-muted)',
+      color: 'var(--pfui-colors-text-muted)',
       '&[hidden]': {
         display: 'none',
       },
@@ -21,7 +21,7 @@ export const loadingStateClasses = sva({
       minInlineSize: '0',
       fontSize: '18px',
       fontWeight: '600',
-      color: 'var(--color-text)',
+      color: 'var(--pfui-colors-text)',
     },
     content: {
       minInlineSize: '0',
@@ -40,9 +40,9 @@ export const loadingStateClasses = sva({
         loading: {
           justifyItems: 'center',
           padding: '48px 24px',
-          border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-md)',
-          background: 'var(--color-card)',
+          border: '1px solid var(--pfui-colors-border)',
+          borderRadius: 'var(--pfui-radii-md)',
+          background: 'var(--pfui-colors-card)',
           textAlign: 'center',
         },
       },
@@ -58,7 +58,7 @@ export const loadingStateClasses = sva({
         },
         label: {
           gridColumn: '2',
-          fontSize: 'var(--type-body)',
+          fontSize: 'var(--pfui-fontSizes-body)',
         },
         content: {
           gridColumn: '2',

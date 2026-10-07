@@ -1,8 +1,8 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { buttonClasses } from './button.styles';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
 import { Spinner } from '../spinner/spinner';
 export type ButtonProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'default' | 'primary' | 'subtle' | 'danger';

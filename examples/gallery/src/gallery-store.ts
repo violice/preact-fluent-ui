@@ -1,6 +1,6 @@
 import { batch, effect, signal } from '@preact/signals';
-import resetUrl from '../../../dist/reset.css?url';
-import nativeControlsUrl from '../../../dist/native-controls.css?url';
+import resetUrl from '../../../.artifacts/gallery-defaults/reset.css?url';
+import nativeControlsUrl from '../../../.artifacts/gallery-defaults/native-controls.css?url';
 import { defaultSettings, readSettings, settingsUrl, themeOverrides } from './gallery-settings';
 import type { GallerySettings } from './gallery-settings';
 

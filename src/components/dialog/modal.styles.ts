@@ -1,4 +1,4 @@
-import { sva } from '../../styling';
+import { sva } from '../../styles';
 export const modalClasses = sva({
   slots: ['backdrop', 'dialog'],
   base: {
@@ -8,7 +8,7 @@ export const modalClasses = sva({
       inset: '0',
       display: 'grid',
       placeItems: 'center',
-      padding: 'var(--space-5)',
+      padding: 'var(--pfui-spacing-5)',
       background: 'rgb(0 0 0 / 38%)',
       zIndex: '20',
       '@media (forced-colors: active)': {
@@ -20,15 +20,15 @@ export const modalClasses = sva({
       width: 'min(100%, 520px)',
       maxHeight: 'calc(100dvh - 40px)',
       overflowY: 'auto',
-      padding: 'var(--space-6)',
-      background: 'var(--color-surface-raised)',
-      color: 'var(--color-text)',
-      border: '1px solid var(--color-border-strong)',
-      borderRadius: 'var(--radius-lg)',
-      boxShadow: 'var(--shadow-dialog)',
-      font: 'var(--type-body) / 1.5 var(--font-body)',
+      padding: 'var(--pfui-spacing-6)',
+      background: 'var(--pfui-colors-surface-raised)',
+      color: 'var(--pfui-colors-text)',
+      border: '1px solid var(--pfui-colors-border-strong)',
+      borderRadius: 'var(--pfui-radii-lg)',
+      boxShadow: 'var(--pfui-shadows-dialog)',
+      font: 'var(--pfui-fontSizes-body) / 1.5 var(--pfui-fonts-body)',
       '&:focus-visible': {
-        outline: '2px solid var(--color-focus)',
+        outline: '2px solid var(--pfui-colors-focus)',
         outlineOffset: '2px',
       },
       '@media (forced-colors: active)': {
@@ -42,4 +42,4 @@ export const modalClasses = sva({
     },
   },
 });
-export default modalClasses();
+export const modalStyles = modalClasses();

@@ -1,4 +1,4 @@
-const libraryProperty = /^--(?:color|font|type|weight|shadow|radius|space|pfui)-/;
+const libraryProperty = /^--pfui-/;
 
 /** Copy resolved library tokens rather than a theme name, preserving local overrides. */
 export function copyTooltipTheme(trigger: HTMLElement, target: HTMLElement): void {

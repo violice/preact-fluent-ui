@@ -1,7 +1,7 @@
 import { createRef } from 'preact';
 import { cleanup, render, screen } from '@testing-library/preact';
 import { afterEach, expect, it } from 'vitest';
-import { DataList, DataListItem, DataListLabel, DataListValue, StatusBadge } from '../../index';
+import { DataList, DataListItem, DataListLabel, DataListValue, StatusBadge } from '../index';
 
 afterEach(cleanup);
 

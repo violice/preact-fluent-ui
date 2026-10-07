@@ -1,5 +1,5 @@
 import type { JSX } from 'preact';
-import { cx } from '../styling/runtime/cx';
+import { cx } from '../styles/runtime/cx';
 import { resolveClass } from './resolve-class';
 
 type Handler = (...args: unknown[]) => unknown;

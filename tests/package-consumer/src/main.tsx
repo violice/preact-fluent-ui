@@ -1,3 +1,4 @@
+import '../styled-system/styles.css';
 import { render } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 import {
@@ -31,10 +32,7 @@ import {
   StatusBadge,
   CounterBadge,
   Text,
-} from '@violice/preact-fluent-ui';
-import '@violice/preact-fluent-ui/theme.css';
-import '@violice/preact-fluent-ui/styles.css';
-import '@violice/preact-fluent-ui/native-controls.css';
+} from '@violice/preact-fluent-ui/components';
 
 function App() {
   const [dialog, setDialog] = useState<'modal' | 'confirm' | null>(null);
@@ -47,7 +45,7 @@ function App() {
       <AppShellWorkspace>
         <AppShellContent>
           <PageHeader title="Installed package" description="Controls and localized dialogs" />
-          <Card padding="none" style={{ display: 'grid', gap: 'var(--space-2)' }}>
+          <Card padding="none" style={{ display: 'grid', gap: 'var(--pfui-spacing-2)' }}>
             <InfoBar title="Ready" tone="success">
               Installed from an npm archive.
             </InfoBar>

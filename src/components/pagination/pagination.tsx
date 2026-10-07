@@ -1,9 +1,9 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
 import { Button } from '../button/button';
-import styles from './pagination.styles';
+import { paginationStyles } from './pagination.styles';
 
 export type PaginationProps = JSX.HTMLAttributes<HTMLElement> & {
   page: number;
@@ -36,7 +36,11 @@ export const Pagination = /* @__PURE__ */ forwardRef<HTMLElement, PaginationProp
     const previousDisabled = disabled || displayedPage <= 1;
     const nextDisabled = disabled || displayedPage >= pageCount;
     return (
-      <nav {...props} ref={ref} class={cx(styles.pagination, resolveClass(classProp, className))}>
+      <nav
+        {...props}
+        ref={ref}
+        class={cx(paginationStyles.pagination, resolveClass(classProp, className))}
+      >
         <Button
           size="compact"
           disabled={previousDisabled}
@@ -46,7 +50,7 @@ export const Pagination = /* @__PURE__ */ forwardRef<HTMLElement, PaginationProp
         >
           {previousLabel}
         </Button>
-        <span class={styles.indicator}>
+        <span class={paginationStyles.indicator}>
           {formatPageLabel
             ? formatPageLabel(displayedPage, pageCount)
             : `${displayedPage} / ${pageCount}`}

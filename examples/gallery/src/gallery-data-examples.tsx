@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableHeaderCell,
   TableRow,
-} from '../../../dist/index.js';
+} from '../../../dist/components.js';
 import type { ComponentDoc } from './gallery-pages';
 import styles from './gallery.module.css';
 
@@ -312,7 +312,7 @@ function SeparatorExample() {
 }
 
 const tableCode = `import { Table, TableContainer, TableCaption, TableHeader, TableBody,
-  TableRow, TableHeaderCell, TableCell } from '@violice/preact-fluent-ui';
+  TableRow, TableHeaderCell, TableCell } from '@violice/preact-fluent-ui/components';
 
 <TableContainer role="region" aria-label="Scrollable profiles" tabIndex={0}>
   <Table density="regular" style={{ minWidth: '480px' }}>

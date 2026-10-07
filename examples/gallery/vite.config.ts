@@ -1,10 +1,17 @@
-import { readFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import preact from '@preact/preset-vite';
 import { defineConfig } from 'vite';
-import { fluentPreset } from '../../src/styling/config/fluent-preset.ts';
-import { fluentStyles } from '../../src/styling/adapters/vite.ts';
+import { fluentPreset } from '../../src/styles/config/fluent-preset.ts';
+import { fluentStyles } from '../../src/styles/adapters/vite.ts';
+
+import { generateResetCss, generateNativeCss } from '../../src/styles/compiler/global-styles.ts';
+
+const defaultsDirectory = new URL('../../.artifacts/gallery-defaults/', import.meta.url);
+await mkdir(defaultsDirectory, { recursive: true });
+await writeFile(new URL('reset.css', defaultsDirectory), generateResetCss());
+await writeFile(new URL('native-controls.css', defaultsDirectory), generateNativeCss());
 
 export default defineConfig({
   root: fileURLToPath(new URL('.', import.meta.url)),
@@ -13,7 +20,6 @@ export default defineConfig({
     fluentStyles({
       outdir: '../../.artifacts/gallery-styled-system',
       config: { presets: [fluentPreset], reset: false, native: false },
-      sources: ['../../../dist/styling.js'],
     }),
     {
       name: 'gallery-static-preview',

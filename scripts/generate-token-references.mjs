@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
-import { fluentPreset } from '../src/styling/config/fluent-preset.ts';
-import { resolveConfig } from '../src/styling/config/resolve-config.ts';
-import { tokenReferences } from '../src/styling/compiler/token-references.ts';
+import { fluentPreset } from '../src/styles/config/fluent-preset.ts';
+import { resolveConfig } from '../src/styles/config/resolve-config.ts';
+import { tokenReferences } from '../src/styles/compiler/token-references.ts';
 
 // Preserve the default token.var API categories; custom configs use generated styled-system/css.ts.
 const references = Object.entries(tokenReferences(resolveConfig({ presets: [fluentPreset] })))
@@ -14,7 +14,7 @@ const source = [
   '} as const;',
   '',
 ].join('\n');
-const target = new URL('../src/styling/runtime/token-references.generated.ts', import.meta.url);
+const target = new URL('../src/styles/runtime/token-references.generated.ts', import.meta.url);
 if (process.argv.includes('--check')) {
   if ((await readFile(target, 'utf8')) !== source) {
     throw new Error('Default token references are stale. Run npm run tokens:generate.');

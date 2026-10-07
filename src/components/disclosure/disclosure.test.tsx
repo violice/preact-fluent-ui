@@ -2,7 +2,7 @@ import { createRef } from 'preact';
 import { cleanup, fireEvent, render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
-import { Disclosure, DisclosureContent, DisclosureSummary } from '../../index';
+import { Disclosure, DisclosureContent, DisclosureSummary } from '../index';
 
 afterEach(cleanup);
 

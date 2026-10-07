@@ -1,5 +1,4 @@
-import '../../../dist/theme.css';
-import '../../../dist/styles.css';
+import '../../../.artifacts/gallery-styled-system/styles.css';
 import { render } from 'preact';
 import { createGalleryStore } from './gallery-store';
 import { ShellDocument } from './gallery-app-shell-examples';

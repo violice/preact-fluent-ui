@@ -15,7 +15,7 @@ import { readFileSync } from 'node:fs';
 const source = readFileSync('src/components/app-shell/app-shell.styles.ts', 'utf8');
 import { recipeCss } from '../../../tests/component-styles';
 const css = recipeCss(source);
-import classes from './app-shell.styles';
+import { appShellStyles } from './app-shell.styles';
 
 afterEach(cleanup);
 
@@ -74,7 +74,9 @@ it('preserves class precedence and scoped native hidden behavior on every part',
     fallback.unmount();
   }
   for (const name of ['shell', 'workspace', 'header', 'content', 'footer'] as const) {
-    expect(classes[name].split(' ').some((name) => css.includes(`.${name}[hidden]`))).toBe(true);
+    expect(appShellStyles[name].split(' ').some((name) => css.includes(`.${name}[hidden]`))).toBe(
+      true,
+    );
   }
   expect(css).toMatch(/display:\s*none\s*!important/);
   const style = document.createElement('style');
@@ -120,7 +122,7 @@ it('declares reset-independent geometry, scoped sidebar integration and theme co
   expect(css).toContain('border-radius:12px');
   expect(css).toContain('box-sizing:border-box');
   expect(css).toContain('margin-inline-start:auto');
-  expect(css).toContain('var(--color-surface)');
+  expect(css).toContain('var(--pfui-colors-surface)');
   expect(css).not.toContain('@media');
 });
 it('passes workspace variant slots directly and isolates nested shells', () => {

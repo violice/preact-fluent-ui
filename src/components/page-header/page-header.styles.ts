@@ -1,15 +1,15 @@
-import { sva } from '../../styling';
+import { sva } from '../../styles';
 export const pageHeaderClasses = sva({
   slots: ['header', 'actions', 'notices', 'title', 'description'],
   base: {
     header: {
       boxSizing: 'border-box',
       minWidth: '0',
-      color: 'var(--color-text)',
+      color: 'var(--pfui-colors-text)',
       overflowWrap: 'anywhere',
-      fontFamily: 'var(--font-body)',
+      fontFamily: 'var(--pfui-fonts-body)',
       fontSynthesis: 'none',
-      fontSize: 'var(--type-body)',
+      fontSize: 'var(--pfui-fontSizes-body)',
       lineHeight: '20px',
       display: 'flex',
       alignItems: 'center',
@@ -41,15 +41,15 @@ export const pageHeaderClasses = sva({
     },
     title: {
       margin: '0 0 6px',
-      fontSize: 'var(--type-title)',
+      fontSize: 'var(--pfui-fontSizes-title)',
       fontWeight: '600',
       lineHeight: '36px',
       letterSpacing: '-0.5px',
     },
     description: {
       margin: '0',
-      color: 'var(--color-text-muted)',
+      color: 'var(--pfui-colors-text-muted)',
     },
   },
 });
-export default pageHeaderClasses();
+export const pageHeaderStyles = pageHeaderClasses();

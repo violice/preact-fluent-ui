@@ -18,7 +18,7 @@ import {
   SidebarGroup,
   SidebarItem,
   SidebarFooter,
-} from '../../../dist/index.js';
+} from '../../../dist/components.js';
 import { version } from '../../../package.json';
 import { GalleryControls, useGallerySettings } from './gallery-controls';
 import type { GalleryStore } from './gallery-store';

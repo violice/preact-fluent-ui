@@ -1,39 +1,39 @@
-import { css } from '../../styling';
+import { css } from '../../styles';
 export const inputClass = css({
   boxSizing: 'border-box',
   minWidth: '0',
   minHeight: '36px',
   padding: '7px 12px',
-  font: 'var(--type-body) / 20px var(--font-body)',
+  font: 'var(--pfui-fontSizes-body) / 20px var(--pfui-fonts-body)',
   fontSynthesis: 'none',
-  color: 'var(--color-text)',
-  background: 'var(--color-control)',
-  border: '1px solid var(--color-control-border)',
-  borderBottomColor: 'var(--color-control-bottom)',
-  borderRadius: 'var(--radius-sm)',
-  boxShadow: 'var(--shadow-control)',
+  color: 'var(--pfui-colors-text)',
+  background: 'var(--pfui-colors-control)',
+  border: '1px solid var(--pfui-colors-control-border)',
+  borderBottomColor: 'var(--pfui-colors-control-bottom)',
+  borderRadius: 'var(--pfui-radii-sm)',
+  boxShadow: 'var(--pfui-shadows-control)',
   transition:
     'background-color 120ms ease,\n    border-color 120ms ease,\n    box-shadow 120ms ease',
   '&:hover:where(:not(:disabled))': {
-    background: 'var(--color-control-hover)',
-    borderBottomColor: 'var(--color-text-subtle)',
+    background: 'var(--pfui-colors-control-hover)',
+    borderBottomColor: 'var(--pfui-colors-text-subtle)',
   },
   '&:focus-visible': {
-    outline: '2px solid var(--color-focus)',
+    outline: '2px solid var(--pfui-colors-focus)',
     outlineOffset: '2px',
-    borderBottomColor: 'var(--color-accent)',
+    borderBottomColor: 'var(--pfui-colors-accent)',
   },
   '&::placeholder': {
-    color: 'var(--color-text-subtle)',
+    color: 'var(--pfui-colors-text-subtle)',
     opacity: '1',
   },
   "&[aria-invalid='true']": {
-    borderBottomColor: 'var(--color-danger)',
+    borderBottomColor: 'var(--pfui-colors-danger)',
   },
   '&:disabled': {
-    color: 'var(--color-disabled)',
-    background: 'var(--color-surface-muted)',
-    borderColor: 'var(--color-border)',
+    color: 'var(--pfui-colors-disabled)',
+    background: 'var(--pfui-colors-surface-muted)',
+    borderColor: 'var(--pfui-colors-border)',
     cursor: 'not-allowed',
   },
   '&[hidden]': {

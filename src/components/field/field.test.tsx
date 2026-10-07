@@ -2,7 +2,7 @@ import { createRef, type ComponentChildren } from 'preact';
 import { cleanup, render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
-import { Field, Input, Select, type ValidationState } from '../../index';
+import { Field, Input, Select, type ValidationState } from '../index';
 
 afterEach(cleanup);
 

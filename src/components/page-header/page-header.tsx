@@ -1,8 +1,8 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
-import styles from './page-header.styles';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
+import { pageHeaderStyles } from './page-header.styles';
 
 export type PageHeaderProps = Omit<JSX.HTMLAttributes<HTMLElement>, 'children' | 'title'> & {
   classes?: {
@@ -29,15 +29,19 @@ export const PageHeader = /* @__PURE__ */ forwardRef<HTMLElement, PageHeaderProp
         <header
           {...props}
           ref={ref}
-          class={cx(styles.header, resolveClass(classProp, className), classes?.root)}
+          class={cx(pageHeaderStyles.header, resolveClass(classProp, className), classes?.root)}
         >
           <div class={classes?.content}>
-            <h1 class={cx(styles.title, classes?.title)}>{title}</h1>
-            <p class={cx(styles.description, classes?.description)}>{description}</p>
+            <h1 class={cx(pageHeaderStyles.title, classes?.title)}>{title}</h1>
+            <p class={cx(pageHeaderStyles.description, classes?.description)}>{description}</p>
           </div>
-          {actions != null && <div class={cx(styles.actions, classes?.actions)}>{actions}</div>}
+          {actions != null && (
+            <div class={cx(pageHeaderStyles.actions, classes?.actions)}>{actions}</div>
+          )}
         </header>
-        {notices != null && <div class={cx(styles.notices, classes?.notices)}>{notices}</div>}
+        {notices != null && (
+          <div class={cx(pageHeaderStyles.notices, classes?.notices)}>{notices}</div>
+        )}
       </>
     );
   },

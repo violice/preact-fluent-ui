@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
-} from '../../../dist/index.js';
+} from '../../../dist/components.js';
 import type { ComponentDoc } from './gallery-pages';
 import { ButtonsDemo } from './gallery-demos';
 import styles from './gallery.module.css';
@@ -161,26 +161,27 @@ function TooltipExample() {
       <div
         data-theme="dark"
         style={{
-          '--color-surface': '#232428',
-          '--color-surface-raised': '#34353b',
-          '--color-text': '#f3f4f6',
-          '--color-surface-muted': '#292a2f',
-          '--color-surface-hover': '#35373e',
-          '--color-surface-pressed': '#2d2f35',
-          '--color-border': '#3b3d44',
-          '--color-border-strong': '#626670',
-          '--color-control': '#37393f',
-          '--color-control-hover': '#40434b',
-          '--color-control-pressed': '#303238',
-          '--color-control-border': '#484b54',
-          '--color-control-bottom': '#656975',
-          '--color-focus': '#dceaff',
-          '--color-disabled': '#8e939e',
-          '--shadow-control': 'inset 0 1px 0 rgb(255 255 255 / 3%), 0 1px 2px rgb(0 0 0 / 10%)',
+          '--pfui-colors-surface': '#232428',
+          '--pfui-colors-surface-raised': '#34353b',
+          '--pfui-colors-text': '#f3f4f6',
+          '--pfui-colors-surface-muted': '#292a2f',
+          '--pfui-colors-surface-hover': '#35373e',
+          '--pfui-colors-surface-pressed': '#2d2f35',
+          '--pfui-colors-border': '#3b3d44',
+          '--pfui-colors-border-strong': '#626670',
+          '--pfui-colors-control': '#37393f',
+          '--pfui-colors-control-hover': '#40434b',
+          '--pfui-colors-control-pressed': '#303238',
+          '--pfui-colors-control-border': '#484b54',
+          '--pfui-colors-control-bottom': '#656975',
+          '--pfui-colors-focus': '#dceaff',
+          '--pfui-colors-disabled': '#8e939e',
+          '--pfui-shadows-control':
+            'inset 0 1px 0 rgb(255 255 255 / 3%), 0 1px 2px rgb(0 0 0 / 10%)',
           colorScheme: 'dark',
           padding: '16px',
-          background: 'var(--color-surface)',
-          color: 'var(--color-text)',
+          background: 'var(--pfui-colors-surface)',
+          color: 'var(--pfui-colors-text)',
         }}
       >
         <Tooltip content="This tooltip inherits the local dark theme" placement="right">

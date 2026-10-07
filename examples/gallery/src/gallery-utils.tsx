@@ -1,3 +1,5 @@
+import { cx } from '../../../.artifacts/gallery-styled-system/css';
+import { mergeProps, resolveClass, useRender } from '../../../dist/utils.js';
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useSignal } from '@preact/signals';
@@ -12,11 +14,7 @@ import {
   Text,
   Checkbox,
   InfoBar,
-  cx,
-  mergeProps,
-  resolveClass,
-  useRender,
-} from '../../../dist/index.js';
+} from '../../../dist/components.js';
 import { CodeExample } from './code-block';
 import styles from './gallery.module.css';
 

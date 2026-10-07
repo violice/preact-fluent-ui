@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { Gallery } from './gallery';
 import { galleryHref, normalizeGalleryPath } from './gallery-routing';
 import { defaultSettings } from './gallery-settings';
-import libraryCss from '../../../dist/styles.css?raw';
+import libraryCss from '../../../dist/components.css?raw';
 import { flattenLayers } from '../../../tests/component-styles';
 import galleryCss from './gallery.module.css?raw';
 import galleryClasses from './gallery.module.css';
@@ -232,7 +232,7 @@ it('focuses the PageHeader demonstration heading after a client transition', asy
   await waitFor(() => expect(document.activeElement).toBe(heading));
 });
 
-it('groups setup before guides and keeps styling separate from theming', async () => {
+it('groups setup before guides and keeps styles separate from theming', async () => {
   render(<Gallery base="/" />);
   const nav = screen.getByRole('navigation', { name: 'Documentation' });
   expect(
@@ -240,8 +240,8 @@ it('groups setup before guides and keeps styling separate from theming', async (
       .map((group) => group.getAttribute('aria-labelledby'))
       .map((id) => document.getElementById(id!)?.textContent),
   ).toEqual(['Overview', 'Guides', 'Components', 'Utils']);
-  await userEvent.setup().click(screen.getByRole('link', { name: 'Styling', exact: true }));
-  expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Styling');
+  await userEvent.setup().click(screen.getByRole('link', { name: 'Styles', exact: true }));
+  expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Styles');
 });
 
 it('starts PageHeader documentation with its sole demonstration heading', () => {

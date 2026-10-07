@@ -1,4 +1,4 @@
-import { css } from '../../styling';
+import { css } from '../../styles';
 export const counterBadgeClass = css({
   display: 'inline-grid',
   placeItems: 'center',
@@ -8,10 +8,10 @@ export const counterBadgeClass = css({
   minInlineSize: '24px',
   blockSize: '24px',
   padding: '4px',
-  borderRadius: 'var(--radius-sm)',
-  color: 'var(--color-text-muted)',
-  background: 'var(--color-surface-pressed)',
-  fontFamily: 'var(--font-body)',
+  borderRadius: 'var(--pfui-radii-sm)',
+  color: 'var(--pfui-colors-text-muted)',
+  background: 'var(--pfui-colors-surface-pressed)',
+  fontFamily: 'var(--pfui-fonts-body)',
   fontSynthesis: 'none',
   fontSize: '11px',
   fontWeight: '400',

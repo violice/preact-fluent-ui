@@ -80,12 +80,17 @@ function checkFileList(files) {
     'LICENSE',
     'THIRD_PARTY_NOTICES.txt',
     'licenses/fluent-system-icons.txt',
-    'dist/index.js',
-    'dist/index.d.ts',
-    'dist/index.js.map',
-    ...['theme', 'styles', 'reset', 'native-controls'].map((name) => `dist/${name}.css`),
+    ...['components', 'utils', 'styles'].flatMap((name) => [
+      `dist/${name}.js`,
+      `dist/${name}/index.d.ts`,
+    ]),
+    'dist/components.js.map',
+    ...['components'].map((name) => `dist/${name}.css`),
   ]) {
     assert(files.includes(required), `Archive is missing ${required}`);
+  }
+  for (const name of ['theme', 'reset', 'native-controls']) {
+    assert(!files.includes(`dist/${name}.css`), `Removed CSS asset is still published: ${name}`);
   }
   for (const file of files) {
     assert(
@@ -145,25 +150,22 @@ async function inspectLibrary(directory, files) {
     'CSS imports must be retained as side effects',
   );
   assert.deepEqual(Object.keys(manifest.exports).sort(), [
-    '.',
+    './components',
     './config',
-    './native-controls.css',
-    './reset.css',
-    './styles.css',
-    './styling',
-    './theme.css',
+    './styles',
+    './utils',
     './vite',
   ]);
-  for (const css of ['theme', 'styles', 'reset', 'native-controls']) {
-    assert.equal(
-      manifest.exports[`./${css}.css`],
-      `./dist/${css}.css`,
-      `Missing CSS export: ${css}`,
-    );
-    assert((await readFile(join(directory, `dist/${css}.css`))).length > 0, `Empty CSS: ${css}`);
+  assert(
+    (await readFile(join(directory, 'dist/components.css'))).length > 0,
+    'Empty component CSS',
+  );
+  assert.equal(manifest.exports['./styles.css'], undefined);
+  assert.equal(manifest.exports['.'], undefined);
+  for (const name of ['components', 'utils', 'styles']) {
+    assert.equal(manifest.exports[`./${name}`].types, `./dist/${name}/index.d.ts`);
+    assert.equal(manifest.exports[`./${name}`].import, `./dist/${name}.js`);
   }
-  assert.equal(manifest.exports['.'].types, './dist/index.d.ts');
-  assert.equal(manifest.exports['.'].import, './dist/index.js');
   const imports = new Set();
   const maps = [];
   for (const file of files.filter((file) => file.endsWith('.js'))) {
@@ -213,7 +215,7 @@ async function inspectLibrary(directory, files) {
         `Library must not embed Preact: ${source}`,
       );
       assert(
-        /^\.\.\/(?:src\/(?:utils\/(?:resolve-class|merge-props|use-render)\.ts|components\/(?:app-shell|button|card|checkbox|counter-badge|data-list|dialog|disclosure|empty-state|field|info-bar|input|loading-state|page-header|pagination|select|separator|sidebar|spinner|status-badge|switch|table|text|text-content|textarea|toolbar|tooltip)\/[^/]+\.(?:tsx|styles\.ts|ts)|icons\/[^/]+\.(?:ts|tsx)|styling\/(?:index\.ts|(?:runtime|shared)\/[^/]+\.ts)|styling\/config\/(?:fluent\/[^/]+|fluent-preset|define-config|resolve-config|index)\.ts|styling\/(?:compiler|adapters)\/[^/]+\.ts))$/.test(
+        /^\.\.\/(?:src\/(?:utils\/(?:index|resolve-class|merge-props|use-render)\.ts|components\/index\.ts|components\/(?:app-shell|button|card|checkbox|counter-badge|data-list|dialog|disclosure|empty-state|field|icon|info-bar|input|loading-state|page-header|pagination|select|separator|sidebar|spinner|status-badge|switch|table|text|text-content|textarea|toolbar|tooltip)\/[^/]+\.(?:tsx|styles\.ts|ts)|styles\/(?:index\.ts|(?:runtime|shared)\/[^/]+\.ts)|styles\/config\/(?:fluent\/[^/]+|fluent-preset|define-config|resolve-config|index)\.ts|styles\/(?:compiler|adapters)\/[^/]+\.ts))$/.test(
           normalized,
         ) && !/\.test\./.test(normalized),
         `Unrelated source content in published map: ${source}`,
@@ -223,7 +225,7 @@ async function inspectLibrary(directory, files) {
     }
     maps.push({ file, sources: map.sources, mappedSources: mappedSources(map) });
   }
-  assert(maps.some((map) => map.file === 'dist/index.js.map'));
+  assert(maps.some((map) => map.file === 'dist/components.js.map'));
   const librarySources = maps.flatMap((map) => map.sources);
   for (const helper of ['clsx', 'class-variance-authority']) {
     assert(
@@ -276,7 +278,7 @@ async function inspectConsumer(directory, mode) {
   );
   assert.equal([...preactRoots][0], await realpath(join(directory, 'node_modules/preact')));
   assert(
-    ids.some((id) => id.includes('/node_modules/@violice/preact-fluent-ui/dist/index.js')),
+    ids.some((id) => id.includes('/node_modules/@violice/preact-fluent-ui/dist/components.js')),
     'Build must use installed package JavaScript',
   );
   assert(
@@ -297,7 +299,7 @@ async function inspectConsumer(directory, mode) {
     'Button must have live generated mappings',
   );
   const unusedSources = Object.keys(mapped).filter((source) =>
-    /\/src\/(?:components\/[^/]+\/(?:modal|confirm-dialog|dialog-header|dialog-body|dialog-footer|card|info-bar|status-badge|counter-badge|text|select|field|input|textarea|checkbox|switch|page-header|empty-state|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
+    /\/src\/(?:components\/[^/]+\/(?:modal|confirm-dialog|dialog-header|dialog-body|dialog-footer|card|info-bar|status-badge|counter-badge|text|select|field|input|textarea|checkbox|switch|page-header|empty-state|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|components\/icon\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
       source,
     ),
   );
@@ -332,7 +334,7 @@ async function inspectConsumer(directory, mode) {
   );
   if (mode === 'minimal') {
     const forbiddenSources = unusedSources.filter((source) =>
-      /\/(?:components\/[^/]+\/(?:modal|confirm-dialog|field|input|textarea|checkbox|switch|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|icons\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
+      /\/(?:components\/[^/]+\/(?:modal|confirm-dialog|field|input|textarea|checkbox|switch|disclosure|loading-state|tooltip|text-preview|code-block)\.tsx|components\/icon\/(?:fluent-icon-paths\.ts|icon\.tsx))$/.test(
         source,
       ),
     );
@@ -344,12 +346,12 @@ async function inspectConsumer(directory, mode) {
     const renderedExports = graph.chunks
       .flatMap((chunk) => chunk.modules)
       .filter((module) =>
-        module.id.endsWith('/node_modules/@violice/preact-fluent-ui/dist/index.js'),
+        module.id.endsWith('/node_modules/@violice/preact-fluent-ui/dist/components.js'),
       )
       .flatMap((module) => module.renderedExports);
     assert.deepEqual(
       renderedExports.toSorted(),
-      ['Button', 'Spinner', 'cx', 'resolveClass'],
+      ['Button', 'Spinner'],
       'Only Button, its loading Spinner and shared class helpers may remain rendered library exports',
     );
   } else {
@@ -364,7 +366,7 @@ async function inspectConsumer(directory, mode) {
       'Full consumer must provide a live Modal control for the tree-shaking comparison',
     );
     assert(
-      unusedSources.some((source) => source.endsWith('/icons/fluent-icon-paths.ts')),
+      unusedSources.some((source) => source.endsWith('/components/icon/fluent-icon-paths.ts')),
       'Full consumer must provide a live SVG catalog control',
     );
   }
@@ -441,8 +443,8 @@ try {
       '--input-type=module',
       '--eval',
       `
-    for (const path of ['src/components/button', 'dist/components/button', 'dist/index.js']) {
-      try { import.meta.resolve('@violice/preact-fluent-ui/' + path); }
+    for (const path of ['', 'styles.css', 'components.css', 'theme.css', 'reset.css', 'native-controls.css', 'src/components/button', 'dist/components/button', 'dist/index.js']) {
+      try { import.meta.resolve('@violice/preact-fluent-ui' + (path ? '/' + path : '')); }
       catch (error) {
         if (error.code === 'ERR_PACKAGE_PATH_NOT_EXPORTED') continue;
         throw error;

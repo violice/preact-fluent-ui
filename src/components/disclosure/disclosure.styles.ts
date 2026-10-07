@@ -1,11 +1,11 @@
-import { sva } from '../../styling';
+import { sva } from '../../styles';
 export const disclosureClasses = sva({
   slots: ['disclosure', 'summary', 'content'],
   base: {
     disclosure: {
       boxSizing: 'border-box',
       minInlineSize: '0',
-      color: 'var(--color-text)',
+      color: 'var(--pfui-colors-text)',
       '&[open] > $summary::before': {
         borderBlockStart: '6px solid currentColor',
         borderBlockEnd: '0 solid transparent',
@@ -19,9 +19,9 @@ export const disclosureClasses = sva({
       boxSizing: 'border-box',
       display: 'flex',
       alignItems: 'center',
-      gap: 'var(--space-2)',
-      paddingBlock: 'var(--space-2)',
-      font: 'var(--weight-semibold) var(--type-body) / 20px var(--font-body)',
+      gap: 'var(--pfui-spacing-2)',
+      paddingBlock: 'var(--pfui-spacing-2)',
+      font: 'var(--pfui-fontWeights-semibold) var(--pfui-fontSizes-body) / 20px var(--pfui-fonts-body)',
       cursor: 'pointer',
       listStyle: 'none',
       overflowWrap: 'anywhere',
@@ -38,9 +38,9 @@ export const disclosureClasses = sva({
         borderInlineEnd: '0 solid transparent',
       },
       '&:focus-visible': {
-        outline: '2px solid var(--color-focus)',
+        outline: '2px solid var(--pfui-colors-focus)',
         outlineOffset: '2px',
-        borderRadius: 'var(--radius-sm)',
+        borderRadius: 'var(--pfui-radii-sm)',
       },
       '&[hidden]': {
         display: 'none',
@@ -48,7 +48,7 @@ export const disclosureClasses = sva({
     },
     content: {
       minInlineSize: '0',
-      marginBlockStart: 'var(--space-2)',
+      marginBlockStart: 'var(--pfui-spacing-2)',
       '&[hidden]': {
         display: 'none',
       },
@@ -63,11 +63,11 @@ export const disclosureClasses = sva({
       },
       card: {
         disclosure: {
-          paddingInline: 'var(--space-3)',
-          paddingBlockEnd: 'var(--space-2)',
-          border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-md)',
-          background: 'var(--color-card)',
+          paddingInline: 'var(--pfui-spacing-3)',
+          paddingBlockEnd: 'var(--pfui-spacing-2)',
+          border: '1px solid var(--pfui-colors-border)',
+          borderRadius: 'var(--pfui-radii-md)',
+          background: 'var(--pfui-colors-card)',
         },
       },
     },
@@ -76,4 +76,4 @@ export const disclosureClasses = sva({
     appearance: 'default',
   },
 });
-export default disclosureClasses();
+export const disclosureStyles = disclosureClasses();

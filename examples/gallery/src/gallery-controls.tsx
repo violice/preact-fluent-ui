@@ -1,6 +1,6 @@
 import type { RefObject } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Select } from '../../../dist/index.js';
+import { Select } from '../../../dist/components.js';
 import { createGalleryStore } from './gallery-store';
 import type { GalleryStore } from './gallery-store';
 import type { GallerySettings } from './gallery-settings';

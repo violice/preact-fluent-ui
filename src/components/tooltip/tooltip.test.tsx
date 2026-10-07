@@ -167,12 +167,12 @@ it('copies custom theme tokens, color scheme and inherited direction', () => {
   const target = document.createElement('div');
   parent.append(trigger);
   document.body.append(parent);
-  trigger.style.setProperty('--color-surface-raised', 'purple');
-  trigger.style.setProperty('--space-2', '11px');
+  trigger.style.setProperty('--pfui-colors-surface-raised', 'purple');
+  trigger.style.setProperty('--pfui-spacing-2', '11px');
   trigger.style.colorScheme = 'dark';
   copyTooltipTheme(trigger, target);
-  expect(target.style.getPropertyValue('--color-surface-raised')).toBe('purple');
-  expect(target.style.getPropertyValue('--space-2')).toBe('11px');
+  expect(target.style.getPropertyValue('--pfui-colors-surface-raised')).toBe('purple');
+  expect(target.style.getPropertyValue('--pfui-spacing-2')).toBe('11px');
   expect(target.style.colorScheme).toBe('dark');
   expect(target.dir).toBe('rtl');
   parent.remove();
@@ -248,8 +248,7 @@ it('updates ancestor tokens, scheme and direction while visible without geometry
     <div
       dir="ltr"
       style={{
-        '--color-surface-raised': 'white',
-        '--pfui-colors-surface-raised': 'pink',
+        '--pfui-colors-surface-raised': 'white',
         colorScheme: 'light',
       }}
     >
@@ -261,30 +260,29 @@ it('updates ancestor tokens, scheme and direction while visible without geometry
   button.getBoundingClientRect = () => new DOMRect(100, 100, 40, 20);
   act(() => button.focus());
   const tooltip = screen.getByRole('tooltip');
-  expect(tooltip.style.getPropertyValue('--color-surface-raised')).toBe('white');
-  expect(tooltip.style.getPropertyValue('--pfui-colors-surface-raised')).toBe('pink');
+  expect(tooltip.style.getPropertyValue('--pfui-colors-surface-raised')).toBe('white');
   await act(async () => {
-    ancestor.style.setProperty('--color-surface-raised', 'purple');
+    ancestor.style.setProperty('--pfui-colors-surface-raised', 'purple');
     ancestor.style.colorScheme = 'dark';
     ancestor.dir = 'rtl';
     await Promise.resolve();
   });
-  expect(tooltip.style.getPropertyValue('--color-surface-raised')).toBe('purple');
+  expect(tooltip.style.getPropertyValue('--pfui-colors-surface-raised')).toBe('purple');
   expect(tooltip.style.colorScheme).toBe('dark');
   expect(tooltip.dir).toBe('rtl');
   expect(tooltip.style.getPropertyValue(topProperty)).toBe('92px');
   unmount();
   await act(async () => {
-    ancestor.style.setProperty('--color-surface-raised', 'orange');
+    ancestor.style.setProperty('--pfui-colors-surface-raised', 'orange');
     await Promise.resolve();
   });
-  expect(tooltip.style.getPropertyValue('--color-surface-raised')).toBe('purple');
+  expect(tooltip.style.getPropertyValue('--pfui-colors-surface-raised')).toBe('purple');
 });
 
 it('updates class-based stylesheet themes when head CSS changes without geometry events', async () => {
   const sheet = document.createElement('style');
   sheet.textContent =
-    '.tooltip-test-theme { --color-text: green; } .tooltip-test-alternate { --color-text: purple; }';
+    '.tooltip-test-theme { --pfui-colors-text: green; } .tooltip-test-alternate { --pfui-colors-text: purple; }';
   document.head.append(sheet);
   try {
     render(
@@ -294,17 +292,17 @@ it('updates class-based stylesheet themes when head CSS changes without geometry
     );
     act(() => screen.getByRole('button').focus());
     const tooltip = screen.getByRole('tooltip');
-    expect(tooltip.style.getPropertyValue('--color-text')).toBe('green');
+    expect(tooltip.style.getPropertyValue('--pfui-colors-text')).toBe('green');
     await act(async () => {
       screen.getByRole('button').parentElement!.className = 'tooltip-test-alternate';
       await Promise.resolve();
     });
-    expect(tooltip.style.getPropertyValue('--color-text')).toBe('purple');
+    expect(tooltip.style.getPropertyValue('--pfui-colors-text')).toBe('purple');
     await act(async () => {
-      sheet.textContent = '.tooltip-test-alternate { --color-text: blue; }';
+      sheet.textContent = '.tooltip-test-alternate { --pfui-colors-text: blue; }';
       await Promise.resolve();
     });
-    expect(tooltip.style.getPropertyValue('--color-text')).toBe('blue');
+    expect(tooltip.style.getPropertyValue('--pfui-colors-text')).toBe('blue');
   } finally {
     sheet.remove();
   }
@@ -320,25 +318,25 @@ it('refreshes system theme changes and releases media subscriptions on dismissal
   try {
     setup();
     const button = screen.getByRole('button');
-    button.style.setProperty('--color-text', 'green');
+    button.style.setProperty('--pfui-colors-text', 'green');
     act(() => button.focus());
     const tooltip = screen.getByRole('tooltip');
-    button.style.setProperty('--color-text', 'purple');
+    button.style.setProperty('--pfui-colors-text', 'purple');
     act(() => {
       queries.get('(prefers-color-scheme: dark)')?.dispatchEvent(new Event('change'));
     });
-    expect(tooltip.style.getPropertyValue('--color-text')).toBe('purple');
-    button.style.setProperty('--color-text', 'blue');
+    expect(tooltip.style.getPropertyValue('--pfui-colors-text')).toBe('purple');
+    button.style.setProperty('--pfui-colors-text', 'blue');
     act(() => {
       queries.get('(forced-colors: active)')?.dispatchEvent(new Event('change'));
     });
-    expect(tooltip.style.getPropertyValue('--color-text')).toBe('blue');
+    expect(tooltip.style.getPropertyValue('--pfui-colors-text')).toBe('blue');
     fireEvent.keyDown(button, { key: 'Escape' });
-    button.style.setProperty('--color-text', 'orange');
+    button.style.setProperty('--pfui-colors-text', 'orange');
     act(() => {
       for (const events of queries.values()) events.dispatchEvent(new Event('change'));
     });
-    expect(tooltip.style.getPropertyValue('--color-text')).toBe('blue');
+    expect(tooltip.style.getPropertyValue('--pfui-colors-text')).toBe('blue');
   } finally {
     vi.unstubAllGlobals();
   }
@@ -346,19 +344,19 @@ it('refreshes system theme changes and releases media subscriptions on dismissal
 
 it('clears copied tokens when their source declaration is removed', async () => {
   const { container } = render(
-    <div style={{ '--color-text': 'purple' }}>
+    <div style={{ '--pfui-colors-text': 'purple' }}>
       <Tooltip content="Description">{(props) => <button {...props}>Action</button>}</Tooltip>
     </div>,
   );
   const ancestor = container.firstElementChild as HTMLElement;
   act(() => screen.getByRole('button').focus());
   const tooltip = screen.getByRole('tooltip');
-  expect(tooltip.style.getPropertyValue('--color-text')).toBe('purple');
+  expect(tooltip.style.getPropertyValue('--pfui-colors-text')).toBe('purple');
   await act(async () => {
-    ancestor.style.removeProperty('--color-text');
+    ancestor.style.removeProperty('--pfui-colors-text');
     await Promise.resolve();
   });
-  expect(tooltip.style.getPropertyValue('--color-text')).toBe('');
+  expect(tooltip.style.getPropertyValue('--pfui-colors-text')).toBe('');
 });
 
 function renderTooltipPair() {

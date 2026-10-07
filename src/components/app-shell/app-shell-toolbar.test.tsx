@@ -1,7 +1,7 @@
 import { createRef } from 'preact';
 import { cleanup, fireEvent, render, screen } from '@testing-library/preact';
 import { afterEach, expect, it } from 'vitest';
-import * as library from '../../index';
+import * as library from '../index';
 import {
   AppShellToolbar,
   AppShell,
@@ -10,7 +10,7 @@ import {
   AppShellContent,
   ToolbarGroup,
   Button,
-} from '../../index';
+} from '../index';
 
 afterEach(cleanup);
 

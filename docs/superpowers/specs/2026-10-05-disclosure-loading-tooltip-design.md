@@ -39,7 +39,7 @@ LoadingState requires a localized label, accepts optional descriptive children a
 
 Add loading?: boolean and loadingLabel?: string. Retain the existing label unless loadingLabel is supplied. Put a decorative 16px Spinner before textual content; an icon-only button replaces its visible icon with the spinner while retaining its accessible name. Preserve the existing 32/34/36px button heights and all variants.
 
-Loading sets aria-busy and aria-disabled, suppresses click activation including form submission, and retains focus. Explicit disabled continues to use native disabled and takes precedence. Loading alone does not turn on native disabled. Guard programmatic click and pointer/keyboard activation through the button click handler. Keep busy styling readable using the variant's foreground color. Do not add a separate live region to every button; application status or LoadingState can announce an operation.
+Loading sets aria-busy and aria-disabled, suppresses click activation including form submission, and retains focus. Explicit disabled continues to use native disabled and takes precedence. Loading alone does not turn on native disabled. Guard programmatic click and pointer/keyboard activation through the button click handler. Keep busy styles readable using the variant's foreground color. Do not add a separate live region to every button; application status or LoadingState can announce an operation.
 
 ## Tooltip
 

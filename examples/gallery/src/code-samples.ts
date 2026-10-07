@@ -1,5 +1,5 @@
 export const samples = {
-  formStates: `import { Checkbox, Field, Input, Switch, Textarea } from '@violice/preact-fluent-ui';
+  formStates: `import { Checkbox, Field, Input, Switch, Textarea } from '@violice/preact-fluent-ui/components';
 
 export function FormStates() {
   return (
@@ -49,7 +49,7 @@ export function FormStates() {
 }
 `,
   connectionForm: `import { useState } from 'preact/hooks';
-import { Button, Checkbox, Field, InfoBar, Input, Select, Switch } from '@violice/preact-fluent-ui';
+import { Button, Checkbox, Field, InfoBar, Input, Select, Switch } from '@violice/preact-fluent-ui/components';
 
 export function ConnectionForm() {
   const [port, setPort] = useState('');
@@ -88,7 +88,7 @@ export function ConnectionForm() {
     </>
   );
 }`,
-  buttons: `import { Button, Icon } from '@violice/preact-fluent-ui';
+  buttons: `import { Button, Icon } from '@violice/preact-fluent-ui/components';
 
 <Button variant="primary" onClick={save}>Save</Button>
 <Button size="compact">Compact</Button>
@@ -96,14 +96,14 @@ export function ConnectionForm() {
   <Icon name="refresh" size={16} />
 </Button>
 <Button disabled>Unavailable</Button>`,
-  notices: `import { InfoBar, StatusBadge } from '@violice/preact-fluent-ui';
+  notices: `import { InfoBar, StatusBadge } from '@violice/preact-fluent-ui/components';
 
 <InfoBar tone="success" title="Saved">
   Your changes have been applied.
 </InfoBar>
 <StatusBadge tone="success">Connected</StatusBadge>`,
   forms: `import { useState } from 'preact/hooks';
-import { Button, Field, Select } from '@violice/preact-fluent-ui';
+import { Button, Field, Select } from '@violice/preact-fluent-ui/components';
 
 export function ConnectionForm() {
   const [mode, setMode] = useState('automatic');
@@ -123,13 +123,13 @@ export function ConnectionForm() {
     </form>
   );
 }`,
-  icons: `import { Icon } from '@violice/preact-fluent-ui';
+  icons: `import { Icon } from '@violice/preact-fluent-ui/components';
 
 // Icons are decorative. Put the accessible name on the control.
 <Icon name="network" size={16} />
 <Icon name="refresh" size={20} />
 <Icon name="settings" size={24} />`,
-  empty: `import { Button, EmptyState, Icon } from '@violice/preact-fluent-ui';
+  empty: `import { Button, EmptyState, Icon } from '@violice/preact-fluent-ui/components';
 
 <EmptyState title="No connections yet">
   <p>Add a connection to start.</p>
@@ -139,7 +139,7 @@ export function ConnectionForm() {
   </Button>
 </EmptyState>`,
   dialogs: `import { useRef, useState } from 'preact/hooks';
-import { Button, ConfirmDialog } from '@violice/preact-fluent-ui';
+import { Button, ConfirmDialog } from '@violice/preact-fluent-ui/components';
 
 export function ConfirmationExample() {
   const [open, setOpen] = useState(false);

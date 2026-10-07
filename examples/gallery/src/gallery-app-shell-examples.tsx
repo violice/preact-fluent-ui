@@ -17,9 +17,9 @@ import {
   SidebarFooter,
   Icon,
   Select,
-} from '../../../dist/index.js';
+} from '../../../dist/components.js';
 import { useSignal } from '@preact/signals';
-import type { SidebarLayout } from '../../../dist/index.js';
+import type { SidebarLayout } from '../../../dist/components.js';
 import { GalleryContext } from './gallery-context';
 import { galleryHref } from './gallery-routing';
 import styles from './gallery.module.css';

@@ -1,4 +1,4 @@
-import themeCss from '../../../dist/theme.css?inline';
+import themeCss from '../../../.artifacts/gallery-styled-system/theme.css?inline';
 import greenCss from './green-theme.css?inline';
 
 export type GallerySettings = {
@@ -49,10 +49,9 @@ export function settingsUrl(url: URL, settings: GallerySettings): URL {
 // Read tokens from the actual showcased package, including on the published gallery.
 export function themeTokenBlocks(css: string) {
   const blocks = [...css.matchAll(/:root\s*\{([^{}]*)\}/g)]
-    .filter((match) => /--(?!pfui-)[\w-]+\s*:/.test(match[1]))
+    .filter((match) => /--pfui-[\w-]+\s*:/.test(match[1]))
     .map((match) => match[1].trim().replace(/;*$/, ';'));
   if (blocks.length !== 3) throw new Error('Expected light, dark and forced-colors theme tokens');
-  if (!/--pfui-[\w-]+\s*:/.test(blocks[0])) return blocks;
   const declarations = new Map<string, string>();
   return blocks.map((block) => {
     const names = new Set<string>();
@@ -65,7 +64,7 @@ export function themeTokenBlocks(css: string) {
     }
     function resolve(value: string, visited = new Set<string>()): string {
       return value.replace(/var\((--[\w-]+)\)/g, (reference, name: string) => {
-        if (!name.startsWith('--pfui-')) return reference;
+        if (!/^--pfui-(?:palette|systemColors|shadowValues)-/.test(name)) return reference;
         if (visited.has(name)) throw new Error(`Theme variable cycle: ${name}`);
         const target = declarations.get(name);
         return target === undefined ? reference : resolve(target, new Set([...visited, name]));
@@ -95,13 +94,13 @@ export function themeOverrides(settings: GallerySettings, systemDark: boolean): 
       const color = settings[name];
       const text = foreground(color);
       const shade = text === '#000000' ? 'white' : 'black';
-      tokens += `\n--color-${name}: ${color};
-        --color-${name}-hover: color-mix(in srgb, ${color}, ${shade} 12%);
-        --color-${name}-pressed: color-mix(in srgb, ${color}, ${shade} 20%);
-        --color-on-${name}: ${text};`;
+      tokens += `\n--pfui-colors-${name}: ${color};
+        --pfui-colors-${name}-hover: color-mix(in srgb, ${color}, ${shade} 12%);
+        --pfui-colors-${name}-pressed: color-mix(in srgb, ${color}, ${shade} 20%);
+        --pfui-colors-on-${name}: ${text};`;
     }
     tokens +=
-      '\n--color-accent-subtle: color-mix(in srgb, var(--color-accent) 15%, var(--color-card));';
+      '\n--pfui-colors-accent-subtle: color-mix(in srgb, var(--pfui-colors-accent) 15%, var(--pfui-colors-card));';
   }
   return `:root { ${tokens} }\n@media (forced-colors: active) { :root { ${forced} } }`;
 }

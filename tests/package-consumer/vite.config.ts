@@ -2,6 +2,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import type { Plugin } from 'vite';
+import { fluentStyles } from '@violice/preact-fluent-ui/vite';
+import { fluentPreset } from '@violice/preact-fluent-ui/config';
 
 function consumerModules(mode: string): Plugin {
   return {
@@ -10,13 +12,14 @@ function consumerModules(mode: string): Plugin {
     // Load the archive's own map without changing its code or import resolution.
     async load(id) {
       if (
-        !id.replaceAll('\\', '/').endsWith('/node_modules/@violice/preact-fluent-ui/dist/index.js')
+        !/\/node_modules\/@violice\/preact-fluent-ui\/dist\/[^/]+\.js$/.test(
+          id.replaceAll('\\', '/'),
+        )
       )
         return;
-      return {
-        code: await readFile(id, 'utf8'),
-        map: JSON.parse(await readFile(`${id}.map`, 'utf8')),
-      };
+      const code = await readFile(id, 'utf8');
+      if (!code.includes('sourceMappingURL=')) return;
+      return { code, map: JSON.parse(await readFile(`${id}.map`, 'utf8')) };
     },
     async generateBundle(_options, bundle) {
       const chunks = Object.values(bundle)
@@ -43,7 +46,7 @@ function consumerModules(mode: string): Plugin {
 }
 
 export default defineConfig(({ mode }) => ({
-  plugins: [consumerModules(mode)],
+  plugins: [fluentStyles({ config: { presets: [fluentPreset] } }), consumerModules(mode)],
   build: {
     outDir: `dist-${mode}`,
     sourcemap: true,

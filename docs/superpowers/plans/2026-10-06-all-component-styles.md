@@ -6,7 +6,7 @@
 
 **Architecture:** Preserve public package imports and props, refs, slots, resolveClass behavior and native states. Component styles use css/cva/sva. SVA gains deterministic slot markers and `$slot` selector references so sibling/ancestor selectors retain their relationships without fragile atomic class references. Keyframes are extracted at build time. Shared recipes may live with families; code and tests are colocated. Gallery styles and global theme/reset/native-controls CSS are outside the component migration.
 
-**Constraints:** Continue the current branch/main checkout per user preference. Preserve the pending docs/styling.md edit. No push/publication/application migration. Retain exact declarations, responsive/forced-colors/reduced-motion selectors; preserve CSS specificity and cascade order where relationships matter.
+**Constraints:** Continue the current branch/main checkout per user preference. Preserve the pending docs/styles.md edit. No push/publication/application migration. Retain exact declarations, responsive/forced-colors/reduced-motion selectors; preserve CSS specificity and cascade order where relationships matter.
 
 - [x] Capture baseline source CSS and representative gallery computed styles; run current behavior tests as needed.
 - [x] Add failing integration tests for SVA slot selectors and keyframes; implement build-only lowering, stable markers and validation. No runtime stylesheet insertion.

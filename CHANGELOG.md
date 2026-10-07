@@ -12,11 +12,11 @@
 
 - Apply resolveClass consistently before cx in components, including Tooltip signal fallbacks. class takes priority over className; an explicit empty class suppresses the fallback.
 
-- Rename the styling namespace to pfui and the dynamic API to css.dynamic().
-- Remove mergeClasses in favor of signal-aware cx; expose cx from both root and styling entries.
+- Rename the styles namespace to pfui and the dynamic API to css.dynamic().
+- Remove mergeClasses in favor of signal-aware cx; expose cx from both root and styles entries.
 - Use sva for InfoBar root/title/content slots.
 
-- Add the WyW-based styling engine: css/cx, cva/sva, compound variants, typed token references, configuration and scoped themes.
+- Add the WyW-based styles engine: css/cx, cva/sva, compound variants, typed token references, configuration and scoped themes.
 - Add css.dynamic() to extract static CSS and assign dynamic values or signals to local CSS variables.
 - Remove Box. Use native elements or existing components with css()/css.dynamic().
 - Replace bundled clsx and class-variance-authority with the library’s own engine; migrate Button, Field, InfoBar and StatusBadge recipes.
@@ -70,7 +70,7 @@
 
 ### Migration from 0.2.0
 
-- Remove Sidebar `appearance`; application styling is now the default. Use `layout` for expanded, rail and horizontal navigation.
+- Remove Sidebar `appearance`; application styles is now the default. Use `layout` for expanded, rail and horizontal navigation.
 
 ## 0.2.0 (2026-10-05)
 
@@ -78,7 +78,7 @@
 - Add composable Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem and SidebarFooter components.
 - Expose named class slots on multipart components; single-element controls use class or className.
 - Rebuild the English gallery with Preact ISO routing, Signals appearance settings and 30 prerendered documentation pages.
-- Add Getting Started, About, Theming and Styling guides, alphabetical component navigation, visible code and isolated interactive examples.
+- Add Getting Started, About, Theming and Styles guides, alphabetical component navigation, visible code and isolated interactive examples.
 - Present example feedback below previews and provide responsive appearance settings with custom palettes.
 - Verify repository-base gallery artifacts and serve malformed requests and unknown routes safely.
 

@@ -10,8 +10,8 @@ import {
   InfoBar,
   Modal,
   Select,
-} from '../../../dist/index.js';
-import type { ButtonProps, IconName } from '../../../dist/index.js';
+} from '../../../dist/components.js';
+import type { ButtonProps, IconName } from '../../../dist/components.js';
 import styles from './gallery.module.css';
 import { CodeExample } from './code-block';
 import { samples } from './code-samples';

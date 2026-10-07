@@ -13,13 +13,13 @@ test('ignores CSS imports and import examples inside strings and comments', () =
 test('finds static imports, reexports, side effects and literal dynamic imports', () => {
   const js = `import { h } from 'preact';
     import 'side-effect';
-    export { css } from './styling.js';
+    export { css } from './styles.js';
     export * from './helpers.js';
     const load = () => import('./lazy.js');`;
   assert.deepEqual(runtimeImports(js), [
     'preact',
     'side-effect',
-    './styling.js',
+    './styles.js',
     './helpers.js',
     './lazy.js',
   ]);

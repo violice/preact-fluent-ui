@@ -1,8 +1,8 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { badgeClasses } from './status-badge.styles';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
 
 export type StatusBadgeProps = JSX.HTMLAttributes<HTMLSpanElement> & {
   tone?: 'neutral' | 'success' | 'warning' | 'error';

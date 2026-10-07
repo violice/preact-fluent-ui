@@ -1,8 +1,8 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
-import styles from './disclosure.styles';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
+import { disclosureStyles } from './disclosure.styles';
 
 export type DisclosureSummaryProps = JSX.HTMLAttributes<HTMLElement>;
 
@@ -12,7 +12,7 @@ export const DisclosureSummary = /* @__PURE__ */ forwardRef<HTMLElement, Disclos
       <summary
         {...props}
         ref={ref}
-        class={cx(styles.summary, resolveClass(classProp, className))}
+        class={cx(disclosureStyles.summary, resolveClass(classProp, className))}
       />
     );
   },

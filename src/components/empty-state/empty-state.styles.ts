@@ -1,23 +1,23 @@
-import { sva } from '../../styling';
+import { sva } from '../../styles';
 export const emptyStateClasses = sva({
   slots: ['empty', 'content', 'title'],
   base: {
     empty: {
       boxSizing: 'border-box',
       overflowWrap: 'anywhere',
-      fontFamily: 'var(--font-body)',
+      fontFamily: 'var(--pfui-fonts-body)',
       fontSynthesis: 'none',
-      fontSize: 'var(--type-body)',
+      fontSize: 'var(--pfui-fontSizes-body)',
       lineHeight: '20px',
       display: 'grid',
       justifyItems: 'center',
       gap: '12px',
       padding: '48px 24px',
-      border: '1px solid var(--color-border)',
-      borderRadius: 'var(--radius-md)',
-      background: 'var(--color-card)',
+      border: '1px solid var(--pfui-colors-border)',
+      borderRadius: 'var(--pfui-radii-md)',
+      background: 'var(--pfui-colors-card)',
       textAlign: 'center',
-      color: 'var(--color-text-muted)',
+      color: 'var(--pfui-colors-text-muted)',
       '&[hidden]': {
         display: 'none',
       },
@@ -35,8 +35,8 @@ export const emptyStateClasses = sva({
       margin: '0',
       fontSize: '18px',
       fontWeight: '600',
-      color: 'var(--color-text)',
+      color: 'var(--pfui-colors-text)',
     },
   },
 });
-export default emptyStateClasses();
+export const emptyStateStyles = emptyStateClasses();

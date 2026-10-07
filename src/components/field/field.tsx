@@ -1,8 +1,8 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useId } from 'preact/hooks';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
 import { fieldClasses } from './field.styles';
 
 export type ValidationState = 'none' | 'error' | 'warning' | 'success';

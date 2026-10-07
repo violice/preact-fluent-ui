@@ -1,7 +1,7 @@
 import { DocSection } from './gallery-doc-section';
 import { QuickstartExample, quickstartCode } from './gallery-quickstart';
 import { useSignal, useComputed } from '@preact/signals';
-import { Button, Checkbox, Field, InfoBar, Input } from '../../../dist/index.js';
+import { Button, Checkbox, Field, InfoBar, Input } from '../../../dist/components.js';
 import { CodeExample } from './code-block';
 import { FormsDemo } from './gallery-demos';
 import { useGalleryHref } from './gallery-context';
@@ -59,7 +59,7 @@ export function About() {
           , Card and PageHeader compose application layouts.
         </p>
       </DocSection>
-      <DocSection title="Styling and themes">
+      <DocSection title="Styles and themes">
         <p>
           Theme tokens control color, typography and spacing. Primary colors identify actions;
           accent colors mark selection and emphasis. Override them independently for your
@@ -68,8 +68,8 @@ export function About() {
             Theming guide
           </a>{' '}
           covers tokens and CSS imports. The{' '}
-          <a class={styles.documentationLink} href={href('/guides/styling')}>
-            Styling guide
+          <a class={styles.documentationLink} href={href('/guides/styles')}>
+            Styles guide
           </a>{' '}
           covers classes, inline styles and CSS modules.
         </p>
@@ -106,22 +106,17 @@ export function GettingStarted() {
       </DocSection>
       <DocSection title="Minimal CSS">
         <p>
-          Import theme tokens and component styles in your application entry. Your existing document
-          and native control styles remain in charge.
+          Configure reset: false and native: false, then import the generated stylesheet in your
+          application entry. Your existing document and native control styles remain in charge.
         </p>
-        <CodeExample
-          code={`import '@violice/preact-fluent-ui/theme.css';
-import '@violice/preact-fluent-ui/styles.css';`}
-        />
+        <CodeExample code={`import './styled-system/styles.css';`} />
       </DocSection>
       <DocSection title="Full CSS">
-        <p>
-          Optionally add the document reset and native form control styling after the required
-          imports.
-        </p>
+        <p>Enable the document reset and native form control styles in the plugin configuration.</p>
         <CodeExample
-          code={`import '@violice/preact-fluent-ui/reset.css';
-import '@violice/preact-fluent-ui/native-controls.css';`}
+          code={`fluentStyles({
+  config: { presets: [fluentPreset], reset: true, native: true },
+});`}
         />
       </DocSection>
       <DocSection title="Build a profile form">
@@ -170,12 +165,12 @@ export function ThemingGuide() {
         <CodeExample
           language="css"
           code={`:root {
-  --color-accent: #147d44;
-  --color-primary: #147d44;
-  --color-on-primary: #ffffff;
+  --pfui-colors-accent: #147d44;
+  --pfui-colors-primary: #147d44;
+  --pfui-colors-on-primary: #ffffff;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --color-accent: #63d49a; }
+  :root { --pfui-colors-accent: #63d49a; }
 }`}
         />
         <InfoBar title="Contrast">
@@ -186,7 +181,7 @@ export function ThemingGuide() {
       <DocSection title="Primary and accent">
         <p>
           Primary colors identify actions and documentation links. Accent colors mark selection and
-          decorative emphasis. Set --color-on-primary for readable text on primary buttons.
+          decorative emphasis. Set --pfui-colors-on-primary for readable text on primary buttons.
         </p>
       </DocSection>
       <DocSection title="CSS layers">
@@ -245,7 +240,7 @@ export function SignalsGuide() {
         <InfoBar title="Current value">{value}</InfoBar>
         <CodeExample
           code={`import { useSignal, useComputed } from '@preact/signals';
-import { Button, Checkbox, Field, InfoBar, Input } from '@violice/preact-fluent-ui';
+import { Button, Checkbox, Field, InfoBar, Input } from '@violice/preact-fluent-ui/components';
 
 export function SignalExample() {
   const value = useSignal('Office connection');
@@ -282,7 +277,7 @@ export function SignalExample() {
   );
 }
 
-export function StylingGuide() {
+export function StylesGuide() {
   return (
     <div class={styles.sections}>
       <DocSection title="Component classes">

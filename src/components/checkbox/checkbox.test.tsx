@@ -2,7 +2,7 @@ import { createRef, type JSX } from 'preact';
 import { cleanup, render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it } from 'vitest';
-import { Checkbox } from '../../index';
+import { Checkbox } from '../index';
 
 afterEach(cleanup);
 

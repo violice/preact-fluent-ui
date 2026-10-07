@@ -1,4 +1,4 @@
-import { sva } from '../../styling';
+import { sva } from '../../styles';
 export const appShellClasses = sva({
   slots: ['shell', 'workspace', 'header', 'footer', 'content'],
   base: {
@@ -8,12 +8,12 @@ export const appShellClasses = sva({
       gridTemplateColumns: 'var(--app-shell-navigation-width, 248px) minmax(0, 1fr)',
       minWidth: '0',
       minHeight: '100dvh',
-      fontFamily: 'var(--font-body)',
+      fontFamily: 'var(--pfui-fonts-body)',
       fontSynthesis: 'none',
-      fontSize: 'var(--type-body)',
+      fontSize: 'var(--pfui-fontSizes-body)',
       lineHeight: '20px',
-      color: 'var(--color-text)',
-      background: 'var(--color-canvas)',
+      color: 'var(--pfui-colors-text)',
+      background: 'var(--pfui-colors-canvas)',
       '& > [data-sidebar]': {
         boxSizing: 'border-box',
         position: 'sticky',
@@ -32,7 +32,7 @@ export const appShellClasses = sva({
       display: 'flex',
       flexDirection: 'column',
       minWidth: '0',
-      background: 'var(--color-surface)',
+      background: 'var(--pfui-colors-surface)',
       '& > :where(:first-child)': {
         borderStartStartRadius: 'inherit',
         borderStartEndRadius: 'inherit',
@@ -80,14 +80,14 @@ export const appShellClasses = sva({
       expanded: {
         workspace: {
           margin: '8px',
-          border: '1px solid var(--color-border)',
+          border: '1px solid var(--pfui-colors-border)',
           borderRadius: '12px',
         },
       },
       rail: {
         workspace: {
           margin: '8px',
-          border: '1px solid var(--color-border)',
+          border: '1px solid var(--pfui-colors-border)',
           borderRadius: '12px',
         },
         shell: {
@@ -97,7 +97,7 @@ export const appShellClasses = sva({
       horizontal: {
         workspace: {
           margin: '0',
-          border: '1px solid var(--color-border)',
+          border: '1px solid var(--pfui-colors-border)',
           borderRadius: '0',
         },
         shell: {
@@ -112,4 +112,4 @@ export const appShellClasses = sva({
     },
   },
 });
-export default appShellClasses();
+export const appShellStyles = appShellClasses();

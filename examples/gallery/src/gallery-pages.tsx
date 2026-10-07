@@ -1,4 +1,4 @@
-import { css } from '../../../dist/styling.js';
+import { css } from '../../../.artifacts/gallery-styled-system/css';
 import { Changelog } from './gallery-changelog';
 import { feedbackDocs, BusyButtonsExample } from './gallery-feedback-examples';
 import { utilityPages } from './gallery-utils';
@@ -11,7 +11,7 @@ import {
   FormsGuide,
   ThemingGuide,
   SignalsGuide,
-  StylingGuide,
+  StylesGuide,
 } from './gallery-guides';
 import type { ComponentType } from 'preact';
 import { useState } from 'preact/hooks';
@@ -43,8 +43,8 @@ import {
   Textarea,
   TextPreview,
   CodeBlock as PlainCodeBlock,
-} from '../../../dist/index.js';
-import type { TextColor, TextPreset } from '../../../dist/index.js';
+} from '../../../dist/components.js';
+import type { TextColor, TextPreset } from '../../../dist/components.js';
 import { CodeExample } from './code-block';
 import { samples } from './code-samples';
 import { DialogsDemo, IconsDemo } from './gallery-demos';
@@ -173,7 +173,7 @@ function TextExample() {
         A paragraph composed through a render callback.
       </Text>
       <Text>Default inline text</Text>
-      <div style={{ color: 'var(--color-text-muted)' }}>
+      <div style={{ color: 'var(--pfui-colors-text-muted)' }}>
         {(['inherit', 'default', 'muted', 'subtle'] satisfies TextColor[]).map((color) => (
           <Text key={color} color={color} render={<p />} data-color={color}>
             {color}
@@ -183,7 +183,7 @@ function TextExample() {
     </div>
   );
 }
-function StylingExample() {
+function StylesExample() {
   const [width, setWidth] = useState(220);
   return (
     <div class={css({ display: 'grid', gap: '4', minWidth: 0 })}>
@@ -204,7 +204,7 @@ function StylingExample() {
           padding: '4',
           backgroundColor: 'surface',
           color: 'text',
-          '&:hover': { backgroundColor: 'var(--color-surface-hover)' },
+          '&:hover': { backgroundColor: 'var(--pfui-colors-surface-hover)' },
           '@media (max-width: 600px)': { maxWidth: '100%' },
         })}
       >
@@ -363,13 +363,13 @@ const docs: ComponentDoc[] = [
     ],
     accessibility:
       'Choose h1–h6 for headings and p for paragraphs. Visual presets do not imply heading semantics. Text adds no tab stop or live region.',
-    note: 'The optional reset.css clears native h1–h6 and p margins and typography. Text preserves native block or inline display and uses the theme body font.',
+    note: 'The optional reset configuration clears native h1–h6 and p margins and typography. Text preserves native block or inline display and uses the theme body font.',
   },
   {
-    title: 'Styling engine',
-    slug: 'styling-engine',
+    title: 'Styles engine',
+    slug: 'styles-engine',
     purpose: 'Compile typed CSS objects and dynamic local variables without a layout wrapper.',
-    example: StylingExample,
+    example: StylesExample,
     code: 'const layout = css({ display: "flex", gap: "4" });\n<section class={layout}>...</section>\n\n<div {...css.dynamic({ width: measuredWidth })} />',
     props: [
       ['css(styles)', 'string', 'Static styles become atomic classes.'],
@@ -381,7 +381,7 @@ const docs: ComponentDoc[] = [
       ],
     ],
     accessibility:
-      'Use native semantic elements and existing components; styling adds no role or focus behavior.',
+      'Use native semantic elements and existing components; styles adds no role or focus behavior.',
     note: 'Requires fluentStyles() in Vite for your own style definitions. Built-in library components use precompiled CSS.',
   },
   {
@@ -881,7 +881,7 @@ const componentDocs: ComponentDoc[] = [
     ],
     accessibility:
       'Native div root and ref with pre/code semantics. hidden is forwarded. Source is escaped; plain or unknown kinds render as text. The pre has tabIndex 0. Clipboard rejection or absence announces failure.',
-    note: 'Token kinds: keyword, string, comment, function, type, property, number, literal, tag, attribute, operator, punctuation, command. Override --code-color-<kind> theme variables. Forced colors use CanvasText. Tokenization remains external; this gallery maps TanStack tokens to library kinds.',
+    note: 'Token kinds: keyword, string, comment, function, type, property, number, literal, tag, attribute, operator, punctuation, command. Override --pfui-codeColors-<kind> theme variables. Forced colors use CanvasText. Tokenization remains external; this gallery maps TanStack tokens to library kinds.',
   },
   ...docs.filter((doc) => !families.some((family) => family.members.includes(doc))),
   ...families.map((family) => ({
@@ -946,8 +946,8 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
                 {member.title}
               </Text>
             )}
-            {member.title === 'Styling engine' ? (
-              <p>Import css, cx, cva and sva from the styling entry or generated bindings.</p>
+            {member.title === 'Styles engine' ? (
+              <p>Import css, cx, cva and sva from the styles entry or generated bindings.</p>
             ) : (
               <p>Import {member.title}Props for the complete TypeScript contract.</p>
             )}
@@ -966,7 +966,7 @@ function ComponentPage({ doc }: { doc: ComponentDoc }) {
               <TableBody>
                 {[
                   ...member.props,
-                  ...(member.title === 'Styling engine'
+                  ...(member.title === 'Styles engine'
                     ? []
                     : [
                         member.title === 'Tooltip'
@@ -1047,7 +1047,7 @@ export const galleryPages: GalleryPage[] = [
     demoOwnsHeading: doc.title === 'PageHeader',
   })),
   { path: '/guides/theming', title: 'Theming', group: 'Guides', component: ThemingGuide },
-  { path: '/guides/styling', title: 'Styling', group: 'Guides', component: StylingGuide },
+  { path: '/guides/styles', title: 'Styles', group: 'Guides', component: StylesGuide },
   { path: '/guides/forms', title: 'Forms', group: 'Guides', component: FormsGuide },
   { path: '/guides/signals', title: 'Signals', group: 'Guides', component: SignalsGuide },
 ];

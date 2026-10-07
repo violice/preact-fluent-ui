@@ -1,3 +1,7 @@
+// @ts-expect-error The root entry is closed; use explicit subpaths.
+import { Button as RootButton } from '@violice/preact-fluent-ui';
+void RootButton;
+import { useRender } from '@violice/preact-fluent-ui/utils';
 import { createRef } from 'preact';
 import { forwardRef } from 'preact/compat';
 import type { JSX, Ref } from 'preact';
@@ -7,7 +11,6 @@ import {
   AppShellHeader,
   AppShellContent,
   AppShellFooter,
-  useRender,
   Sidebar,
   SidebarHeader,
   SidebarNav,
@@ -41,7 +44,7 @@ import {
   StatusBadge,
   CounterBadge,
   Text,
-} from '@violice/preact-fluent-ui';
+} from '@violice/preact-fluent-ui/components';
 import type {
   AppShellProps,
   AppShellWorkspaceProps,
@@ -90,7 +93,7 @@ import type {
   TextColor,
   TextRenderProps,
   TextRenderState,
-} from '@violice/preact-fluent-ui';
+} from '@violice/preact-fluent-ui/components';
 
 // The export map must reject source imports, even with bundler module resolution.
 // @ts-expect-error Internal source paths are closed.
@@ -777,7 +780,7 @@ import {
   DataListLabel,
   DataListValue,
   Separator,
-} from '@violice/preact-fluent-ui';
+} from '@violice/preact-fluent-ui/components';
 import type {
   TableProps,
   TableContainerProps,
@@ -796,7 +799,7 @@ import type {
   DataListLabelProps,
   DataListValueProps,
   SeparatorProps,
-} from '@violice/preact-fluent-ui';
+} from '@violice/preact-fluent-ui/components';
 const tableProps: TableProps = { class: slotSignal, hidden: false, dividers: 'between' };
 const tableContainerProps: TableContainerProps = { class: slotSignal, hidden: false };
 const tableHeaderProps: TableHeaderProps = { class: slotSignal, hidden: false };
@@ -928,15 +931,15 @@ export const feedbackElements = (
 const invalidTooltipChild: TooltipProps = { content: 'Refresh', children: <Button /> };
 void invalidTooltipChild;
 
-import { AppShellToolbar, type AppShellToolbarProps } from '@violice/preact-fluent-ui';
+import { AppShellToolbar, type AppShellToolbarProps } from '@violice/preact-fluent-ui/components';
 // @ts-expect-error The superseded toolbar export was removed.
-export { DataToolbar } from '@violice/preact-fluent-ui';
+export { DataToolbar } from '@violice/preact-fluent-ui/components';
 // @ts-expect-error The superseded toolbar group export was removed.
-export { DataToolbarGroup } from '@violice/preact-fluent-ui';
+export { DataToolbarGroup } from '@violice/preact-fluent-ui/components';
 // @ts-expect-error The superseded toolbar props were removed.
-export type { DataToolbarProps } from '@violice/preact-fluent-ui';
+export type { DataToolbarProps } from '@violice/preact-fluent-ui/components';
 // @ts-expect-error The superseded toolbar group props were removed.
-export type { DataToolbarGroupProps } from '@violice/preact-fluent-ui';
+export type { DataToolbarGroupProps } from '@violice/preact-fluent-ui/components';
 const appShellToolbarProps: AppShellToolbarProps = { class: slotSignal, hidden: false, dir: 'rtl' };
 export const appShellToolbarContract = (
   <AppShellToolbar
@@ -955,17 +958,17 @@ export const toolbarNegativeContracts = (
 );
 
 // @ts-expect-error Application chrome is named AppShellToolbar.
-export { AppToolbar } from '@violice/preact-fluent-ui';
+export { AppToolbar } from '@violice/preact-fluent-ui/components';
 // @ts-expect-error Application chrome props are named AppShellToolbarProps.
-export type { AppToolbarProps } from '@violice/preact-fluent-ui';
+export type { AppToolbarProps } from '@violice/preact-fluent-ui/components';
 
-import { TextPreview, CodeBlock } from '@violice/preact-fluent-ui';
+import { TextPreview, CodeBlock } from '@violice/preact-fluent-ui/components';
 import type {
   TextPreviewProps,
   CodeBlockProps,
   CodeBlockToken,
   CodeBlockTokenKind,
-} from '@violice/preact-fluent-ui';
+} from '@violice/preact-fluent-ui/components';
 const previewProps: TextPreviewProps = {
   text: 'raw',
   wrap: true,

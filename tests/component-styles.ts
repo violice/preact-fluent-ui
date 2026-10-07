@@ -1,4 +1,4 @@
-import { compileRecipe } from '../src/styling/compiler/recipes';
+import { compileRecipe } from '../src/styles/compiler/recipes';
 /** jsdom has no cascade-layer support. Keep rules and conditions, unwrap layers. */
 export function flattenLayers(css: string): string {
   let result = '';
@@ -25,9 +25,9 @@ export function flattenLayers(css: string): string {
 export function recipeCss(source: string): string {
   const rules: string[] = [];
   const code = source
+    .replace(/export const \w+Styles = \w+Classes\(\);[\s\S]*$/, '')
     .replace(/^import .*;\s*$/gm, '')
-    .replace(/export const /g, 'const ')
-    .replace(/export default [\s\S]*$/, '');
+    .replace(/export const /g, 'const ');
   const sva = (definition: Parameters<typeof compileRecipe>[0]) => {
     rules.push(compileRecipe(definition, {}, true).css);
     return () => ({});

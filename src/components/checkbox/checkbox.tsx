@@ -1,9 +1,9 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useCallback, useLayoutEffect, useRef } from 'preact/hooks';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
-import styles from './checkbox.styles';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
+import { checkboxStyles } from './checkbox.styles';
 
 export type CheckboxProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type' | 'children'> & {
   label: ComponentChildren;
@@ -33,15 +33,15 @@ export const Checkbox = /* @__PURE__ */ forwardRef<HTMLInputElement, CheckboxPro
     }, [props.checked, indeterminate]);
 
     return (
-      <label class={cx(styles.wrapper, classes?.wrapper)} hidden={props.hidden}>
+      <label class={cx(checkboxStyles.wrapper, classes?.wrapper)} hidden={props.hidden}>
         <input
           {...props}
           type="checkbox"
           ref={setRef}
-          class={cx(styles.input, resolveClass(classProp, className), classes?.root)}
+          class={cx(checkboxStyles.input, resolveClass(classProp, className), classes?.root)}
         />
-        <span class={cx(styles.indicator, classes?.indicator)} aria-hidden="true" />
-        <span class={cx(styles.label, classes?.label)}>{label}</span>
+        <span class={cx(checkboxStyles.indicator, classes?.indicator)} aria-hidden="true" />
+        <span class={cx(checkboxStyles.label, classes?.label)}>{label}</span>
       </label>
     );
   },

@@ -1,4 +1,4 @@
-import { sva } from '../../styling';
+import { sva } from '../../styles';
 export const fieldClasses = sva({
   slots: ['root', 'label', 'required', 'hint', 'validation'],
   base: {
@@ -8,9 +8,9 @@ export const fieldClasses = sva({
       flexDirection: 'column',
       gap: '4px',
       minInlineSize: '0',
-      fontFamily: 'var(--font-body)',
+      fontFamily: 'var(--pfui-fonts-body)',
       fontSynthesis: 'none',
-      color: 'var(--color-text)',
+      color: 'var(--pfui-colors-text)',
       '&[hidden]': { display: 'none' },
     },
     label: {
@@ -20,13 +20,13 @@ export const fieldClasses = sva({
       minInlineSize: '0',
       overflowWrap: 'anywhere',
     },
-    required: { marginInlineStart: '4px', color: 'var(--color-danger)' },
+    required: { marginInlineStart: '4px', color: 'var(--pfui-colors-danger)' },
     hint: {
       minInlineSize: '0',
       fontSize: '12px',
       lineHeight: '16px',
       overflowWrap: 'anywhere',
-      color: 'var(--color-text-muted)',
+      color: 'var(--pfui-colors-text-muted)',
     },
     validation: {
       minInlineSize: '0',
@@ -38,9 +38,9 @@ export const fieldClasses = sva({
   variants: {
     validationState: {
       none: {},
-      error: { validation: { color: 'var(--color-danger)' } },
-      warning: { validation: { color: 'var(--color-warning)' } },
-      success: { validation: { color: 'var(--color-success)' } },
+      error: { validation: { color: 'var(--pfui-colors-danger)' } },
+      warning: { validation: { color: 'var(--pfui-colors-warning)' } },
+      success: { validation: { color: 'var(--pfui-colors-success)' } },
     },
   },
   defaultVariants: { validationState: 'none' },

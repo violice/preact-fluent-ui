@@ -1,4 +1,4 @@
-import { sva } from '../../styling';
+import { sva } from '../../styles';
 export const appShellToolbarClasses = sva({
   slots: ['root', 'inner'],
   base: {
@@ -6,8 +6,8 @@ export const appShellToolbarClasses = sva({
       boxSizing: 'border-box',
       minWidth: '0',
       width: '100%',
-      background: 'var(--color-surface)',
-      borderBottom: '1px solid var(--color-border)',
+      background: 'var(--pfui-colors-surface)',
+      borderBottom: '1px solid var(--pfui-colors-border)',
       '&[hidden]': {
         display: 'none',
       },
@@ -27,4 +27,4 @@ export const appShellToolbarClasses = sva({
     },
   },
 });
-export default appShellToolbarClasses();
+export const appShellToolbarStyles = appShellToolbarClasses();

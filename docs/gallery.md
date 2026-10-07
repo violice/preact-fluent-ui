@@ -1,6 +1,6 @@
 # Gallery
 
-The English gallery has separate component pages, Overview pages for Getting Started, Changelog and About, Guides for Theming, Styling, Forms and Signals, and a 404 page. preact-iso provides gallery routing/prerendering; @preact/signals owns gallery settings and live examples. Both are devDependencies and are absent from the library runtime and peer contract.
+The English gallery has separate component pages, Overview pages for Getting Started, Changelog and About, Guides for Theming, Styles, Forms and Signals, and a 404 page. preact-iso provides gallery routing/prerendering; @preact/signals owns gallery settings and live examples. Both are devDependencies and are absent from the library runtime and peer contract.
 
 The sidebar Appearance settings button opens a Modal with Full/Minimal CSS presets, system/light/dark appearance, and standard/green/custom palettes. Settings are saved in the URL.
 

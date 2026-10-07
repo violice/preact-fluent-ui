@@ -1,5 +1,5 @@
 import type { ComponentChildren } from 'preact';
-import { Text } from '../../../dist/index.js';
+import { Text } from '../../../dist/components.js';
 import styles from './gallery.module.css';
 
 export function DocSection({ title, children }: { title: string; children: ComponentChildren }) {

@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Button, Field, InfoBar, Input, Select, Switch } from '../../../dist/index.js';
+import { Button, Field, InfoBar, Input, Select, Switch } from '../../../dist/components.js';
 import styles from './gallery.module.css';
 
 export function QuickstartExample() {
@@ -43,7 +43,7 @@ export function QuickstartExample() {
 export const quickstartCode = `import { useState } from 'preact/hooks';
 import {
   Button, Field, InfoBar, Input, Select, Switch,
-} from '@violice/preact-fluent-ui';
+} from '@violice/preact-fluent-ui/components';
 
 export function ProfileForm() {
   const [result, setResult] = useState('Save the sample profile to preview its values.');

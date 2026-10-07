@@ -2,8 +2,8 @@ import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { SidebarContext, sidebarValue } from './sidebar-context';
 import type { SidebarLayout } from './sidebar-context';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
 import { sidebarClasses } from './sidebar.styles';
 
 export type SidebarProps = JSX.HTMLAttributes<HTMLElement> & {

@@ -1,4 +1,4 @@
-import { sva, css } from '../../styling';
+import { sva, css } from '../../styles';
 export const sidebarClasses = sva({
   slots: [
     'sidebar',
@@ -26,16 +26,16 @@ export const sidebarClasses = sva({
     sidebar: {
       display: 'flex',
       flexDirection: 'column',
-      gap: 'var(--space-4)',
+      gap: 'var(--pfui-spacing-4)',
       boxSizing: 'border-box',
       minWidth: '0',
-      padding: 'var(--space-3)',
-      fontFamily: 'var(--font-body)',
+      padding: 'var(--pfui-spacing-3)',
+      fontFamily: 'var(--pfui-fonts-body)',
       fontSynthesis: 'none',
-      fontSize: 'var(--type-body)',
+      fontSize: 'var(--pfui-fontSizes-body)',
       lineHeight: '20px',
-      color: 'var(--color-text)',
-      background: 'var(--sidebar-background, var(--color-card))',
+      color: 'var(--pfui-colors-text)',
+      background: 'var(--sidebar-background, var(--pfui-colors-card))',
       overflowWrap: 'anywhere',
       '&[hidden]': {
         display: 'none',
@@ -43,7 +43,7 @@ export const sidebarClasses = sva({
     },
     header: {
       minWidth: '0',
-      padding: 'var(--space-2)',
+      padding: 'var(--pfui-spacing-2)',
       '&[hidden]': {
         display: 'none',
       },
@@ -51,7 +51,7 @@ export const sidebarClasses = sva({
     },
     footer: {
       minWidth: '0',
-      padding: 'var(--space-2)',
+      padding: 'var(--pfui-spacing-2)',
       '&[hidden]': {
         display: 'none',
       },
@@ -62,7 +62,7 @@ export const sidebarClasses = sva({
       display: 'flex',
       flexDirection: 'column',
       minWidth: '0',
-      gap: 'var(--space-4)',
+      gap: 'var(--pfui-spacing-4)',
       '&[hidden]': {
         display: 'none',
       },
@@ -79,11 +79,11 @@ export const sidebarClasses = sva({
       display: 'flex',
       flexDirection: 'column',
       minWidth: '0',
-      gap: 'var(--space-1)',
+      gap: 'var(--pfui-spacing-1)',
     },
     label: {
-      padding: 'var(--space-2) var(--space-3)',
-      color: 'var(--color-text-muted)',
+      padding: 'var(--pfui-spacing-2) var(--pfui-spacing-3)',
+      color: 'var(--pfui-colors-text-muted)',
       fontWeight: '600',
     },
     item: {
@@ -93,32 +93,32 @@ export const sidebarClasses = sva({
       boxSizing: 'border-box',
       display: 'flex',
       alignItems: 'center',
-      gap: 'var(--space-3)',
+      gap: 'var(--pfui-spacing-3)',
       minWidth: '0',
-      padding: 'var(--space-2) var(--space-3)',
-      borderRadius: 'var(--radius-sm)',
+      padding: 'var(--pfui-spacing-2) var(--pfui-spacing-3)',
+      borderRadius: 'var(--pfui-radii-sm)',
       color: 'inherit',
       textDecoration: 'none',
       overflowWrap: 'anywhere',
       '&:hover': {
-        background: 'var(--sidebar-hover-background, var(--color-surface-hover))',
+        background: 'var(--sidebar-hover-background, var(--pfui-colors-surface-hover))',
       },
       "&[aria-current='page']": {
-        background: 'var(--sidebar-active-background, var(--color-surface-hover))',
-        color: 'var(--sidebar-active-color, var(--color-accent))',
+        background: 'var(--sidebar-active-background, var(--pfui-colors-surface-hover))',
+        color: 'var(--sidebar-active-color, var(--pfui-colors-accent))',
         fontWeight: '600',
       },
       "&[aria-current='page']::before": {
         content: "''",
         position: 'absolute',
         insetInlineStart: '0',
-        insetBlock: 'var(--space-2)',
+        insetBlock: 'var(--pfui-spacing-2)',
         width: '3px',
-        borderRadius: 'var(--radius-sm)',
-        background: 'var(--color-accent)',
+        borderRadius: 'var(--pfui-radii-sm)',
+        background: 'var(--pfui-colors-accent)',
       },
       '&:focus-visible': {
-        outline: '2px solid var(--color-accent)',
+        outline: '2px solid var(--pfui-colors-accent)',
         outlineOffset: '2px',
       },
       '@media (forced-colors: active)': {
@@ -170,16 +170,16 @@ export const sidebarClasses = sva({
       minWidth: '0',
     },
     description: {
-      color: 'var(--color-text-muted)',
-      fontSize: 'var(--type-caption)',
+      color: 'var(--pfui-colors-text-muted)',
+      fontSize: 'var(--pfui-fontSizes-caption)',
     },
     brand: {
       display: 'flex',
       alignItems: 'center',
-      gap: 'var(--space-3)',
+      gap: 'var(--pfui-spacing-3)',
       minWidth: '0',
       boxSizing: 'border-box',
-      padding: 'var(--space-2)',
+      padding: 'var(--pfui-spacing-2)',
       '&[hidden]': {
         display: 'none',
       },
@@ -200,13 +200,13 @@ export const sidebarClasses = sva({
       transform: 'translateY(-50%)',
       maxWidth: 'min(240px, calc(100vw - 16px))',
       boxSizing: 'border-box',
-      padding: 'var(--space-2) var(--space-3)',
-      border: '1px solid var(--color-border)',
-      borderRadius: 'var(--radius-sm)',
-      background: 'var(--color-card)',
-      color: 'var(--color-text)',
-      fontFamily: 'var(--font-body)',
-      fontSize: 'var(--type-caption)',
+      padding: 'var(--pfui-spacing-2) var(--pfui-spacing-3)',
+      border: '1px solid var(--pfui-colors-border)',
+      borderRadius: 'var(--pfui-radii-sm)',
+      background: 'var(--pfui-colors-card)',
+      color: 'var(--pfui-colors-text)',
+      fontFamily: 'var(--pfui-fonts-body)',
+      fontSize: 'var(--pfui-fontSizes-caption)',
       overflowWrap: 'anywhere',
       pointerEvents: 'none',
       '@media (forced-colors: active)': {
@@ -288,7 +288,7 @@ export const sidebarClasses = sva({
           width: 'auto',
           flexShrink: '0',
           "&[aria-current='page']::before": {
-            insetInline: 'var(--space-2)',
+            insetInline: 'var(--pfui-spacing-2)',
             insetBlock: 'auto 0',
             width: 'auto',
             height: '3px',
@@ -327,7 +327,7 @@ export const sidebarClasses = sva({
     },
   ],
 });
-export default sidebarClasses();
+export const sidebarStyles = sidebarClasses();
 
 export function sidebarHintPosition(position: { top: number; left: number }) {
   return css.dynamic({ top: position.top, left: position.left });

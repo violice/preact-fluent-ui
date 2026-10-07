@@ -1,23 +1,23 @@
-import { sva, css } from '../../styling';
+import { sva, css } from '../../styles';
 const dialogHeaderClasses = sva({
   slots: ['header', 'title', 'description'],
   base: {
     header: {
       boxSizing: 'border-box',
       overflowWrap: 'anywhere',
-      font: 'var(--type-body) / 1.5 var(--font-body)',
-      marginBottom: 'var(--space-4)',
+      font: 'var(--pfui-fontSizes-body) / 1.5 var(--pfui-fonts-body)',
+      marginBottom: 'var(--pfui-spacing-4)',
     },
     title: {
       margin: '0',
-      fontFamily: 'var(--font-display)',
+      fontFamily: 'var(--pfui-fonts-display)',
       fontSize: '20px',
       lineHeight: '1.3',
-      fontWeight: 'var(--weight-semibold)',
+      fontWeight: 'var(--pfui-fontWeights-semibold)',
     },
     description: {
-      margin: 'var(--space-2) 0 0',
-      color: 'var(--color-text-muted)',
+      margin: 'var(--pfui-spacing-2) 0 0',
+      color: 'var(--pfui-colors-text-muted)',
     },
   },
 });
@@ -25,9 +25,9 @@ export const dialogHeaderStyles = dialogHeaderClasses();
 export const dialogBodyClass = css({
   boxSizing: 'border-box',
   overflowWrap: 'anywhere',
-  font: 'var(--type-body) / 1.5 var(--font-body)',
+  font: 'var(--pfui-fontSizes-body) / 1.5 var(--pfui-fonts-body)',
   display: 'grid',
-  gap: 'var(--space-3)',
+  gap: 'var(--pfui-spacing-3)',
   '& p': {
     margin: '0',
   },
@@ -38,12 +38,12 @@ export const dialogBodyClass = css({
 export const dialogFooterClass = css({
   boxSizing: 'border-box',
   overflowWrap: 'anywhere',
-  font: 'var(--type-body) / 1.5 var(--font-body)',
+  font: 'var(--pfui-fontSizes-body) / 1.5 var(--pfui-fonts-body)',
   display: 'flex',
   justifyContent: 'flex-end',
   flexWrap: 'wrap',
-  gap: 'var(--space-2)',
-  marginTop: 'var(--space-6)',
+  gap: 'var(--pfui-spacing-2)',
+  marginTop: 'var(--pfui-spacing-6)',
   '&[hidden]': {
     display: 'none',
   },

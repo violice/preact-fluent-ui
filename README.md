@@ -6,7 +6,7 @@
 
 - [Live gallery](https://violice.github.io/preact-fluent-ui/) with interactive examples and component documentation.
 - [npm package](https://www.npmjs.com/package/@violice/preact-fluent-ui) with published versions.
-- [Usage guide](docs/usage.md) for component composition and styling.
+- [Usage guide](docs/usage.md) for component composition and styles.
 - [API reference](docs/api.md) for props, refs and accessibility.
 - [Theme tokens](docs/tokens.md) for colors, typography and spacing.
 - [Gallery documentation](docs/gallery.md) for navigation, examples and appearance settings.
@@ -19,29 +19,34 @@ npm install @violice/preact-fluent-ui preact
 ```
 
 ```tsx
-import { Button, Card } from '@violice/preact-fluent-ui';
-import '@violice/preact-fluent-ui/theme.css';
-import '@violice/preact-fluent-ui/styles.css';
-// Optional document defaults and ordinary fields:
-import '@violice/preact-fluent-ui/reset.css';
-import '@violice/preact-fluent-ui/native-controls.css';
+import { Button, Card } from '@violice/preact-fluent-ui/components';
+import { mergeProps } from '@violice/preact-fluent-ui/utils';
 
 export function Example() {
   return <Card><Button variant="primary">Save</Button></Card>;
 }
 ```
 
-JavaScript imports do not load CSS. `theme.css` provides root tokens and the system light/dark color scheme. `styles.css` supplies every component's required styling. Reset and native-controls are optional. System fonts are used without distributing font files.
+With the Vite plugin, import style helpers from the generated module:
 
-## Styling engine
+```ts
+import { css, cx, token } from './styled-system/css';
+import './styled-system/styles.css';
+```
 
-Use `css()` for compiled classes, `css.dynamic()` for dynamic values and `cva()` / `sva()` for recipes. Box has been removed; apply styles to a native element or an existing component. See [the styling guide](docs/styling.md) for compiler setup, tokens and scoped themes. Components ship precompiled CSS and do not require the compiler.
+See [styles setup](docs/styles.md) for plugin configuration.
+
+JavaScript imports do not load CSS. The generated `styles.css` includes theme tokens, component styles, and the configured reset and native control rules. System fonts are used without distributing font files.
+
+## Styles engine
+
+Use `css()` for compiled classes, `css.dynamic()` for dynamic values and `cva()` / `sva()` for recipes. Box has been removed; apply styles to a native element or an existing component. See [the styles guide](docs/styles.md) for compiler setup, tokens and scoped themes. Components ship precompiled CSS and do not require the compiler.
 
 ## Limitations
 
 Only one Modal may be active, and portaled dialogs use the root theme. Scoped themes use data attributes; there is no ThemeProvider. The application owns layout sizing, responsive navigation, routing and business state.
 
-`styles.css` includes all component styles, even when you import only one component. Preact is a peer dependency. Class composition and recipes use the library’s own styling engine.
+`styles.css` includes all component styles, even when you import only one component. Preact is a peer dependency. Class composition and recipes use the library’s own styles engine.
 
 Forced-colors and reduced-motion CSS rules are included, but manual Windows verification is still pending. See [the pending Windows checks](docs/visual-acceptance.md#pending-windows-checks).
 

@@ -40,7 +40,7 @@ RadioGroup перенесён в последующие фазы: согласо
 
 ## Галерея документации и Sidebar
 
-Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem и SidebarFooter реализованы в текущем checkout. Они сохраняют нативные props/ref и не зависят от роутера. Английская галерея содержит 30 страниц, отдельные примеры всех 24 публичных компонентов и руководства Theming, Styling, Forms и Signals. preact-iso и @preact/signals используются только как devDependencies галереи.
+Sidebar, SidebarHeader, SidebarNav, SidebarGroup, SidebarItem и SidebarFooter реализованы в текущем checkout. Они сохраняют нативные props/ref и не зависят от роутера. Английская галерея содержит 30 страниц, отдельные примеры всех 24 публичных компонентов и руководства Theming, Styles, Forms и Signals. preact-iso и @preact/signals используются только как devDependencies галереи.
 
 Prerender создаёт все известные страницы и 404.html для корневого и repository base. Pages проверяет Sidebar exports опубликованного пакета и останавливается с явной ошибкой, если их нет. Новая версия пакета и галерея пока не опубликованы.
 

@@ -1,8 +1,8 @@
 import type { ComponentChildren, JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { cx } from '../../styling/runtime/cx';
-import { resolveClass } from '../../utils/resolve-class';
-import { dialogHeaderStyles as styles } from './dialog-content.styles';
+import { cx } from '../../styles';
+import { resolveClass } from '../../utils';
+import { dialogHeaderStyles } from './dialog-content.styles';
 
 export type DialogHeaderProps = Omit<
   JSX.HTMLAttributes<HTMLElement>,
@@ -27,13 +27,13 @@ export const DialogHeader = /* @__PURE__ */ forwardRef<HTMLElement, DialogHeader
       <header
         {...props}
         ref={ref}
-        class={cx(styles.header, resolveClass(classProp, className), classes?.root)}
+        class={cx(dialogHeaderStyles.header, resolveClass(classProp, className), classes?.root)}
       >
-        <h2 id={id} class={cx(styles.title, classes?.title)}>
+        <h2 id={id} class={cx(dialogHeaderStyles.title, classes?.title)}>
           {title}
         </h2>
         {description != null && (
-          <p class={cx(styles.description, classes?.description)}>{description}</p>
+          <p class={cx(dialogHeaderStyles.description, classes?.description)}>{description}</p>
         )}
       </header>
     );
