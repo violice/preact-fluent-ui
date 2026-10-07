@@ -18,15 +18,10 @@ try {
   const { filename } = Array.isArray(packed) ? packed[0] : Object.values(packed)[0];
   const lock = JSON.parse(await readFile(join(root, 'package-lock.json'), 'utf8'));
   const dependencies = Object.fromEntries(
-    [
-      'preact',
-      'vite',
-      '@wyw-in-js/vite',
-      '@wyw-in-js/processor-utils',
-      'oxc-parser',
-      'magic-string',
-      'typescript',
-    ].map((name) => [name, lock.packages[`node_modules/${name}`].version]),
+    ['preact', 'vite', 'typescript'].map((name) => [
+      name,
+      lock.packages[`node_modules/${name}`].version,
+    ]),
   );
   dependencies['@violice/preact-fluent-ui'] = join(temporary, filename);
   await writeFile(
@@ -36,7 +31,7 @@ try {
   run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund'], temporary);
   await writeFile(
     join(temporary, 'entry.ts'),
-    `import {css,cva,sva,cx,token} from './styled-system/css';
+    `import './styled-system/styles.css';import {css,cva,sva,cx,token} from './styled-system/css';
  export const color=token.var('colors.accent');
  const base=css({color:'accent',gap:8});
  const button=cva({variants:{size:{sm:{height:24},lg:{height:48}}},defaultVariants:{size:'sm'}});
@@ -45,7 +40,7 @@ try {
   );
   await writeFile(
     join(temporary, 'fluent.config.ts'),
-    `import {defineConfig} from '@violice/preact-fluent-ui/config';export default defineConfig({theme:{tokens:{colors:{accent:{value:'red'}}}}});`,
+    `import {defineConfig} from '@violice/preact-fluent-ui/config';export default defineConfig({reset:false,native:true,globalStyles:{body:{color:'accent'}},theme:{tokens:{colors:{accent:{value:'red'}}}}});`,
   );
   await writeFile(
     join(temporary, 'build.mjs'),
@@ -69,6 +64,16 @@ try {
   });
   assert(css.includes('width:var(--pfui-local-'));
   assert(css.includes('height:48px'));
+  assert(css.includes('@layer tokens'));
+  assert(css.includes('@layer base'));
+  assert(css.includes('@layer native'));
+  assert(!css.includes('@layer reset{'));
+  assert(css.includes('body{color:var(--pfui-colors-accent)}'));
+  assert(css.includes('--pfui-colors-accent:red'));
+  assert(css.includes('--pfui-local-'));
+  assert(css.includes('@layer recipes'));
+  assert(css.includes('@layer utilities'));
+  await writeFile(join(temporary, 'vite-env.d.ts'), '/// <reference types="vite/client" />\n');
   await writeFile(
     join(temporary, 'contracts.ts'),
     `import {css,cva,sva,type RecipeVariant,type RecipeVariantProps} from '@violice/preact-fluent-ui/styling';
@@ -99,6 +104,7 @@ try {
       '--target',
       'es2022',
       '--skipLibCheck',
+      'vite-env.d.ts',
       'contracts.ts',
       'entry.ts',
     ],

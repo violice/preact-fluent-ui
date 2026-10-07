@@ -1,16 +1,20 @@
+import { layerOrder } from './layers.ts';
 import { declarationClass } from '../identity.ts';
 import { normalizeStyles } from '../normalize.ts';
 import { cx } from '../cx.ts';
 import type { Declaration, StyleContext, StyleObject } from '../types.ts';
 const identities = new Map<string, string>();
-export function compileDeclarations(declarations: Declaration[]): {
+export function compileDeclarations(
+  declarations: Declaration[],
+  layer: 'utilities' | 'recipes' = 'utilities',
+): {
   className: string;
   css: string;
 } {
   const rules = new Map<string, string>();
   for (const declaration of declarations) {
     const { property, value, selector, conditions } = declaration;
-    const name = declarationClass(property, value, selector, conditions);
+    const name = declarationClass(property, value, selector, conditions, layer);
     const identity = JSON.stringify(declaration);
     if (identities.has(name) && identities.get(name) !== identity)
       throw new Error(`Style identifier collision: ${name}`);
@@ -21,12 +25,13 @@ export function compileDeclarations(declarations: Declaration[]): {
   }
   return {
     className: cx(...rules.keys()),
-    css: `@layer pfui.reset,pfui.native,pfui.utilities;@layer pfui.utilities{${[...rules.values()].join('')}}`,
+    css: `${layerOrder}@layer ${layer}{${[...rules.values()].join('')}}`,
   };
 }
 export function compileStyles(
   style: StyleObject,
   context: StyleContext = {},
+  layer: 'utilities' | 'recipes' = 'utilities',
 ): { className: string; css: string } {
   let globals = '';
   function extract(input: StyleObject, nested = false): StyleObject {
@@ -58,9 +63,9 @@ export function compileStyles(
     }
     return local;
   }
-  const output = compileDeclarations(normalizeStyles(extract(style), context));
+  const output = compileDeclarations(normalizeStyles(extract(style), context), layer);
   return {
     className: output.className,
-    css: globals ? `${output.css}@layer pfui.utilities{${globals}}` : output.css,
+    css: globals ? `${output.css}@layer ${layer}{${globals}}` : output.css,
   };
 }

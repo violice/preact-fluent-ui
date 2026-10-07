@@ -61,10 +61,6 @@
     "test:styling-package": "node scripts/test-styling-package.mjs"
   },
   "peerDependencies": {
-    "@wyw-in-js/processor-utils": "^2.5.0",
-    "@wyw-in-js/vite": "^2.5.1",
-    "magic-string": "^0.30.21",
-    "oxc-parser": "^0.131.0",
     "preact": "^10.27.0",
     "vite": "^8.3.1"
   },
@@ -76,11 +72,7 @@
     "@testing-library/preact": "^3.2.4",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.5.2",
-    "@wyw-in-js/processor-utils": "2.5.0",
-    "@wyw-in-js/vite": "2.5.1",
     "jsdom": "^30.1.1",
-    "magic-string": "0.30.21",
-    "oxc-parser": "0.131.0",
     "oxfmt": "^0.70.0",
     "oxlint": "^1.85.0",
     "preact": "^10.27.0",
@@ -90,20 +82,14 @@
     "vitest": "^5.0.1"
   },
   "peerDependenciesMeta": {
-    "@wyw-in-js/vite": {
-      "optional": true
-    },
-    "@wyw-in-js/processor-utils": {
-      "optional": true
-    },
-    "oxc-parser": {
-      "optional": true
-    },
-    "magic-string": {
-      "optional": true
-    },
     "vite": {
       "optional": true
     }
+  },
+  "dependencies": {
+    "@wyw-in-js/processor-utils": "2.5.0",
+    "@wyw-in-js/vite": "2.5.1",
+    "magic-string": "0.30.21",
+    "oxc-parser": "0.131.0"
   }
 }

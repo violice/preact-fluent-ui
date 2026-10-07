@@ -78,3 +78,17 @@ it('uses scope roots for custom parent semantic conditions', () => {
   expect(css).toContain('@scope ([data-contrast="more"]){:scope{');
   expect(css).not.toContain('[data-contrast="more"] :root');
 });
+
+it('inherits reset/native switches and merges global styles with config overrides', () => {
+  const config = resolveConfig({
+    presets: [
+      { reset: true, native: true, globalStyles: { body: { margin: 0, color: 'red' } } },
+      { presets: [{}] },
+    ],
+    reset: false,
+    globalStyles: { body: { color: 'blue' } },
+  });
+  expect(config.reset).toBe(false);
+  expect(config.native).toBe(true);
+  expect(config.globalStyles).toEqual({ body: { margin: 0, color: 'blue' } });
+});

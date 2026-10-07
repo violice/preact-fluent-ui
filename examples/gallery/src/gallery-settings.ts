@@ -49,10 +49,30 @@ export function settingsUrl(url: URL, settings: GallerySettings): URL {
 // Read tokens from the actual showcased package, including on the published gallery.
 export function themeTokenBlocks(css: string) {
   const blocks = [...css.matchAll(/:root\s*\{([^{}]*)\}/g)]
-    .filter((match) => !/--pfui-[\w-]+\s*:/.test(match[1]))
+    .filter((match) => /--(?!pfui-)[\w-]+\s*:/.test(match[1]))
     .map((match) => match[1].trim().replace(/;*$/, ';'));
   if (blocks.length !== 3) throw new Error('Expected light, dark and forced-colors theme tokens');
-  return blocks;
+  if (!/--pfui-[\w-]+\s*:/.test(blocks[0])) return blocks;
+  const declarations = new Map<string, string>();
+  return blocks.map((block) => {
+    const names = new Set<string>();
+    for (const declaration of block.split(';')) {
+      const colon = declaration.indexOf(':');
+      if (colon < 0) continue;
+      const name = declaration.slice(0, colon).trim();
+      names.add(name);
+      declarations.set(name, declaration.slice(colon + 1).trim());
+    }
+    function resolve(value: string, visited = new Set<string>()): string {
+      return value.replace(/var\((--[\w-]+)\)/g, (reference, name: string) => {
+        if (!name.startsWith('--pfui-')) return reference;
+        if (visited.has(name)) throw new Error(`Theme variable cycle: ${name}`);
+        const target = declarations.get(name);
+        return target === undefined ? reference : resolve(target, new Set([...visited, name]));
+      });
+    }
+    return [...names].map((name) => `${name}: ${resolve(declarations.get(name)!)};`).join('\n');
+  });
 }
 const [light, dark, forced] = themeTokenBlocks(themeCss);
 const [greenLight, greenDark] = themeTokenBlocks(greenCss);

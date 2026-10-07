@@ -45,13 +45,13 @@ export function compileRecipe(
       const output: Record<string, string> = {};
       for (const [slot, value] of Object.entries(style)) {
         if (!slots!.includes(slot)) throw new Error(`Unknown sva slot: ${slot}`);
-        const result = compileStyles(selectors(value as StyleObject), context);
+        const result = compileStyles(selectors(value as StyleObject), context, 'recipes');
         output[slot] = result.className;
         css += result.css;
       }
       return output;
     }
-    const result = compileStyles(style as StyleObject, context);
+    const result = compileStyles(style as StyleObject, context, 'recipes');
     css += result.css;
     return result.className;
   }

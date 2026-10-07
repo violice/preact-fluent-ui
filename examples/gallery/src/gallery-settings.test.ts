@@ -81,3 +81,22 @@ it('ignores additional engine variable roots while reading legacy theme blocks',
     ),
   ).toHaveLength(3);
 });
+
+it('reads generated token aliases as concrete light, dark and forced color values', () => {
+  const blocks = themeTokenBlocks(
+    ':root{color-scheme:light;--pfui-palette-white:#fff;--pfui-palette-black:#000;--pfui-colors-text:var(--pfui-palette-black);--color-text:var(--pfui-colors-text)}@media(dark){:root{color-scheme:dark;--pfui-colors-text:var(--pfui-palette-white);--color-text:var(--pfui-colors-text)}}@media(forced){:root{--pfui-colors-text:CanvasText;--color-text:var(--pfui-colors-text)}}',
+  );
+  expect(blocks[0]).toContain('--color-text: #000;');
+  expect(blocks[1]).toContain('--color-text: #fff;');
+  expect(blocks[2]).toContain('--color-text: CanvasText;');
+  expect(blocks[2]).not.toContain('color-scheme:');
+  expect(blocks[2]).not.toContain('--pfui-palette-white:');
+});
+
+it('preserves public token dependencies for gallery palette overrides', () => {
+  const [light] = themeTokenBlocks(
+    ':root{--pfui-colors-text-subtle:#616b7b;--color-text-subtle:var(--pfui-colors-text-subtle);--code-color-comment:var(--color-text-subtle)}@media(dark){:root{--color-text-subtle:white}}@media(forced){:root{--color-text-subtle:CanvasText}}',
+  );
+  expect(light).toContain('--color-text-subtle: #616b7b;');
+  expect(light).toContain('--code-color-comment: var(--color-text-subtle);');
+});

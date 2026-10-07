@@ -1,6 +1,6 @@
-@layer pfui.reset, pfui.native, pfui.utilities;
-@layer pfui.reset {
-  /* Optional document defaults. Import after theme.css. */
+@layer reset, native, base, tokens, recipes, utilities;
+@layer reset {
+  /* Optional document defaults. Included when reset is enabled. */
   *,
   *::before,
   *::after {

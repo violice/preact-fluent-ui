@@ -1,5 +1,5 @@
-@layer pfui.reset, pfui.native, pfui.utilities;
-@layer pfui.native {
+@layer reset, native, base, tokens, recipes, utilities;
+@layer native {
   /* Optional ordinary fields. :where keeps component classes authoritative. */
   :where(
     input:not(

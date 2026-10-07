@@ -1,13 +1,13 @@
 # Styling engine
 
-Components arrive precompiled. Keep importing the package’s `theme.css` and `styles.css`; the styling compiler is needed only for your own `css`, `cva` and `sva` calls.
+With the Vite plugin, import `./styled-system/styles.css` once. It includes the configured theme, precompiled components, global styles, and enabled reset/native styles. Without the plugin, components remain precompiled and you can import the package’s individual CSS exports.
 
 ## Setup
 
-Install the optional build peers:
+The compiler tools are installed with the library. Add Vite to your project if it is not already installed:
 
 ```sh
-npm install -D vite @wyw-in-js/vite @wyw-in-js/processor-utils oxc-parser magic-string
+npm install -D vite
 ```
 
 ```ts
@@ -26,6 +26,9 @@ import { defineConfig, fluentPreset } from '@violice/preact-fluent-ui/config';
 
 export default defineConfig({
   presets: [fluentPreset],
+  reset: true,
+  native: true,
+  globalStyles: { body: { color: 'text', backgroundColor: 'canvas' } },
   conditions: { md: '@media (min-width: 800px)' },
   theme: {
     extend: {
@@ -41,13 +44,13 @@ export default defineConfig({
 });
 ```
 
-The plugin generates `styled-system/css.ts` and `styled-system/theme.css` when Vite starts. Import the generated theme after the package theme. Generated token paths reflect the resolved configuration. Changes to the configuration or its imported dependencies restart the dev server and regenerate these files. Add `styled-system/` to your application’s ignore list.
+The plugin generates `styled-system/css.ts`, `theme.css` and `styles.css`. Import the generated `styles.css` once using the path relative to your entry file. For example, from `src/main.tsx` with the default output directory, use `import '../styled-system/styles.css'`. `fluentPreset` enables `reset` and `native` by default; either can be disabled in your config. `globalStyles` merges across presets and accepts global selectors, nested selectors, conditions, and token values. Config changes restart the dev server and regenerate output. Add `styled-system/` to your application’s ignore list.
 
 ## Static and dynamic styles
 
 ```tsx
 import { css, cx, token } from './styled-system/css';
-import './styled-system/theme.css';
+import './styled-system/styles.css';
 
 const panel = css({ display: 'grid', gap: '4', color: 'action', _md: { gap: '6' } });
 
@@ -131,7 +134,7 @@ The compiler adds stable slot markers, including to slots without base declarati
 
 Top-level `@keyframes name` definitions are extracted with the stylesheet. Frames accept `from`, `to`, percentages and comma-separated percentages; nested selectors and scoped keyframes are rejected. Choose unique animation names.
 
-Generated CSS declares the layer order `pfui.reset, pfui.native, pfui.utilities` before emitting utility rules. The optional reset and native-control styles use the first two layers. Unlayered application CSS can still override normal utility declarations.
+Generated CSS declares `@layer reset, native, base, tokens, recipes, utilities`. Reset and native controls occupy the first two layers; `globalStyles` is emitted in `base`, themes in `tokens`, `cva/sva` in `recipes`, and `css/css.dynamic` in `utilities`. Utility classes override recipe declarations even when recipe classes appear later in the class attribute. Unlayered application CSS can still override normal declarations. You can add your own global CSS in `@layer base`.
 
 Tooltip and Sidebar hints use `css.dynamic` for measured geometry. Native `style` props remain available. TextPreview/CodeBlock retain their style adapter to preserve existing `wrap` precedence for both object and string styles.
 

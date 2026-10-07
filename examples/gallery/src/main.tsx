@@ -1,5 +1,4 @@
-import '../../../dist/theme.css';
-import '../../../dist/styles.css';
+import '../../../.artifacts/gallery-styled-system/styles.css';
 import { hydrate, prerender as renderStatic } from 'preact-iso';
 import { Gallery } from './gallery';
 import { galleryPages } from './gallery-pages';

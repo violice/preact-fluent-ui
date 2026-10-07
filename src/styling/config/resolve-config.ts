@@ -65,18 +65,32 @@ function validate(theme: ResolvedConfig['theme'], conditions: Record<string, str
   }
   Object.keys(leaves).forEach(visit);
 }
+function definesFlag(config: StylingConfig, key: 'reset' | 'native'): boolean {
+  return (
+    config[key] !== undefined || (config.presets ?? []).some((preset) => definesFlag(preset, key))
+  );
+}
 export function resolveConfig(input: StylingConfig = {}): ResolvedConfig {
   const result: ResolvedConfig = {
+    reset: false,
+    native: false,
+    globalStyles: {},
     theme: { tokens: {}, semanticTokens: {} },
     themes: {},
     conditions: {},
   };
   for (const preset of input.presets ?? []) {
     const resolved = resolveConfig(preset);
+    if (definesFlag(preset, 'reset')) result.reset = resolved.reset;
+    if (definesFlag(preset, 'native')) result.native = resolved.native;
+    result.globalStyles = merge(result.globalStyles, resolved.globalStyles);
     result.theme = themeWithOverrides(result, resolved.theme);
     result.conditions = { ...result.conditions, ...resolved.conditions };
     result.themes = { ...result.themes, ...resolved.themes };
   }
+  result.reset = input.reset ?? result.reset;
+  result.native = input.native ?? result.native;
+  result.globalStyles = merge(result.globalStyles, input.globalStyles ?? {});
   result.conditions = { ...result.conditions, ...input.conditions };
   for (const key of ['tokens', 'semanticTokens'] as const)
     Object.assign(result.theme[key], input.theme?.[key]);

@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, readFile } from 'node:fs/promises';
 import { resolve, relative, dirname } from 'node:path';
 import wyw from '@wyw-in-js/vite';
 import { loadConfigFromFile } from 'vite';
@@ -8,6 +8,7 @@ import type { StylingConfig, ResolvedConfig } from '../config/types.ts';
 import { resolveConfig } from '../config/resolve-config.ts';
 import { tokenReferences, generateThemeCss } from './tokens.ts';
 import { transformDynamic } from './dynamic.ts';
+import { generateStylesCss } from './global-styles.ts';
 import { fluentPreset } from '../config/fluent-preset.ts';
 export interface FluentStylesOptions {
   config?: StylingConfig;
@@ -80,6 +81,19 @@ export function fluentStyles(options: FluentStylesOptions = {}): Plugin[] {
         }) { return (${JSON.stringify(refs)} as Record<string,string>)[path]; } };\n`,
       );
       await writeFile(resolve(outputPath, 'theme.css'), generateThemeCss(config));
+      const styleDirectory = new URL(
+        import.meta.url.endsWith('.ts') ? '../../styles/' : './',
+        import.meta.url,
+      );
+      const [reset, native] = await Promise.all([
+        config.reset ? readFile(new URL('reset.css', styleDirectory), 'utf8') : '',
+        config.native ? readFile(new URL('native-controls.css', styleDirectory), 'utf8') : '',
+      ]);
+      const staticCss = generateStylesCss(config, reset, native);
+      await writeFile(
+        resolve(outputPath, 'styles.css'),
+        `@import '@violice/preact-fluent-ui/styles.css';\n${staticCss}`,
+      );
       sources.add(resolve(outputPath, 'css.ts'));
     },
     configureServer(server) {

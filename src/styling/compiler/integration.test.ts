@@ -132,7 +132,7 @@ it('compiles css.dynamic with the pfui namespace', async () => {
   const props = result.module.layout(80);
   expect(props.class).toMatch(/^pfui_/);
   expect(Object.keys(props.style)[0]).toMatch(/^--pfui-local-/);
-  expect(result.css).toContain('@layer pfui.utilities');
+  expect(result.css).toContain('@layer utilities');
 });
 it('emits slot relationships and animation frames in the actual CSS asset', async () => {
   const result = await compile(`import {sva} from ${JSON.stringify(api)};
@@ -142,8 +142,8 @@ it('emits slot relationships and animation frames in the actual CSS asset', asyn
   const marker = parts.indicator.split(' ').find((name: string) => name.startsWith('pfui-sva-'));
   expect(result.css).toContain(`:checked + .${marker}`);
   expect(result.css).toContain('@keyframes pfui-test-spin');
-  expect(result.css.indexOf('@layer pfui.reset,pfui.native,pfui.utilities;')).toBeLessThan(
-    result.css.indexOf('@layer pfui.utilities{'),
+  expect(result.css.indexOf('@layer reset,native,base,tokens,recipes,utilities;')).toBeLessThan(
+    result.css.indexOf('@layer recipes{'),
   );
   expect(result.css).toContain('transform:rotate(360deg)');
   expect(parts.indicator).not.toContain('transform');
@@ -161,5 +161,38 @@ it('bridges configured semantic themes to public Fluent variables used by compon
     }),
   );
   expect(css).toContain('--color-text:var(--pfui-colors-text)');
-  expect(css).not.toContain('--color-border:var(--pfui-colors-border)');
+  expect(css).toContain('--color-border:var(--pfui-colors-border)');
+});
+
+it('generates a self-contained Fluent theme with system, explicit and forced color modes', async () => {
+  const { fluentPreset } = await import('../config/fluent-preset');
+  const { resolveConfig } = await import('../config/resolve-config');
+  const { generateThemeCss } = await import('./tokens');
+  const css = generateThemeCss(resolveConfig({ presets: [fluentPreset] }));
+  const declarations = new Set([...css.matchAll(/(--[\w-]+):/g)].map((match) => match[1]));
+  for (const match of css.matchAll(/var\((--[\w-]+)\)/g)) {
+    expect(declarations.has(match[1]), `Undefined variable ${match[1]}`).toBe(true);
+  }
+  expect(css).toContain('@media (prefers-color-scheme: dark)');
+  expect(css).toContain('@media (forced-colors: active)');
+  expect(css).toContain('color-scheme:light');
+  expect(css).toContain('color-scheme:dark');
+  expect(css).toContain('[data-color-mode="light"]');
+  expect(css).toContain('[data-color-mode="dark"]');
+  expect(css).toContain('--font-body:var(--pfui-fonts-body)');
+  expect(css).toContain('--shadow-card:var(--pfui-shadows-card)');
+  expect(css).toContain('--color-primary:var(--color-accent)');
+  expect(css).toContain('--code-color-comment:var(--color-text-subtle)');
+  expect(css).not.toContain('--space-1:var(--space-1)');
+  expect(css).toContain(
+    '@scope ([data-color-mode]){:scope{--pfui-colors-canvas:var(--pfui-systemColors-canvas)',
+  );
+});
+
+it('loads the unified CSS entry with configurable reset/native and token-aware global styles', async () => {
+  const result = await compile(`import './styled-system/styles.css';export const ready=true;`);
+  expect(result.css).toContain('@layer tokens');
+  expect(result.css).toContain('--pfui-colors-accent:red');
+  expect(result.css).not.toContain('@layer reset{');
+  expect(result.css).not.toContain('@layer native{');
 });

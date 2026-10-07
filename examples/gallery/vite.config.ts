@@ -3,6 +3,7 @@ import { resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import preact from '@preact/preset-vite';
 import { defineConfig } from 'vite';
+import { fluentPreset } from '../../src/styling/config/fluent-preset.ts';
 import { fluentStyles } from '../../src/styling/compiler/vite.ts';
 
 export default defineConfig({
@@ -11,6 +12,7 @@ export default defineConfig({
   plugins: [
     fluentStyles({
       outdir: '../../.artifacts/gallery-styled-system',
+      config: { presets: [fluentPreset], reset: false, native: false },
       sources: ['../../../dist/styling.js'],
     }),
     {

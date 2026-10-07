@@ -1,4 +1,5 @@
-import { fluentPreset } from '../config/fluent-preset.ts';
+import { layerOrder } from './layers.ts';
+import { fluentLegacyVariables } from '../config/fluent-preset.ts';
 import { flattenTokens, themeWithOverrides } from '../config/resolve-config.ts';
 import type { ResolvedConfig, TokenLeaf } from '../config/types.ts';
 export function variableName(path: string): string {
@@ -16,26 +17,18 @@ export function tokenReferences(config: ResolvedConfig): Record<string, string> 
 function valueCss(value: string | number): string {
   return String(value).replace(/\{([\w.-]+)\}/g, (_, path: string) => `var(${variableName(path)})`);
 }
-// Existing Fluent variables are the component contract. Theme overrides update both
-// namespaces at the same scope; default aliases must not create a variable cycle.
-const legacyVariables = Object.fromEntries(
-  Object.entries({
-    ...flattenTokens(fluentPreset.theme!.tokens!),
-    ...flattenTokens(fluentPreset.theme!.semanticTokens!),
-  }).flatMap(([path, leaf]) => {
-    const match = typeof leaf.value === 'string' && /^var\((--[\w-]+)\)$/.exec(leaf.value);
-    return match ? [[path, match[1]]] : [];
-  }),
-);
+const legacyVariables = fluentLegacyVariables;
 function declarations(leaves: Record<string, TokenLeaf>, mode = 'base'): string {
   return Object.entries(leaves)
     .map(([path, leaf]) => {
       const value =
         typeof leaf.value === 'object' ? (leaf.value[mode] ?? leaf.value.base) : leaf.value;
       const reference = legacyVariables[path];
+      const alias = typeof value === 'string' && /^\{([\w.-]+)\}$/.exec(value);
+      const publicTarget = alias && legacyVariables[alias[1]];
       const bridge =
-        reference && valueCss(value) !== `var(${reference})`
-          ? `${reference}:var(${variableName(path)});`
+        reference && reference !== variableName(path) && valueCss(value) !== `var(${reference})`
+          ? `${reference}:var(${publicTarget || variableName(path)});`
           : '';
       return `${variableName(path)}:${valueCss(value)};${bridge}`;
     })
@@ -52,7 +45,8 @@ export function generateThemeCss(config: ResolvedConfig): string {
   for (const [name, theme] of variants) {
     const leaves = { ...flattenTokens(theme.tokens), ...flattenTokens(theme.semanticTokens) };
     const root = name ? `[data-pfui-theme="${name}"]` : ':root';
-    css += `${root}{${declarations(leaves)}}`;
+    css += `${root}{${name ? '' : 'color-scheme:light;'}${declarations(leaves)}}`;
+    css += `@media (prefers-color-scheme: dark){${root}{${name ? '' : 'color-scheme:dark;'}${declarations(leaves, '_dark')}}}`;
     for (const [mode, opposite] of [
       ['dark', 'light'],
       ['light', 'dark'],
@@ -60,7 +54,7 @@ export function generateThemeCss(config: ResolvedConfig): string {
       const selector = name
         ? `:scope[data-pfui-theme="${name}"], [data-pfui-theme="${name}"]`
         : ':scope';
-      css += `@scope ([data-color-mode="${mode}"]) to ([data-color-mode="${opposite}"]){${selector}{${declarations(leaves, `_${mode}`)}}}`;
+      css += `@scope ([data-color-mode="${mode}"]) to ([data-color-mode="${opposite}"]){${selector}{color-scheme:${mode};${declarations(leaves, `_${mode}`)}}}`;
       if (name)
         css += `@scope ([data-pfui-theme="${name}"]) to ([data-pfui-theme]:not([data-pfui-theme="${name}"])){@scope ([data-color-mode="${mode}"]) to ([data-color-mode="${opposite}"]){:scope{${declarations(leaves, `_${mode}`)}}}}`;
     }
@@ -77,8 +71,15 @@ export function generateThemeCss(config: ResolvedConfig): string {
       );
       const values = declarations(conditionalLeaves, condition);
       const body = `${root}{${values}}`;
-      if (scope.startsWith('@')) css += `${scope}{${body}}`;
-      else {
+      if (scope.startsWith('@')) {
+        const selector = name
+          ? `:scope[data-pfui-theme="${name}"], [data-pfui-theme="${name}"]`
+          : ':scope';
+        let scoped = `@scope ([data-color-mode]){${selector}{${values}}}`;
+        if (name)
+          scoped += `@scope ([data-pfui-theme="${name}"]) to ([data-pfui-theme]:not([data-pfui-theme="${name}"])){@scope ([data-color-mode]){:scope{${values}}}}`;
+        css += `${scope}{${body}${scoped}}`;
+      } else {
         const boundary = scope.slice(0, -2).trim();
         const selector = name
           ? `:scope[data-pfui-theme="${name}"], [data-pfui-theme="${name}"]`
@@ -89,5 +90,5 @@ export function generateThemeCss(config: ResolvedConfig): string {
       }
     }
   }
-  return css;
+  return `${layerOrder}@layer tokens{${css}}`;
 }

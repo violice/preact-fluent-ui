@@ -143,6 +143,26 @@ export function expandStyle(property: string, value: string): [string, string][]
   }
   return [[property, value]];
 }
+function nestedParent(selector: string): string {
+  let depth = 0;
+  let quote = '';
+  for (let index = 0; index < selector.length; index++) {
+    const char = selector[index];
+    if (char === '\\') {
+      index++;
+      continue;
+    }
+    if (quote) {
+      if (char === quote) quote = '';
+      continue;
+    }
+    if (char === '"' || char === "'") quote = char;
+    else if (char === '(' || char === '[') depth++;
+    else if (char === ')' || char === ']') depth--;
+    else if (char === ',' && depth === 0) return `:is(${selector})`;
+  }
+  return selector;
+}
 export function normalizeStyles(
   style: StyleObject,
   context: StyleContext = {},
@@ -171,7 +191,12 @@ export function normalizeStyles(
         output.push(...normalizeStyles(value, context, selector, [...conditions, condition]));
       else if (condition.includes('&'))
         output.push(
-          ...normalizeStyles(value, context, condition.replaceAll('&', selector), conditions),
+          ...normalizeStyles(
+            value,
+            context,
+            condition.replaceAll('&', nestedParent(selector)),
+            conditions,
+          ),
         );
       else throw new Error(`Nested styles require a selector or condition: ${property}`);
       continue;

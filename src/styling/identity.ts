@@ -13,6 +13,7 @@ export function declarationClass(
   value: string,
   selector = '&',
   conditions: readonly string[] = [],
+  layer: 'utilities' | 'recipes' = 'utilities',
 ): string {
-  return `pfui_${styleHash(JSON.stringify([selector, conditions]))}_${property}_${styleHash(value)}`;
+  return `pfui_${styleHash(JSON.stringify(layer === 'utilities' ? [selector, conditions] : [selector, conditions, layer]))}_${property}_${styleHash(value)}`;
 }
