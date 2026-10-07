@@ -427,54 +427,54 @@ it('scrolls documentation links without scrolling the sidebar brand and actions'
   }
 });
 
-it('documents composite families on one canonical page with an API table for each export', async () => {
-  const { galleryPages } = await import('./pages');
-  for (const [slug, title, members] of [
+it.each([
+  [
+    'table',
+    'Table',
     [
-      'table',
       'Table',
-      [
-        'Table',
-        'TableContainer',
-        'TableHeader',
-        'TableBody',
-        'TableFooter',
-        'TableRow',
-        'TableHeaderCell',
-        'TableCell',
-        'TableCaption',
-      ],
+      'TableContainer',
+      'TableHeader',
+      'TableBody',
+      'TableFooter',
+      'TableRow',
+      'TableHeaderCell',
+      'TableCell',
+      'TableCaption',
     ],
-    ['data-list', 'DataList', ['DataList', 'DataListItem', 'DataListLabel', 'DataListValue']],
-    ['disclosure', 'Disclosure', ['Disclosure', 'DisclosureSummary', 'DisclosureContent']],
-    ['toolbar', 'Toolbar', ['Toolbar', 'ToolbarGroup']],
+  ],
+  ['data-list', 'DataList', ['DataList', 'DataListItem', 'DataListLabel', 'DataListValue']],
+  ['disclosure', 'Disclosure', ['Disclosure', 'DisclosureSummary', 'DisclosureContent']],
+  ['toolbar', 'Toolbar', ['Toolbar', 'ToolbarGroup']],
+  [
+    'app-shell',
+    'AppShell',
     [
-      'app-shell',
       'AppShell',
-      [
-        'AppShell',
-        'AppShellWorkspace',
-        'AppShellHeader',
-        'AppShellToolbar',
-        'AppShellContent',
-        'AppShellFooter',
-      ],
+      'AppShellWorkspace',
+      'AppShellHeader',
+      'AppShellToolbar',
+      'AppShellContent',
+      'AppShellFooter',
     ],
+  ],
+  [
+    'sidebar',
+    'Sidebar',
     [
-      'sidebar',
       'Sidebar',
-      [
-        'Sidebar',
-        'SidebarHeader',
-        'SidebarNav',
-        'SidebarGroup',
-        'SidebarItem',
-        'SidebarFooter',
-        'SidebarBrand',
-      ],
+      'SidebarHeader',
+      'SidebarNav',
+      'SidebarGroup',
+      'SidebarItem',
+      'SidebarFooter',
+      'SidebarBrand',
     ],
-    ['dialog', 'Dialog', ['Modal', 'DialogHeader', 'DialogBody', 'DialogFooter', 'ConfirmDialog']],
-  ] as const) {
+  ],
+  ['dialog', 'Dialog', ['Modal', 'DialogHeader', 'DialogBody', 'DialogFooter', 'ConfirmDialog']],
+] as const)(
+  'documents %s on one canonical page with an API table for each export',
+  (slug, title, members) => {
     history.replaceState(null, '', `/components/${slug}`);
     const view = render(<Gallery base="/" />);
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(title);
@@ -489,21 +489,22 @@ it('documents composite families on one canonical page with an API table for eac
     }
     expect(screen.queryByRole('heading', { name: 'Props', level: 2 })).toBeNull();
     view.unmount();
-  }
-  expect(galleryPages.some((page) => page.path === '/getting-started')).toBe(false);
-  for (const path of [
-    '/getting-started',
-    '/components/modal',
-    '/components/confirm-dialog',
-    '/components/sidebar-nav',
-    '/components/app-shell-workspace',
-  ]) {
-    expect(galleryPages.some((page) => page.path === path)).toBe(false);
-    history.replaceState(null, '', path);
-    const view = render(<Gallery base="/" />);
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Page not found');
-    view.unmount();
-  }
+  },
+);
+
+it.each([
+  '/getting-started',
+  '/components/modal',
+  '/components/confirm-dialog',
+  '/components/sidebar-nav',
+  '/components/app-shell-workspace',
+])('removes the former documentation route %s', async (path) => {
+  const { galleryPages } = await import('./pages');
+  expect(galleryPages.some((page) => page.path === path)).toBe(false);
+  history.replaceState(null, '', path);
+  const view = render(<Gallery base="/" />);
+  expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Page not found');
+  view.unmount();
 });
 
 it.each(['use-render', 'merge-props', 'cx', 'resolve-class'])(
