@@ -70,12 +70,12 @@ Run on Node 24 with `npm ci`. CI on every push and pull request runs the same ch
 
 ```sh
 npm run build
-npm run check
 npm run build:gallery
+npm run check
 npm run test:package:all
 ```
 
-`check` runs typecheck, lint, format checks, behavior tests, release tests, and notices checks. Individual check commands remain available. Run `build` before `check` on a clean checkout because the gallery imports the built library and its declarations. `build:gallery` also consumes the library's existing `dist`. `dev` still builds the library before starting the gallery.
+`check` runs typecheck, lint, format checks, behavior tests, release tests, and notices checks. Individual check commands remain available. Run `build` and `build:gallery` before `check` on a clean checkout because gallery compilation generates its style bindings and consumes the built library declarations. `build:gallery` also consumes the library's existing `dist`. `dev` still builds the library before starting the gallery.
 
 Finish both builds before `test:package:all`. This cross-platform Node command packs the existing build once with scripts disabled, then passes the same absolute tarball path to `test-package.mjs` for the root lockfile's Preact version and minimum peer `10.27.0`. A failed pack or verification stops the command and returns the child process's exit code.
 

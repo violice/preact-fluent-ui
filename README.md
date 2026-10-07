@@ -74,14 +74,14 @@ Run the checks on a clean checkout:
 
 ```sh
 npm run build
-npm run check
 npm run build:gallery
+npm run check
 npm run test:package:all
 npm run test:gallery-artifact
 npm run test:gallery-preview
 ```
 
-Build before checking because the gallery needs the library's generated declarations. `check` runs type, lint, formatting, test, and license checks. `test:package:all` verifies the packed library with the locked and minimum supported Preact versions, then checks the packed styles compiler in a separate consumer.
+Build the library and gallery before checking: gallery compilation generates the style bindings required by typecheck. `check` runs type, lint, formatting, test, and license checks. `test:package:all` verifies the packed library with the locked and minimum supported Preact versions, then checks the packed styles compiler in a separate consumer.
 
 `build:gallery` prerenders every known route and `404.html`, then verifies the artifact. The default base is `/`. For GitHub Pages, build and preview the repository base:
 

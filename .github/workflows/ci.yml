@@ -18,8 +18,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - run: npm run check
       - run: npm run build:gallery
+      - run: npm run check
       - run: npm run test:package:all
       - uses: actions/upload-artifact@v7.0.1
         with:
