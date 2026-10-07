@@ -145,3 +145,5 @@ Fluent components continue reading public `--color-*`, `--font-*` and `--radius-
 `src/styling/index.ts` is the browser styling entrypoint. Browser functions and compile-time stubs live in `runtime/`; CSS value expansion, class identities and common types live in `shared/`. Configuration and Fluent preset data live in `config/`, CSS generation in `compiler/`, and Vite/WyW integration in `adapters/`.
 
 The default `token.var` references are generated from the Fluent preset. After changing its tokens, run `npm run tokens:generate`; `npm run tokens:check` verifies that the checked-in bindings match the preset. Custom configurations continue to generate their own bindings in `styled-system/css.ts`.
+
+Reset and native control rules are defined in `config/fluent/reset-styles.ts` and `config/fluent/native-styles.ts`. The compiler emits them into their own cascade layers when enabled, and the package build generates the standalone `reset.css` and `native-controls.css` exports from the same definitions. No source CSS files or filesystem reads are required for these rules.

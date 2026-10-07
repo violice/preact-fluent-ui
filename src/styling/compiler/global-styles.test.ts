@@ -16,13 +16,11 @@ it('includes optional layers only when enabled and normalizes global selectors a
       '@media print': { body: { backgroundColor: 'white' } },
     },
   });
-  const css = generateStylesCss(
-    config,
-    '@layer reset{body{margin:0}}',
-    '@layer native{input{border:0}}',
-  );
-  expect(css).toContain('@layer reset{body{margin:0}}');
-  expect(css).toContain('@layer native{input{border:0}}');
+  const css = generateStylesCss(config);
+  expect(css).toContain('@layer reset{');
+  expect(css).toContain('body{margin:0;');
+  expect(css).toContain('@layer native{');
+  expect(css).toContain('min-height:36px');
   expect(css).toContain('body{color:var(--pfui-colors-text)}');
   expect(css).toContain('body{padding-top:4px}');
   expect(css).toContain('body a:hover{opacity:0.5}');
@@ -32,11 +30,7 @@ it('includes optional layers only when enabled and normalizes global selectors a
     { reset: true, native: false },
     { reset: false, native: false },
   ]) {
-    const output = generateStylesCss(
-      { ...config, ...flags },
-      '@layer reset{body{margin:0}}',
-      '@layer native{input{border:0}}',
-    );
+    const output = generateStylesCss({ ...config, ...flags });
     expect(output.includes('@layer reset{')).toBe(flags.reset);
     expect(output.includes('@layer native{')).toBe(flags.native);
     expect(output).toContain('@layer base{');
@@ -67,4 +61,28 @@ it('applies nested conditions to every selector in a global selector list', () =
   );
   expect(css).toContain(':is(h1, h2):hover{color:red}');
   expect(css).toContain(':is(body a, body button):hover{color:blue}');
+});
+
+it('generates native interaction, accessibility and media rules without external CSS input', () => {
+  const css = generateStylesCss(resolveConfig({ presets: [fluentPreset] }));
+  expect(css).toContain(':hover:where(:not(:disabled)){background:var(--color-control-hover);');
+  expect(css).toContain(':focus-visible{outline:2px solid var(--color-focus);');
+  expect(css).toContain(':disabled{color:var(--color-disabled);');
+  expect(css).toContain(
+    ':where(input, textarea)::placeholder{color:var(--color-text-subtle);opacity:1;}',
+  );
+  expect(css).toContain("[aria-invalid='true']{border-bottom-color:var(--color-danger);}");
+  expect(css).toContain('@media (prefers-reduced-motion: reduce){');
+  expect(css).toContain('transition:none');
+  expect(css).toContain('@media (forced-colors: active){');
+  expect(css).toContain('color:FieldText');
+  expect(css).toContain('outline-color:Highlight');
+  expect(css).toContain("[aria-invalid='true']{border-bottom-style:dashed;}");
+});
+
+it('preserves document shorthands that reset background images and border images', () => {
+  const css = generateStylesCss(resolveConfig({ presets: [fluentPreset] }));
+  expect(css).toContain('background:var(--color-canvas)');
+  expect(css).toContain('background:var(--color-control)');
+  expect(css).toContain('border:1px solid var(--color-control-border)');
 });

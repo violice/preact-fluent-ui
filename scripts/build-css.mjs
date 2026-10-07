@@ -1,10 +1,11 @@
-import { copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+
+import { generateResetCss, generateNativeCss } from '../src/styling/compiler/global-styles.ts';
 
 const root = new URL('../', import.meta.url);
 await mkdir(new URL('dist/', root), { recursive: true });
-for (const name of ['reset.css', 'native-controls.css']) {
-  await copyFile(new URL(`src/styles/${name}`, root), new URL(`dist/${name}`, root));
-}
+await writeFile(new URL('dist/reset.css', root), generateResetCss());
+await writeFile(new URL('dist/native-controls.css', root), generateNativeCss());
 
 await writeFile(
   new URL('dist/theme.css', root),
