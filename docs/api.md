@@ -1,6 +1,6 @@
 # Public API
 
-Import components and their exported props types from `@violice/preact-fluent-ui`. Internal source subpaths are not exports. JavaScript does not import CSS; explicitly load `theme.css` and `styles.css`. [README](../README.md#installation) explains optional global styles. The [usage guide](usage.md#theming) explains override order.
+Import components and their exported props types from `@violice/preact-fluent-ui/components`. Internal source subpaths are not exports. JavaScript does not import CSS; load the generated `styled-system/styles.css` once. [README](../README.md#installation) explains optional global styles. The [usage guide](usage.md#theming) explains override order.
 
 ## Shared native props
 
@@ -41,7 +41,7 @@ All components read signal-like values through resolveClass before choosing `cla
 
 ## Layout
 
-Box was removed in favor of `css()` and `css.dynamic()` from the styles subpath or generated bindings. Native elements and existing components keep their own props and refs. See [the styles guide](styles.md) for compiler setup, recipes, token types and dynamic variables.
+Box was removed in favor of `css()` and `css.dynamic()` from the generated `styled-system/css` bindings. Native elements and existing components keep their own props and refs. See [the styles guide](styles.md) for compiler setup, recipes, token types and dynamic variables.
 
 ## Typography
 
@@ -81,7 +81,7 @@ a callback receives the resolved preset and color in `TextRenderState` and must 
 all `TextRenderProps`, including the composed callback ref, to its native root.
 `TextProps` accepts a native `HTMLElement` ref.
 
-The optional `reset.css` clears margins and inherits font styles for bare
+The optional generated `reset` layer clears margins and inherits font styles for bare
 `h1`–`h6` and `p` using a low specificity selector. It does not assign presets;
 use Text or explicit application styles for visual hierarchy. Existing
 component typography continues to override the reset.
@@ -262,7 +262,7 @@ SidebarItem defaults to an anchor. The anchor branch requires href unless render
 
 SidebarGroup slots are root/label/content, and SidebarItem slots are root/icon/content/description. Slots accept JSX.Signalish<string | undefined> and append to internal classes. class takes priority over className, including an explicit empty class; classes.root remains additive. Structural parts have no classes prop. Navigation uses native Tab and Enter, without menu roles or arrow-key handling. Styles support wrapping, focus-visible, logical RTL positioning and forced colors; active Windows contrast-theme acceptance remains a manual check.
 
-See the [composition example](../README.md#sidebar-composition). The library imports neither preact-iso nor @preact/signals. Their use in the documentation gallery does not require consumers to install them.
+See the [composition example](usage.md#sidebar-composition). The library imports neither preact-iso nor @preact/signals. Their use in the documentation gallery does not require consumers to install them.
 
 
 ## Application shell
@@ -275,7 +275,7 @@ See the [composition example](../README.md#sidebar-composition). The library imp
 
 ## Utilities
 
-All utilities import from the main package entry. Production code has no Signals, React, Base UI or router dependency.
+Import utilities from `@violice/preact-fluent-ui/utils`; import `cx` from the generated `styled-system/css` module. Production code has no Signals, React, Base UI or router dependency.
 
 ```ts
 cx(...classes: ClassValue[]): string
@@ -359,7 +359,7 @@ forward arbitrary native root props or a root ref. Native disabled controls
 cannot receive keyboard focus; no focusable wrapper is added. Place essential
 instructions in visible text rather than relying on a disabled trigger hint.
 
-All six new components and their Props types are root exports. Tooltip also
+All six new components and their Props types are exports of `@violice/preact-fluent-ui/components`. Tooltip also
 exports `TooltipTriggerProps`; placement/theme helpers remain internal.
 
 AppShellToolbar supplies application surface and bottom-border chrome around Toolbar.

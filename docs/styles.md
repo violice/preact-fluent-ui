@@ -74,7 +74,7 @@ You can also spread the result with `<section {...dynamic} />`. Ordinary JSX pro
 
 Dynamic inputs may be strings, numbers, null/undefined or Preact signals. Read signals through `css.dynamic()` inside a component render to subscribe to updates. Null removes the inline variable. Nested selectors and configured conditions require explicit objects; spreads, computed keys and dynamic nested objects are rejected. No runtime stylesheet insertion is used.
 
-`cx()` retains foreign classes and selects the last engine declaration for the same property, selector and condition. Supported shorthands expand into independently composable declarations. Overlapping unexpanded shorthands and longhands are rejected; use explicit longhands for those combinations. Mixing logical and physical spacing in the same context is rejected because direction and writing mode make their overlap ambiguous.
+`cx()` retains foreign classes and selects the last engine declaration for the same property, selector, condition and cascade layer. Supported shorthands expand into independently composable declarations. Overlapping unexpanded shorthands and longhands are rejected; use explicit longhands for those combinations. Mixing logical and physical spacing in the same context is rejected because direction and writing mode make their overlap ambiguous.
 
 ## Recipes
 
@@ -112,7 +112,7 @@ This is the first implementation. CSS types permit arbitrary property strings; t
 
 ## Component recipes
 
-All library components use the style engine. Each component lives in its own TSX file inside a family directory; recipes, helpers and tests are colocated. Public imports from the package root remain unchanged.
+All library components use the style engine. Each component lives in its own TSX file inside a family directory; recipes, helpers and tests are colocated. Import components from `@violice/preact-fluent-ui/components` and utilities from `/utils`; the package root is not exported. Application style functions must come from the generated `styled-system/css` module so they use your configuration and token types.
 
 Use `css` for an invariant element, `cva` for variants of one element and `sva` for component parts. Select multipart variants once in the parent and pass the returned slot classes to children, through context when parts are separate components. Sidebar, AppShell and Table use this pattern; nested roots establish their own selection and standalone parts use cached defaults. Do not select the same recipe again in each child.
 

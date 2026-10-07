@@ -26,7 +26,6 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - run: npm ci
       - name: Resolve the latest stable GitHub release
         id: release
         env:
@@ -42,6 +41,12 @@ jobs:
           const { appendFileSync } = await import('node:fs');
           appendFileSync(process.env.GITHUB_OUTPUT, `version=${release.tag_name.slice(1)}\n`);
           NODE
+      - name: Check out the released gallery and styling sources
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: refs/tags/v${{ steps.release.outputs.version }}
+          persist-credentials: false
+      - run: npm ci
       - name: Install the published release for the gallery
         env:
           RELEASE_VERSION: ${{ steps.release.outputs.version }}
@@ -66,8 +71,8 @@ jobs:
       - name: Require the release gallery exports
         run: |
           node --input-type=module <<'NODE'
-          const release = await import('./dist/index.js');
-          const required = ['Sidebar', 'SidebarHeader', 'SidebarNav', 'SidebarGroup', 'SidebarItem', 'SidebarFooter'];
+          const release = await import('./dist/components.js');
+          const required = ['Sidebar', 'SidebarBrand', 'SidebarHeader', 'SidebarNav', 'SidebarGroup', 'SidebarItem', 'SidebarFooter'];
           const missing = required.filter(name => typeof release[name] !== 'function');
           if (missing.length) throw new Error(`The published release cannot build this gallery. Missing exports: ${missing.join(', ')}. Publish a Sidebar-capable package before deploying; unpublished components will not be substituted.`);
           NODE

@@ -36,7 +36,7 @@ Use compiled classes on native elements or existing components:
 import { Card, Text } from '@violice/preact-fluent-ui/components';
 import { css } from './styled-system/css';
 
-<Card class={css({ display: 'grid', gap: 'space-4' })}>
+<Card class={css({ display: 'grid', gap: '4' })}>
   <Text preset="subtitle2" render={<h2 />}>Connection details</Text>
   <Text color="muted">Selected VPN profile</Text>
 </Card>
@@ -98,7 +98,7 @@ Compose `AppShell`, `AppShellWorkspace`, `AppShellHeader`, `AppShellToolbar`, `A
 
 `SidebarItem render` replaces its root with a VNode or callback. `as` still selects native types and defaults. A custom Link must forward composed props, children and ref to its native root. Do not nest an anchor or button inside another interactive root. `useRender` composes refs; `mergeProps` combines props with consumer handlers first and stops earlier handlers after `preventDefault()`. See the [utility API](api.md#utilities).
 
-Version 0.5.0 added Text and CounterBadge, plus Card padding="none" and Table dividers="between" for edge-to-edge tables. The upcoming styles engine replaces Box with css()/css.dynamic().
+Version 0.5.0 added Text and CounterBadge, plus Card padding="none" and Table dividers="between" for edge-to-edge tables. Version 0.6.0 replaces Box with css()/css.dynamic() and requires explicit package subpath imports.
 
 Version 0.4.0 includes data components, loading feedback, Tooltip, TextPreview, CodeBlock and AppShellToolbar. Toolbar and ToolbarGroup replace the former DataToolbar names without compatibility aliases. AppShellToolbar belongs directly inside AppShellWorkspace alongside Header and Content.
 

@@ -1,39 +1,25 @@
 # Changelog
 
-## Unreleased
+## 0.6.0 (2026-10-07)
 
-- Select Sidebar, AppShell and Table slot variants once in their parent and share classes through context; isolate nested recipe selections.
-- Simplify invariant styles to css and independent element variants to cva; apply LoadingState and owned heading styles directly to slots.
-
-- Migrate all component styles to css/cva/sva; remove component CSS Modules.
-- Group component families into directories with one component per file, preserving public exports.
-- Add sva slot selector references and build-time keyframes; order reset/native styles below utilities.
-- Use css.dynamic for Tooltip and Sidebar hint geometry; preserve portal theme tokens.
-
-- Apply resolveClass consistently before cx in components, including Tooltip signal fallbacks. class takes priority over className; an explicit empty class suppresses the fallback.
-
-- Rename the styles namespace to pfui and the dynamic API to css.dynamic().
-- Remove mergeClasses in favor of signal-aware cx; expose cx from both root and styles entries.
-- Use sva for InfoBar root/title/content slots.
-
-- Add the WyW-based styles engine: css/cx, cva/sva, compound variants, typed token references, configuration and scoped themes.
-- Add css.dynamic() to extract static CSS and assign dynamic values or signals to local CSS variables.
-- Remove Box. Use native elements or existing components with css()/css.dynamic().
-- Replace bundled clsx and class-variance-authority with the library’s own engine; migrate Button, Field, InfoBar and StatusBadge recipes.
+- Add the Vite styles compiler with generated `styled-system/css.ts` and `styles.css`, typed tokens, global styles, named themes and nested light/dark scopes.
+- Add `css`, `css.dynamic`, `cx`, `cva` and `sva`, including signals, compound variants, slot selectors and build-time keyframes. Component styles now use the same engine and cascade layers.
+- **Breaking:** remove the package root entry. Import components from `/components`, utilities from `/utils`, and application style functions from the generated `./styled-system/css`. Use `/config` and `/vite` for build configuration.
+- **Breaking:** remove Box and mergeClasses. Apply `css`/`css.dynamic` to native elements or existing components and compose classes with `cx`.
+- **Breaking:** replace public standalone CSS imports with generated `styles.css`; legacy token aliases are removed. Theme variables use the `--pfui-*` namespace. `fluentPreset` enables document reset and native controls by default; disable either independently in configuration.
+- Preserve signal-aware `class` precedence over `className`, including explicit empty classes, and inherited theme tokens for Tooltip and Sidebar hint portals.
+- Reorganize the gallery into Overview, Styling, Components, Styles and Utils, with 45 documentation pages. Add executable style examples and separate configuration, token, global style and theming guides.
+- Replace Full/Minimal appearance presets with independent reset/native switches. Refresh Getting Started and About, and remove obsolete guide URLs.
+- Group component families into directories with one component per file; replace bundled clsx and class-variance-authority with the library's engine.
 
 ## 0.5.0 (2026-10-06)
 
 - Align AppShellFooter width with Content and keep AppShellToolbar inline padding aligned with Content on mobile. Existing shell sizing variables apply to all three.
-
 - Add Box with render composition, reactive flex/grid layout props, theme spacing, dimensions and overflow controls. Native display is preserved when no layout is supplied.
-
 - Add Card padding="none" and Table dividers="between" for tables that meet card edges without a trailing row divider. Default padding and dividers remain unchanged.
-
 - Keep the first workspace surface inside AppShell's upper rounded corners, including AppShellToolbar.
-
 - Add Text with ten Fluent 2 typography presets, semantic theme colors and render composition for semantic HTML roots. Color defaults to inherit; default, muted and subtle use theme text tokens.
 - Reset native h1–h6 and p margins and typography through the optional reset.css; visual hierarchy is explicit through Text or application styles.
-
 - Add CounterBadge for numeric counts, with a 24px height, a minimum 24px width, rounded corners and a public gallery example. Longer counts expand only the width.
 
 ## 0.4.0 (2026-10-05)

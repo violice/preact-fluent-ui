@@ -1,12 +1,20 @@
 # npm releases
 
-## Release 0.5.0
+## Preparing 0.6.0
 
-Version 0.5.0 adds Text, Box and CounterBadge, optional edge-to-edge Card/Table composition, explicit native typography reset and aligned AppShell content, toolbar and footer. The release is published through the existing GitHub Actions npm trusted publisher from tag `v0.5.0`.
+Version 0.6.0 introduces the generated styles engine and explicit package entries.
+See [the changelog](../CHANGELOG.md#060-2026-10-07) for breaking changes and
+[styles setup](styles.md) for migration. The release tag must be `v0.6.0`.
+Local preparation does not publish the package; publishing a GitHub Release
+starts the trusted-publisher workflow.
+
+## Published 0.5.0
+
+Version 0.5.0 adds Text, Box and CounterBadge, optional edge-to-edge Card/Table composition, explicit native typography reset and aligned AppShell content, toolbar and footer. The release was published through the existing GitHub Actions npm trusted publisher from tag `v0.5.0`.
 
 ## Published 0.4.0
 
-`@violice/preact-fluent-ui@0.4.0` was published on 2026-10-05 from `8a50de7af34acedc2c51085dd23d5253c0cc83ee`. The npm latest tag points to 0.4.0 and records SLSA provenance. A registry-downloaded archive passed the isolated TypeScript, Full/Minimal build and package checks against Preact 10.29.8.
+`@violice/preact-fluent-ui@0.4.0` was published on 2026-10-05 from `8a50de7af34acedc2c51085dd23d5253c0cc83ee`. At publication, the npm latest tag pointed to 0.4.0 and npm recorded SLSA provenance. A registry-downloaded archive passed the isolated TypeScript, Full/Minimal build and package checks against Preact 10.29.8.
 
 - [GitHub Release v0.4.0](https://github.com/violice/preact-fluent-ui/releases/tag/v0.4.0)
 - [Successful publish workflow](https://github.com/violice/preact-fluent-ui/actions/runs/37324024516)
@@ -71,7 +79,11 @@ npm run test:package:all
 
 Finish both builds before `test:package:all`. This cross-platform Node command packs the existing build once with scripts disabled, then passes the same absolute tarball path to `test-package.mjs` for the root lockfile's Preact version and minimum peer `10.27.0`. A failed pack or verification stops the command and returns the child process's exit code.
 
-For a standalone check, `npm run test:package -- --tarball <absolute-path> --preact 10.27.0` verifies that file without rebuilding, packing again, or depending on local library graph metadata. Without `--tarball`, `test:package` still packs the existing build and checks one peer. Both peer runs install the archive in fresh temporary consumers outside the repository. They check exports, declarations, private subpaths, generated CSS and the component stylesheet, external Preact, bundled helpers, notices/licenses, package contents, and Button-only tree shaking.
+For a standalone check, `npm run test:package -- --tarball <absolute-path> --preact 10.27.0` verifies that file without rebuilding, packing again, or depending on local library graph metadata. Without `--tarball`, `test:package` still packs the existing build and checks one peer. `test:styles-package` separately packs and installs the library to verify generated bindings, static and dynamic styles, recipes, custom tokens, theme scopes and config reloads through the published Vite adapter.
+
+`test:package:all` also runs this styles consumer check after both peer checks.
+
+Both peer runs install the archive in fresh temporary consumers outside the repository. They check exports, declarations, private subpaths, generated CSS and the component stylesheet, external Preact, bundled helpers, notices/licenses, package contents, and Button-only tree shaking.
 
 The evidence directory `.artifacts/package/` contains the tarball, its `.sha256` checksum, `verified-10.29.8.json`, `verified-10.27.0.json`, and full/minimal consumer outputs and JSON reports. The verifier writes the locked peer's exact version into the report filename if the lockfile changes. JSON reports record the archive SHA-256, file list, published source maps/imports, module graphs, live source mappings, one resolved Preact root per installation, and emitted raw/gzip byte sizes. CI uploads this directory as an artifact, including its hidden parent directory. These baselines have no arbitrary size limit.
 
@@ -91,12 +103,12 @@ Windows forced-colors and reduced-motion acceptance remains pending as recorded 
 
 The [GitHub Pages gallery](https://violice.github.io/preact-fluent-ui/) displays the latest stable GitHub release using its exact npm package version. The Gallery workflow runs after a successful Publish workflow and can also be started manually. It installs the published package, uses its JavaScript, declarations and CSS, and displays the version in the page heading. It retries installation while npm processes a new release.
 
-Gallery page sources come from `main`; the showcased library comes from npm. Changes to `main` do not automatically redeploy the public gallery. Local `npm run dev` continues to build and use the library sources in the checkout.
+Gallery page sources, compiler and theme configuration come from the matching release tag; the showcased component JavaScript, declarations and precompiled rules come from the exact npm version. Changes to `main` do not automatically redeploy the public gallery. Local `npm run dev` continues to build and use the library sources in the checkout.
 
 ## Gallery route artifacts and Sidebar release guard
 
-The English gallery prerenders 41 known pages and 404.html. Build locally with `GALLERY_BASE=/preact-fluent-ui/ npm run build:gallery` for repository hosting. The build runs `check:gallery`; rerun it with the same GALLERY_BASE after inspecting or changing the artifact. `test:gallery-artifact` checks rejection of missing pages, relative nested assets, unresolved templates and wrong titles. `test:gallery-preview` checks the real preview server's handling of malformed requests and missing fallback HTML.
+The English gallery prerenders 45 known pages and 404.html. Build locally with `GALLERY_BASE=/preact-fluent-ui/ npm run build:gallery` for repository hosting. The build runs `check:gallery`; rerun it with the same GALLERY_BASE after inspecting or changing the artifact. `test:gallery-artifact` checks rejection of missing pages, relative nested assets, unresolved templates and wrong titles. `test:gallery-preview` checks the real preview server's handling of malformed requests and missing fallback HTML.
 
-The Pages workflow supplies the repository base and clears local dist before copying the exact installed release. It then requires all six Sidebar exports. If the published package lacks them, the workflow fails with a diagnostic requiring publication of a Sidebar-capable release. The published 0.1.0 package predates Sidebar; do not expect the new gallery to deploy against that package. The workflow does not substitute local unpublished Sidebar code. Publish a reviewed new library version before requesting deployment of this gallery.
+The Pages workflow checks out the matching release tag, supplies the repository base and clears local dist before copying the exact installed release. It then requires all seven Sidebar exports. If the published package lacks them, the workflow fails with a diagnostic requiring publication of a Sidebar-capable release. The published 0.1.0 package predates Sidebar; do not expect the new gallery to deploy against that package. The workflow does not substitute local unpublished Sidebar code. Publish a reviewed new library version before requesting deployment of this gallery.
 
 The gallery's preact-iso and @preact/signals dependencies are development-only. They are not library runtime dependencies or peers. Unknown preview routes return the prerendered 404 with HTTP 404; known nested routes serve their own HTML under the configured base.

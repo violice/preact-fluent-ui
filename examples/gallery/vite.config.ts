@@ -3,6 +3,9 @@ import { resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import preact from '@preact/preset-vite';
 import { defineConfig } from 'vite';
+import { greenThemeConfig } from './src/styles/green-theme.ts';
+import { resolveConfig } from '../../src/styles/config/resolve-config.ts';
+import { generateThemeCss } from '../../src/styles/compiler/tokens.ts';
 import { fluentPreset } from '../../src/styles/config/fluent-preset.ts';
 import { fluentStyles } from '../../src/styles/adapters/vite.ts';
 
@@ -13,13 +16,31 @@ await mkdir(defaultsDirectory, { recursive: true });
 await writeFile(new URL('reset.css', defaultsDirectory), generateResetCss());
 await writeFile(new URL('native-controls.css', defaultsDirectory), generateNativeCss());
 
+const greenDirectory = new URL('../../.artifacts/gallery-green-theme/', import.meta.url);
+await mkdir(greenDirectory, { recursive: true });
+await writeFile(
+  new URL('theme.css', greenDirectory),
+  generateThemeCss(resolveConfig(greenThemeConfig)),
+);
+
 export default defineConfig({
   root: fileURLToPath(new URL('.', import.meta.url)),
   base: process.env.GALLERY_BASE ?? '/',
   plugins: [
     fluentStyles({
       outdir: '../../.artifacts/gallery-styled-system',
-      config: { presets: [fluentPreset], reset: false, native: false },
+      config: {
+        presets: [fluentPreset],
+        reset: false,
+        native: false,
+        globalStyles: {
+          '#shell-preview label': { display: 'grid', minWidth: '0', gap: '8px' },
+          '#shell-preview select': { minWidth: '0', maxWidth: '100%' },
+          '@media (max-width: 640px)': {
+            '#shell-preview': { '--app-shell-content-padding': '12px' },
+          },
+        },
+      },
     }),
     {
       name: 'gallery-static-preview',

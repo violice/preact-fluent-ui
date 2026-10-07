@@ -1,6 +1,6 @@
 # Theme tokens
 
-`theme.css` defines all public tokens below on `:root`. It sets color-scheme, follows prefers-color-scheme, and then applies forced-colors overrides. It does not style body, headings, or fields. Font stacks use system fonts. Unchanged values inherit from the light definition.
+The generated `styled-system/theme.css`, also included in `styled-system/styles.css`, defines the core tokens below on `:root`. It sets color-scheme, follows prefers-color-scheme, and then applies forced-colors overrides. It does not style body, headings, or fields. Font stacks use system fonts. Unchanged values inherit from the light definition.
 
 | Token | Light | Dark | Forced colors |
 | --- | --- | --- | --- |
@@ -62,7 +62,7 @@
 | `--pfui-spacing-6` | `24px` | `24px` | `unchanged` |
 | `--pfui-spacing-8` | `32px` | `32px` | `unchanged` |
 
-All component `var(--...)` references resolve to this table. Components and gallery introduce no local custom property contracts. Shadows disappear in forced colors; focus uses an outline rather than a shadow.
+This table lists the core Fluent theme defaults. The preset also defines typography, motion and code syntax tokens. Configured tokens and `css.dynamic()` can introduce additional custom properties. Shadows disappear in forced colors; focus uses an outline rather than a shadow.
 
 ## Overrides
 
@@ -97,7 +97,7 @@ Import overrides after theme/styles and any optional global styles. Primary and 
 }
 ```
 
-The complete [green theme](../examples/gallery/src/green-theme.css) preserves the Xbox DNS canvas, card, notice, accent and dark primary colors. Override at root so portaled dialogs receive the same values. Modal portals use the root theme; Tooltip inherits its trigger theme.
+The complete [green theme](../examples/gallery/src/styles/green-theme.ts) preserves the Xbox DNS canvas, card, notice, accent and dark primary colors. Override at root so portaled dialogs receive the same values. Modal portals use the root theme; Tooltip inherits its trigger theme.
 
 
 ## Application shell layout variables
@@ -117,4 +117,4 @@ Desktop workspace margin is 8px and radius is 12px. Horizontal navigation remove
 
 CodeBlock owns the `--pfui-codeColors-<kind>` palette in light and dark themes. Kinds are keyword, string, comment, function, type, property, number, literal, tag, attribute, operator, punctuation and command. Override these variables in your theme; tokenization remains external. Forced colors render tokens with CanvasText.
 
-AppShellToolbar shares the content maximum width and inline padding variable. Its default inline padding is 24px on desktop and 12px up to 640px; an explicit shared padding variable overrides both defaults.
+AppShellToolbar shares the content maximum width and inline padding variable. Its default inline padding is 24px at all viewport widths; an explicit shared padding variable overrides both defaults.

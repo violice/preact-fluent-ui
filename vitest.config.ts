@@ -5,8 +5,7 @@ import { fluentStyles } from './src/styles/adapters/vite.ts';
 export default defineConfig({
   plugins: [
     fluentStyles({
-      outdir: '.artifacts/styled-system',
-      sources: ['../../../.artifacts/gallery-styled-system/css'],
+      outdir: '.artifacts/gallery-styled-system',
     }),
     preact({ devToolsEnabled: false, prefreshEnabled: false }),
   ],
