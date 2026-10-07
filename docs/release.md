@@ -1,12 +1,24 @@
 # npm releases
 
-## Preparing 0.6.0
+## Published 0.6.0
 
-Version 0.6.0 introduces the generated styles engine and explicit package entries.
-See [the changelog](../CHANGELOG.md#060-2026-10-07) for breaking changes and
-[styles setup](styles.md) for migration. The release tag must be `v0.6.0`.
-Local preparation does not publish the package; publishing a GitHub Release
-starts the trusted-publisher workflow.
+`@violice/preact-fluent-ui@0.6.0` was published on 2026-10-07 from
+`3b4194c70c44e8d0e4963682f96bdee5b3a1ced1`. npm's `latest` tag points to
+0.6.0 and the registry records SLSA provenance. The release introduces the
+generated styles engine and explicit package entries. See [the changelog](../CHANGELOG.md#060-2026-10-07)
+for breaking changes and [styles setup](styles.md) for migration.
+
+- [GitHub Release v0.6.0](https://github.com/violice/preact-fluent-ui/releases/tag/v0.6.0)
+- [Successful publish workflow](https://github.com/violice/preact-fluent-ui/actions/runs/37608826308)
+
+A registry-downloaded archive passed the isolated public TypeScript API and
+consumer builds with Preact 10.29.8. Its SHA-512 matches npm metadata. Local
+registry evidence is saved in `.artifacts/registry/verified-0.6.0.json`.
+
+The first publish attempt stopped before npm because typecheck needed the gallery's
+generated style bindings. The corrected workflow builds the library and gallery
+before running checks. The released tag points to that correction; subsequent
+changes in `main` split a slow aggregate gallery test into individual cases.
 
 ## Published 0.5.0
 
