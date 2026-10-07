@@ -26,7 +26,7 @@
       "import": "./dist/config.js"
     },
     "./vite": {
-      "types": "./dist/styling/compiler/vite.d.ts",
+      "types": "./dist/styling/adapters/vite.d.ts",
       "import": "./dist/vite.js"
     }
   },
@@ -39,6 +39,8 @@
     "THIRD_PARTY_NOTICES.txt"
   ],
   "scripts": {
+    "tokens:generate": "node scripts/generate-token-references.mjs",
+    "tokens:check": "node scripts/generate-token-references.mjs --check",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint src scripts tests/package-consumer examples/gallery vite.config.ts vitest.config.ts --max-warnings 0",
     "format": "oxfmt --write src scripts tests/package-consumer examples/gallery vite.config.ts vitest.config.ts tsconfig.json tsconfig.build.json package.json .oxlintrc.json .oxfmtrc.json",
@@ -46,14 +48,15 @@
     "test": "vitest run",
     "test:release": "node --test scripts/check-release.test.mjs",
     "check:release": "node scripts/check-release.mjs",
+    "test:package-guards": "node --test scripts/runtime-imports.test.mjs",
     "test:package": "node scripts/test-package.mjs",
-    "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-css.mjs && node scripts/check-dist.mjs",
+    "build": "npm run tokens:generate && vite build && tsc -p tsconfig.build.json && node scripts/build-css.mjs && node scripts/check-dist.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "licenses:generate": "node scripts/generate-third-party-notices.mjs",
     "licenses:check": "node scripts/generate-third-party-notices.mjs --check",
     "dev": "npm run build && vite --config examples/gallery/vite.config.ts",
     "build:gallery": "vite build --config examples/gallery/vite.config.ts && npm run check:gallery",
-    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run test:release && npm run licenses:check",
+    "check": "npm run tokens:check && npm run typecheck && npm run lint && npm run format:check && npm test && npm run test:release && npm run test:package-guards && npm run licenses:check",
     "test:package:all": "node scripts/test-package-all.mjs",
     "check:gallery": "node scripts/check-gallery.mjs",
     "test:gallery-artifact": "node --test scripts/check-gallery.test.mjs",

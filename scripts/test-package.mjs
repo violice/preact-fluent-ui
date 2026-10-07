@@ -16,6 +16,7 @@ import { tmpdir } from 'node:os';
 import { basename, isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
+import { runtimeImports } from './runtime-imports.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const artifactDirectory = join(root, '.artifacts/package');
@@ -134,12 +135,6 @@ function mappedSources(map) {
   return Object.fromEntries([...counts].sort());
 }
 
-function runtimeImports(js) {
-  return [...js.matchAll(/\bfrom\s*['"]([^'"]+)['"]|\bimport\s*(?:\(\s*)?['"]([^'"]+)['"]/g)].map(
-    (match) => match[1] ?? match[2],
-  );
-}
-
 async function inspectLibrary(directory, files) {
   const manifest = JSON.parse(await readFile(join(directory, 'package.json'), 'utf8'));
   assert.equal(manifest.name, '@violice/preact-fluent-ui');
@@ -218,7 +213,7 @@ async function inspectLibrary(directory, files) {
         `Library must not embed Preact: ${source}`,
       );
       assert(
-        /^\.\.\/(?:src\/(?:utils\/(?:resolve-class|merge-props|use-render)\.ts|components\/(?:app-shell|button|card|checkbox|counter-badge|data-list|dialog|disclosure|empty-state|field|info-bar|input|loading-state|page-header|pagination|select|separator|sidebar|spinner|status-badge|switch|table|text|text-content|textarea|toolbar|tooltip)\/[^/]+\.(?:tsx|styles\.ts|ts)|icons\/[^/]+\.(?:ts|tsx)|styling\/(?:cx|conflicts|identity|normalize|recipe-runtime|style-props|css|cva|sva|token|index)\.ts|styling\/config\/(?:fluent-preset|define-config|resolve-config|index)\.ts|styling\/compiler\/(?:vite|processor|atomic|tokens|dynamic|recipes)\.ts))$/.test(
+        /^\.\.\/(?:src\/(?:utils\/(?:resolve-class|merge-props|use-render)\.ts|components\/(?:app-shell|button|card|checkbox|counter-badge|data-list|dialog|disclosure|empty-state|field|info-bar|input|loading-state|page-header|pagination|select|separator|sidebar|spinner|status-badge|switch|table|text|text-content|textarea|toolbar|tooltip)\/[^/]+\.(?:tsx|styles\.ts|ts)|icons\/[^/]+\.(?:ts|tsx)|styling\/(?:index\.ts|(?:runtime|shared)\/[^/]+\.ts)|styling\/config\/(?:fluent\/[^/]+|fluent-preset|define-config|resolve-config|index)\.ts|styling\/(?:compiler|adapters)\/[^/]+\.ts))$/.test(
           normalized,
         ) && !/\.test\./.test(normalized),
         `Unrelated source content in published map: ${source}`,
@@ -240,7 +235,7 @@ async function inspectLibrary(directory, files) {
       `${helper} must not remain external`,
     );
   }
-  return { imports: [...imports].sort(), maps };
+  return { imports: [...imports].filter((id) => !id.startsWith('.')).sort(), maps };
 }
 
 async function inspectConsumer(directory, mode) {
@@ -466,7 +461,7 @@ try {
       'Build metadata must not contain embedded Preact',
     );
     assert.deepEqual(
-      [...graph.externalImports].sort(),
+      [...new Set(Object.values(graph.entries).flatMap((entry) => entry.externalImports))].sort(),
       library.imports,
       'Archive imports must match this build metadata',
     );

@@ -6,10 +6,10 @@ import type {
   TailProcessorParams,
   ValueCache,
 } from '@wyw-in-js/processor-utils';
-import { cx } from '../cx.ts';
-import { compileStyles } from './atomic.ts';
-import { compileRecipe } from './recipes.ts';
-import type { StyleContext, StyleObject } from '../types.ts';
+import { cx } from '../runtime/cx.ts';
+import { compileStyles } from '../compiler/atomic.ts';
+import { compileRecipe } from '../compiler/recipes.ts';
+import type { StyleContext, StyleObject } from '../shared/types.ts';
 function literal(ast: AstService, value: unknown): Expression {
   if (value == null) return ast.nullLiteral();
   if (typeof value === 'string') return ast.stringLiteral(value);

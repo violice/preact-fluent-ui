@@ -49,7 +49,7 @@ for (const [index, source] of sourcemap.sources.entries()) {
   );
   assert(!/(?:^|\/)preact(?:\/|$)/.test(normalized), `Embedded Preact source: ${source}`);
   assert(
-    /^\.\.\/(?:src\/(?:utils\/(?:resolve-class|merge-props|use-render)\.ts|components\/(?:app-shell|button|card|checkbox|counter-badge|data-list|dialog|disclosure|empty-state|field|info-bar|input|loading-state|page-header|pagination|select|separator|sidebar|spinner|status-badge|switch|table|text|text-content|textarea|toolbar|tooltip)\/[^/]+\.(?:tsx|styles\.ts|ts)|icons\/[^/]+\.(?:ts|tsx)|styling\/(?:cx|conflicts|identity|normalize|recipe-runtime|style-props|css|cva|sva|token|index)\.ts))$/.test(
+    /^\.\.\/(?:src\/(?:utils\/(?:resolve-class|merge-props|use-render)\.ts|components\/(?:app-shell|button|card|checkbox|counter-badge|data-list|dialog|disclosure|empty-state|field|info-bar|input|loading-state|page-header|pagination|select|separator|sidebar|spinner|status-badge|switch|table|text|text-content|textarea|toolbar|tooltip)\/[^/]+\.(?:tsx|styles\.ts|ts)|icons\/[^/]+\.(?:ts|tsx)|styling\/(?:index\.ts|(?:runtime|shared)\/[^/]+\.ts)))$/.test(
       normalized,
     ) && !/\.test\./.test(normalized),
     `Unrelated sourcemap source: ${source}`,
@@ -92,7 +92,9 @@ for (const entry of ['index', 'styling']) {
   );
   assert(
     !browser.modules.some((id) =>
-      /(?:compiler|config)\/|node_modules\/(?:@wyw-in-js|oxc-parser|magic-string)/.test(id),
+      /(?:compiler|config|adapters)\/|node_modules\/(?:@wyw-in-js|oxc-parser|magic-string)/.test(
+        id,
+      ),
     ),
     `Compiler module in ${entry}`,
   );
@@ -103,7 +105,7 @@ const declarationFiles = (await readdir(new URL('dist/', root), { recursive: tru
 );
 for (const file of declarationFiles) {
   const declarations = await readFile(new URL(`dist/${file}`, root), 'utf8');
-  const buildOnly = file.startsWith('styling/compiler/');
+  const buildOnly = file.startsWith('styling/compiler/') || file.startsWith('styling/adapters/');
   assert(
     !/\.css|vitest|class-variance-authority|clsx/.test(declarations) &&
       (buildOnly || !/\bfrom ['"]vite['"]/.test(declarations)),

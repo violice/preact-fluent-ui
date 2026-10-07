@@ -1,5 +1,5 @@
 import type { JSX } from 'preact';
-import type { StyleObject } from './types';
+import type { StyleObject } from '../shared/types';
 import type { StyleProps } from './style-props';
 export interface DynamicStyleObject {
   [property: string]: JSX.Signalish<string | number | null | undefined> | DynamicStyleObject;

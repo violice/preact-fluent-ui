@@ -1,7 +1,7 @@
-import { styleHash } from '../identity.ts';
-import { cx } from '../cx.ts';
+import { styleHash } from '../shared/identity.ts';
+import { cx } from '../runtime/cx.ts';
 import { compileStyles } from './atomic.ts';
-import type { StyleContext, StyleObject } from '../types.ts';
+import type { StyleContext, StyleObject } from '../shared/types.ts';
 interface Definition {
   slots?: string[];
   base?: StyleObject | Record<string, StyleObject>;

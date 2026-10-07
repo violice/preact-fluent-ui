@@ -1,6 +1,6 @@
 import type { JSX, RefCallback } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { cx } from '../../styling/cx';
+import { cx } from '../../styling/runtime/cx';
 import { resolveClass } from '../../utils/resolve-class';
 import { useRender } from '../../utils/use-render';
 import type { RenderProp } from '../../utils/use-render';

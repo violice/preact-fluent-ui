@@ -2,7 +2,7 @@
 import { expect, it } from 'vitest';
 import { compileRecipe } from './recipes';
 import { compileStyles } from './atomic';
-import { createSva } from '../recipe-runtime';
+import { createSva } from '../runtime/recipe-runtime';
 it('provides stable slot markers for sibling and ancestor selectors', () => {
   const definition = {
     slots: ['root', 'input', 'indicator'],

@@ -1,6 +1,6 @@
 import type { JSX } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { cx } from '../../styling/cx';
+import { cx } from '../../styling/runtime/cx';
 import { resolveClass } from '../../utils/resolve-class';
 import { dialogFooterClass } from './dialog-content.styles';
 

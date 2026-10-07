@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import preact from '@preact/preset-vite';
 import { defineConfig } from 'vite';
 import { fluentPreset } from '../../src/styling/config/fluent-preset.ts';
-import { fluentStyles } from '../../src/styling/compiler/vite.ts';
+import { fluentStyles } from '../../src/styling/adapters/vite.ts';
 
 export default defineConfig({
   root: fileURLToPath(new URL('.', import.meta.url)),

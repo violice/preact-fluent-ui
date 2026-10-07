@@ -8,4 +8,5 @@ export { AppShellContent } from './app-shell-content';
 export type { AppShellContentProps } from './app-shell-content';
 export { AppShellFooter } from './app-shell-footer';
 export type { AppShellFooterProps } from './app-shell-footer';
-export * from './app-shell-toolbar';
+export { AppShellToolbar } from './app-shell-toolbar';
+export type { AppShellToolbarProps } from './app-shell-toolbar';

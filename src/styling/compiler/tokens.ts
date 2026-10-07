@@ -1,19 +1,9 @@
 import { layerOrder } from './layers.ts';
-import { fluentLegacyVariables } from '../config/fluent-preset.ts';
+import { fluentLegacyVariables } from '../config/fluent/legacy-variables.ts';
 import { flattenTokens, themeWithOverrides } from '../config/resolve-config.ts';
 import type { ResolvedConfig, TokenLeaf } from '../config/types.ts';
-export function variableName(path: string): string {
-  if (/^spacing\.(1|2|3|4|5|6|8)$/.test(path)) return `--space-${path.split('.')[1]}`;
-  return `--pfui-${path.replaceAll('.', '-')}`;
-}
-export function tokenReferences(config: ResolvedConfig): Record<string, string> {
-  return Object.fromEntries(
-    Object.keys({
-      ...flattenTokens(config.theme.tokens),
-      ...flattenTokens(config.theme.semanticTokens),
-    }).map((path) => [path, `var(${variableName(path)})`]),
-  );
-}
+import { variableName } from '../shared/token-name.ts';
+export { tokenReferences } from './token-references.ts';
 function valueCss(value: string | number): string {
   return String(value).replace(/\{([\w.-]+)\}/g, (_, path: string) => `var(${variableName(path)})`);
 }

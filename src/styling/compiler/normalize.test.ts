@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest';
-import { compileStyles } from './compiler/atomic';
-import { cx } from './cx';
+import { compileStyles } from './atomic';
+import { cx } from '../runtime/cx';
 
 it('merges expanded padding sides without losing unaffected declarations', () => {
   const base = compileStyles({ padding: '16px' });

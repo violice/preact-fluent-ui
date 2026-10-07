@@ -1,4 +1,4 @@
-import type { CvaDefinition, CvaFunction, VariantDefinitions } from './recipe-types';
+import type { CvaDefinition, CvaFunction, VariantDefinitions } from '../shared/recipe-types';
 export function cva<const V extends VariantDefinitions>(
   _definition: CvaDefinition<V>,
 ): CvaFunction<V> {

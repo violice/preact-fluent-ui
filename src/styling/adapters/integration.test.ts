@@ -151,7 +151,7 @@ it('emits slot relationships and animation frames in the actual CSS asset', asyn
 it('bridges configured semantic themes to public Fluent variables used by components', async () => {
   const { fluentPreset } = await import('../config/fluent-preset');
   const { resolveConfig } = await import('../config/resolve-config');
-  const { generateThemeCss } = await import('./tokens');
+  const { generateThemeCss } = await import('../compiler/tokens');
   const css = generateThemeCss(
     resolveConfig({
       presets: [fluentPreset],
@@ -167,7 +167,7 @@ it('bridges configured semantic themes to public Fluent variables used by compon
 it('generates a self-contained Fluent theme with system, explicit and forced color modes', async () => {
   const { fluentPreset } = await import('../config/fluent-preset');
   const { resolveConfig } = await import('../config/resolve-config');
-  const { generateThemeCss } = await import('./tokens');
+  const { generateThemeCss } = await import('../compiler/tokens');
   const css = generateThemeCss(resolveConfig({ presets: [fluentPreset] }));
   const declarations = new Set([...css.matchAll(/(--[\w-]+):/g)].map((match) => match[1]));
   for (const match of css.matchAll(/var\((--[\w-]+)\)/g)) {

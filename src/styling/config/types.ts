@@ -1,4 +1,4 @@
-import type { StyleObject } from '../types.ts';
+import type { StyleObject } from '../shared/types.ts';
 export interface TokenLeaf {
   value: string | number | Record<string, string | number>;
   description?: string;

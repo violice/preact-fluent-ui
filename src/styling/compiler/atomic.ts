@@ -1,8 +1,8 @@
 import { layerOrder } from './layers.ts';
-import { declarationClass } from '../identity.ts';
-import { normalizeStyles } from '../normalize.ts';
-import { cx } from '../cx.ts';
-import type { Declaration, StyleContext, StyleObject } from '../types.ts';
+import { declarationClass } from '../shared/identity.ts';
+import { normalizeStyles } from './normalize.ts';
+import { cx } from '../runtime/cx.ts';
+import type { Declaration, StyleContext, StyleObject } from '../shared/types.ts';
 const identities = new Map<string, string>();
 export function compileDeclarations(
   declarations: Declaration[],

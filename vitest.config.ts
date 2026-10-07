@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitest/config';
 import preact from '@preact/preset-vite';
-import { fluentStyles } from './src/styling/compiler/vite.ts';
+import { fluentStyles } from './src/styling/adapters/vite.ts';
 
 export default defineConfig({
   plugins: [

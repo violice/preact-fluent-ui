@@ -1,5 +1,5 @@
 import type { JSX } from 'preact';
-import { expandStyle, resolveStyleValue } from './normalize';
+import { expandStyle, resolveStyleValue } from '../shared/style-values';
 export interface StyleProps {
   class: string;
   style: JSX.CSSProperties;

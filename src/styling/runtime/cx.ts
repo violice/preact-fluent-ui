@@ -1,5 +1,5 @@
-import { overlappingShorthand } from './conflicts.ts';
-import type { ClassValue } from './types';
+import { overlappingShorthand } from '../shared/conflicts.ts';
+import type { ClassValue } from '../shared/types';
 /** Last engine declaration wins in its property/selector/condition context. */
 export function cx(...values: ClassValue[]): string {
   const classes = new Map<string, string>();

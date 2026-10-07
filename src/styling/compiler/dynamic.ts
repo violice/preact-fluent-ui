@@ -1,9 +1,9 @@
 import { parseSync } from 'oxc-parser';
 import type { Node, ObjectExpression } from 'oxc-parser';
 import MagicString from 'magic-string';
-import type { StyleContext } from '../types.ts';
-import { expandStyle } from '../normalize.ts';
-import { styleHash } from '../identity.ts';
+import type { StyleContext } from '../shared/types.ts';
+import { expandStyle } from '../shared/style-values.ts';
+import { styleHash } from '../shared/identity.ts';
 function names(node: Node): string[] {
   if (node.type === 'Identifier') return [node.name];
   if (node.type === 'RestElement') return names(node.argument);

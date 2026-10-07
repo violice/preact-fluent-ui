@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import preact from '@preact/preset-vite';
 import { defineConfig } from 'vite';
 import type { Plugin } from 'vite';
-import { fluentStyles } from './src/styling/compiler/vite.ts';
+import { fluentStyles } from './src/styling/adapters/vite.ts';
 
 function libraryModules(): Plugin {
   return {
@@ -56,8 +56,8 @@ export default defineConfig({
           index: './src/index.ts',
           styling: './src/styling/index.ts',
           config: './src/styling/config/index.ts',
-          vite: './src/styling/compiler/vite.ts',
-          processor: './src/styling/compiler/processor.ts',
+          vite: './src/styling/adapters/vite.ts',
+          processor: './src/styling/adapters/processor.ts',
         }).map(([name, path]) => [name, fileURLToPath(new URL(path, import.meta.url))]),
       ),
       formats: ['es'],

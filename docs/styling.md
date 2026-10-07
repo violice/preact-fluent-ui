@@ -139,3 +139,9 @@ Generated CSS declares `@layer reset, native, base, tokens, recipes, utilities`.
 Tooltip and Sidebar hints use `css.dynamic` for measured geometry. Native `style` props remain available. TextPreview/CodeBlock retain their style adapter to preserve existing `wrap` precedence for both object and string styles.
 
 Fluent components continue reading public `--color-*`, `--font-*` and `--radius-*` variables, so local overrides retain their behavior. Configured themes also update these variables when overriding the corresponding semantic tokens. Default aliases remain one-way to avoid cycles. Local `--pfui-*` overrides affect styles that read those tokens directly; use the public Fluent variables for local component overrides or `data-pfui-theme` for configured themes.
+
+## Source organization
+
+`src/styling/index.ts` is the browser styling entrypoint. Browser functions and compile-time stubs live in `runtime/`; CSS value expansion, class identities and common types live in `shared/`. Configuration and Fluent preset data live in `config/`, CSS generation in `compiler/`, and Vite/WyW integration in `adapters/`.
+
+The default `token.var` references are generated from the Fluent preset. After changing its tokens, run `npm run tokens:generate`; `npm run tokens:check` verifies that the checked-in bindings match the preset. Custom configurations continue to generate their own bindings in `styled-system/css.ts`.

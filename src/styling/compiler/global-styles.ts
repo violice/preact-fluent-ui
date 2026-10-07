@@ -1,5 +1,5 @@
-import { normalizeStyles } from '../normalize.ts';
-import type { StyleContext, StyleObject } from '../types.ts';
+import { normalizeStyles } from './normalize.ts';
+import type { StyleContext, StyleObject } from '../shared/types.ts';
 import type { ResolvedConfig } from '../config/types.ts';
 import { layerOrder } from './layers.ts';
 import { generateThemeCss, tokenReferences } from './tokens.ts';

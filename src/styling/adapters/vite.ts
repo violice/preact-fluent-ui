@@ -6,9 +6,9 @@ import { loadConfigFromFile } from 'vite';
 import type { Plugin } from 'vite';
 import type { StylingConfig, ResolvedConfig } from '../config/types.ts';
 import { resolveConfig } from '../config/resolve-config.ts';
-import { tokenReferences, generateThemeCss } from './tokens.ts';
-import { transformDynamic } from './dynamic.ts';
-import { generateStylesCss } from './global-styles.ts';
+import { tokenReferences, generateThemeCss } from '../compiler/tokens.ts';
+import { transformDynamic } from '../compiler/dynamic.ts';
+import { generateStylesCss } from '../compiler/global-styles.ts';
 import { fluentPreset } from '../config/fluent-preset.ts';
 export interface FluentStylesOptions {
   config?: StylingConfig;

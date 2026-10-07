@@ -5,8 +5,8 @@ import { fluentPreset } from '../config/fluent-preset';
 import { generateStylesCss } from './global-styles';
 import { compileStyles } from './atomic';
 import { compileRecipe } from './recipes';
-import { createCva } from '../recipe-runtime';
-import { cx } from '../cx';
+import { createCva } from '../runtime/recipe-runtime';
+import { cx } from '../runtime/cx';
 
 it('includes optional layers only when enabled and normalizes global selectors and conditions', () => {
   const config = resolveConfig({
